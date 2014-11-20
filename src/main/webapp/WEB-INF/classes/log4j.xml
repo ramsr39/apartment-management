@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="LogFileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="apartment-managment-services.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] %c{1} %m%n" />
+		</layout>
+	</appender>
+		
+	<!-- springframework -->
+	<logger name="org.springframework" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="LogFileAppender" />
+	</logger>
+
+	<root>
+		<priority value="INFO" />
+		<appender-ref ref="LogFileAppender" />
+	</root>
+
+</log4j:configuration>

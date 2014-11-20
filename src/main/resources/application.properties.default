@@ -1,0 +1,12 @@
+am.jdbc.driverClass=com.mysql.jdbc.Driver
+am.jdbc.url=jdbc:mysql://localhost:3306/apartment_db
+am.jdbc.userId=root
+am.jdbc.password=admin
+am.jdbc.pool.maxWait=30000
+am.jdbc.pool.initialSize=10
+am.jdbc.pool.maxOpenPreparedStatements=20
+am.jdbc.pool.initialSize=10
+am.jdbc.pool.maxActive=-1
+am.jdbc.pool.maxIdle=5
+fetch.size=200
+
