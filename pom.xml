@@ -5,7 +5,7 @@
 	<groupId>com.apartment.management</groupId>
 	<artifactId>apartment-management-services</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>apartment-management-services</name>
 	<url>http://maven.apache.org</url>
@@ -13,7 +13,35 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.0.5.RELEASE</spring.version>
+		<taget.war.file.name>target/${war.name}-${version}.war</taget.war.file.name>
+		<context.path>apartment</context.path>
 	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<warName>${project.artifactId}-${version}</warName>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>http://localhost:8080/manager/text</url>
+					<username>tomcat</username>
+					<password>admin</password>
+					<server>TomcatServer</server>
+					<path>/${context.path}</path>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 
 	<dependencies>
 		<!-- Jersey -->
@@ -21,6 +49,12 @@
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
 			<version>1.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-spring</artifactId>
+			<version>1.17</version>
 		</dependency>
 
 		<!-- Spring 3 dependencies -->
@@ -53,6 +87,13 @@
 			<version>5.1.17</version>
 			<type>jar</type>
 			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
