@@ -43,8 +43,7 @@ public final class LoginService {
 		String existingPwd = loginDao.getPasswordForUser(userName);
 		if (StringUtils.isEmpty(receivePwd) || StringUtils.isEmpty(existingPwd)
 				|| !receivePwd.equalsIgnoreCase(existingPwd)) {
-			return Response.status(Status.FORBIDDEN)
-					.entity("your email of pwd missmatching").build();
+			return Response.status(Status.UNAUTHORIZED).build();
 		}
 
 		UserDTO userLoginDTO = loginDao.getUserDetails(userName);
