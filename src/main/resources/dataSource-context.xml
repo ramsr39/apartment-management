@@ -10,8 +10,6 @@
            http://www.springframework.org/schema/context  
            classpath:/org/springframework/context/config/spring-context-3.0.xsd">
 
-	<context:property-placeholder location="classpath*:*.properties.default" />
-
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="url" value="${am.jdbc.url}" />
@@ -29,8 +27,9 @@
 		<property name="testOnReturn" value="false" />
 		<property name="validationQuery" value="SELECT count(*) from DUAL" />
 	</bean>
-	
-  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-    <property name="dataSource" ref="dataSource" />
-  </bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
 </beans>

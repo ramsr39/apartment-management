@@ -2,9 +2,6 @@ package com.apartment.management.services;
 
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
-import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -16,8 +13,10 @@ public class App
 { 
     public static void main( String[] args ) throws SQLException
     {
-    	ApplicationContext ctx = new ClassPathXmlApplicationContext("dataSource-context.xml");
-    	DataSource ds = (BasicDataSource)ctx.getBean("dataSource");
-    	System.out.println(ds.getConnection());
+    	ApplicationContext ctx = new ClassPathXmlApplicationContext("application-context.xml");
+    	
+    	LoginService ds = (LoginService)ctx.getBean("logService");
+    	String paylaod = "{emailId:msgshd@gmail.com,password:ds}";
+    	System.out.println(ds.ValidateUser(paylaod).getEntity());
     }
 }
