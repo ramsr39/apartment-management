@@ -32,11 +32,11 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<url>http://localhost:8080/manager/text</url>
+					<url>http://50.62.58.115:8080/manager/text</url>
 					<username>tomcat</username>
 					<password>admin</password>
 					<server>TomcatServer</server>
-					<path>/${context.path}</path>
+					<path>/${context.path}-new</path>
 				</configuration>
 			</plugin>
 		</plugins>

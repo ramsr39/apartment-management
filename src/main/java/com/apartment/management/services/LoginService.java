@@ -25,10 +25,10 @@ public final class LoginService {
 	private LoginDao loginDao;
 
 	@GET
-	@Path("/{emailId}")
+	@Path("/{email}")
 	@Produces("applicaton/json")
-	public Response verifyUserId(@PathParam("emailId") final String emailId) {
-		boolean falg = loginDao.isUserExist(emailId);
+	public Response verifyUserId(@PathParam("email") final String email) {
+		boolean falg = loginDao.isUserExist(email);
 		return Response.ok().entity(String.valueOf(falg)).build();
 	}
 
@@ -38,7 +38,7 @@ public final class LoginService {
 	public Response ValidateUser(final String jsonPayload) {
 		JsonParser parser = new JsonParser();
 		JsonObject jsonObject = (JsonObject) parser.parse(jsonPayload);
-		String userName = jsonObject.get("emailId").getAsString();
+		String userName = jsonObject.get("email").getAsString();
 		String receivePwd = jsonObject.get("password").getAsString();
 		String existingPwd = loginDao.getPasswordForUser(userName);
 		if (StringUtils.isEmpty(receivePwd) || StringUtils.isEmpty(existingPwd)
