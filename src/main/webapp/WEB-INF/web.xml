@@ -30,6 +30,10 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
+	<welcome-file-list>
+      <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
 
 	<servlet-mapping>
 		<servlet-name>jersey-serlvet</servlet-name>
