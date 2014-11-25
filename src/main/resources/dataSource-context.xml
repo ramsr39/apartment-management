@@ -9,6 +9,8 @@
            classpath:/org/springframework/transaction/config/spring-tx-3.0.xsd
            http://www.springframework.org/schema/context  
            classpath:/org/springframework/context/config/spring-context-3.0.xsd">
+           
+           <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">

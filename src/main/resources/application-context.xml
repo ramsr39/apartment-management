@@ -20,5 +20,14 @@
 	<bean id="loginDao" class="com.apartment.management.dao.LoginDaoImpl">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
+	<bean id="comunityDetailsService" class="com.apartment.management.services.CommunityDetailsService">
+	  <property name="communityDetailsDao" ref="communityDetailsDao"></property>
+	</bean>
+	
+	<bean id="communityDetailsDao" class="com.apartment.management.dao.CommunityDetailsDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
 
 </beans>
