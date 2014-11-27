@@ -1,6 +1,11 @@
 package com.apartment.management.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
 
@@ -20,7 +25,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			+ "CITY, "
 			+ "PIN, "
 			+ "DESCRIPTION, "
-			+ "COMMUNITYTYPE) "
+			+ "COMMUNITYTYPE,EMAILID) "
 			+ "VALUES("
 			+ ":COMMUNITYNAME,"
 			+ ":ADDRESS_LINE1,"
@@ -30,7 +35,8 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			+ ":CITY,"
 			+ ":PIN,"
 			+ ":DESCRIPTION,"
-			+ ":COMMUNITYTYPE)";
+			+ ":COMMUNITYTYPE,"
+			+ ":EMAILID)";
 	
 	private static final String INSERT_BUILDING_QUERY = "INSERT INTO building("
 			+ "COMMUNITYID,"
@@ -66,9 +72,33 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			+ "WHERE BUILDINGNAME=:OLDBUILDINGNAME"; 
 		
 	 private static final String GET_COMMUNITYID_QUERY="SELECT COMMUNITYID FROM community WHERE COMMUNITYNAME=:COMMUNITYNAME";
+	 
+	 private static final String FIND_EMAILID_QUERY="SELECT count(EMAILID) FROM community WHERE EMAILID=:EMAILID";
+	 
+	 private static final String GET_COMMUNITY_DETAILS_QUERY="SELECT COMMUNITYID,"
+	 		+ "COMMUNITYNAME,"
+	 		+ "ADDRESS_LINE1,"
+	 		+ "ADDRESS_LINE2,"
+	 		+ "ADDRESS_LINE3,"
+	 		+ "CITY,"
+	 		+ "STATE,"
+	 		+ "COUNTRY,"
+	 		+ "PIN,"
+	 		+ "DESCRIPTION,"
+	 		+ "COMMUNITYTYPE"
+	 		+ " FROM community "
+	 		+ "WHERE EMAILID=:EMAILID";
+	 
+	 private static final String GET_BUILDING_DETAILS_QUERY="SELECT BUILDINGID,"
+	 		+ "BUILDINGNAME,"
+	 		+ "NOOFFLOORS,"
+	 		+ "NOOFUNITS,"
+	 		+ "IMAGE_URL FROM building "
+	 		+ "WHERE COMMUNITYID=:COMMUNITYID";
 
 	@Override
-	public long saveCommunityDetails(final CommunityDTO communityDTO) {
+	public long saveCommunityDetails(final String emailId,
+			final CommunityDTO communityDTO) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		//mapSqlParameterSource.addValue("COMMUNITYID", idIncrementer.nextLongValue());
 		try{
@@ -82,6 +112,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		mapSqlParameterSource.addValue("PIN", communityDTO.getPostalCode());
 		mapSqlParameterSource.addValue("DESCRIPTION", communityDTO.getDescription());
 		mapSqlParameterSource.addValue("COMMUNITYTYPE", communityDTO.getType());
+		mapSqlParameterSource.addValue("EMAILID", emailId);
 	    getSimpleJdbcTemplate().update(INSERT_COMMUNITY_QUERY, mapSqlParameterSource);
 	    return getSimpleJdbcTemplate().queryForLong("SELECT LAST_INSERT_ID();");
 		}catch(DataAccessException e){
@@ -98,7 +129,8 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		mapSqlParameterSource.addValue("NOOFUNITS", buildingDTO.getTotalUnits());
 		mapSqlParameterSource.addValue("NOOFFLOORS", buildingDTO.getTotalFloors());
 		mapSqlParameterSource.addValue("IMAGE_URL", buildingDTO.getImageUrl());
-	    return getSimpleJdbcTemplate().update(INSERT_BUILDING_QUERY, mapSqlParameterSource);
+	    getSimpleJdbcTemplate().update(INSERT_BUILDING_QUERY, mapSqlParameterSource);
+	    return getSimpleJdbcTemplate().queryForLong("SELECT LAST_INSERT_ID();");
 	}
 
 	private long getCommunityId(final String communityName) {
@@ -139,6 +171,62 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		mapSqlParameterSource.addValue("NOOFFLOORS", buildingDTO.getTotalFloors());
 		mapSqlParameterSource.addValue("IMAGE_URL", buildingDTO.getImageUrl());
 	    return getSimpleJdbcTemplate().update(UPDATE_BUILDING_QUERY, mapSqlParameterSource);
+	}
+
+	@Override
+	public CommunityDTO findCommunityDetails(final String emailId) {
+		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		mapSqlParameterSource.addValue("EMAILID", emailId);
+		return getSimpleJdbcTemplate().queryForObject(GET_COMMUNITY_DETAILS_QUERY, new RowMapper<CommunityDTO>() {
+			@Override
+			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
+					throws SQLException {
+			CommunityDTO communityDTO = new CommunityDTO();
+			communityDTO.setId(rs.getInt("COMMUNITYID"));
+			communityDTO.setName(rs.getString("COMMUNITYNAME"));
+			communityDTO.setType(rs.getString("COMMUNITYTYPE"));
+			communityDTO.setAddress1(rs.getString("ADDRESS_LINE1"));
+			communityDTO.setAddress2(rs.getString("ADDRESS_LINE2"));
+			communityDTO.setAddress3(rs.getString("ADDRESS_LINE3"));
+			communityDTO.setCity(rs.getString("CITY"));
+			communityDTO.setState(rs.getString("STATE"));
+			communityDTO.setCountry(rs.getString("COUNTRY"));
+			communityDTO.setPostalCode(rs.getInt("PIN"));
+			communityDTO.setDescription(rs.getString("DESCRIPTION"));
+			return communityDTO;
+			}
+		}, mapSqlParameterSource);
+	}
+	@Override
+	public List<BuildingDTO> findBuildingDetails(final long communityId){
+		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		mapSqlParameterSource.addValue("COMMUNITYID", communityId);
+		return getSimpleJdbcTemplate().query(GET_BUILDING_DETAILS_QUERY, new RowMapper<BuildingDTO>() {
+			@Override
+			public BuildingDTO mapRow(final ResultSet rs, final int rowNum)
+					throws SQLException {
+				BuildingDTO buildingDto = new BuildingDTO();
+				buildingDto.setId(rs.getInt("BUILDINGID"));
+				buildingDto.setName(rs.getString("BUILDINGNAME"));
+				buildingDto.setTotalFloors(rs.getInt("NOOFFLOORS"));
+				buildingDto.setTotalUnits(rs.getInt("NOOFUNITS"));
+				buildingDto.setImageUrl(rs.getString("IMAGE_URL"));
+			return buildingDto;
+			}
+		}, mapSqlParameterSource);
+
+	}
+
+	@Override
+	public boolean isCommnityExistedForUser(String emailId) {
+		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		mapSqlParameterSource.addValue("EMAILID", emailId);
+		int count = getSimpleJdbcTemplate().queryForInt(FIND_EMAILID_QUERY,
+				mapSqlParameterSource);
+		if (0 == count) {
+			return false;
+		}
+		return true;
 	}
 
 	/*public void setIdIncrementer(final DataFieldMaxValueIncrementer idIncrementer) {

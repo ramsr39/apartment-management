@@ -1,5 +1,7 @@
 package com.apartment.management.dto;
 
+import java.util.List;
+
 public class CommunityDTO {
 
 	private long id;
@@ -13,6 +15,8 @@ public class CommunityDTO {
 	private String address3;
 	private String type;
 	private String description;
+	private List<BuildingDTO> buildingList;
+	
 
 	public long getId() {
 		return id;
@@ -100,6 +104,14 @@ public class CommunityDTO {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<BuildingDTO> getBuildingList() {
+		return buildingList;
+	}
+
+	public void setBuildingList(List<BuildingDTO> buildingList) {
+		this.buildingList = buildingList;
 	}
 
 }
