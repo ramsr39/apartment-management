@@ -80,11 +80,12 @@ public class BuildingDetailsService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findBuildingDetails(@QueryParam("buildingId") final long buildingId){
     	BuildingDTO buildingDTO = buildingDao.getBuildingDetailsByBuildingId(buildingId);
-    	String communityName = communityDetailsDao.getFindCommunityName(buildingDTO.getCommunityId());
+    	final String communityName = communityDetailsDao.getFindCommunityName(buildingDTO.getCommunityId());
     	buildingDTO.setCommunityName(communityName);
-    	List<FlatDTO> flatsList  = flatDao.findFlatDetails(buildingId);
+    	final List<FlatDTO> flatsList  = flatDao.findFlatDetails(buildingId);
     	buildingDTO.setFlatList(flatsList);
-    	return Response.ok().entity(JsonUtils.convertJavaObjectToJson(buildingDTO)).build();
+    	final String responseEntity = JsonUtils.convertJavaObjectToJson(buildingDTO);
+    	return Response.ok().entity(responseEntity).build();
     }
 
 	public void setCommunityDetailsDao(final CommunityDetailsDao communityDetailsDao) {
