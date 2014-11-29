@@ -23,7 +23,7 @@ import com.apartment.management.dto.BuildingDTO;
 import com.apartment.management.dto.FlatDTO;
 import com.apartment.management.utils.JsonUtils;
 
-@Path("/community")
+@Path("/community/{communityId}/building")
 public class BuildingDetailsService {
 
 	private BuildingDao buildingDao;
@@ -33,7 +33,6 @@ public class BuildingDetailsService {
 	private CommunityDetailsDao communityDetailsDao;
 
 	@POST
-	@Path("/{communityId}/building")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response save(@PathParam("communityId") final String communityId,
@@ -51,7 +50,7 @@ public class BuildingDetailsService {
 	}
 
 	@PUT
-	@Path("/{communityId}/building/{buildingId}")
+	@Path("/{buildingId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("buildingId") final String buildingId,final String flatDetilsPayload){
@@ -67,7 +66,7 @@ public class BuildingDetailsService {
 	}
 
 	@DELETE
-	@Path("/{communityId}/building/{buildingId}")
+	@Path("/{buildingId}")
 	public Response delete(@PathParam("buildingId") final String buildingId){
 		assertId(buildingId, "flatId should not null or empty");
 		long id=Long.parseLong(buildingId);
@@ -76,7 +75,7 @@ public class BuildingDetailsService {
 	}
 
     @GET
-    @Path("/{communityId}/building/find-building-details")
+    @Path("/find-building-details")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findBuildingDetails(@QueryParam("buildingId") final long buildingId){
     	BuildingDTO buildingDTO = buildingDao.getBuildingDetailsByBuildingId(buildingId);
