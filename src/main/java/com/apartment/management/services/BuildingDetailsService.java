@@ -23,7 +23,7 @@ import com.apartment.management.dto.BuildingDTO;
 import com.apartment.management.dto.FlatDTO;
 import com.apartment.management.utils.JsonUtils;
 
-@Path("/community/building")
+@Path("/community")
 public class BuildingDetailsService {
 
 	private BuildingDao buildingDao;
@@ -33,7 +33,7 @@ public class BuildingDetailsService {
 	private CommunityDetailsDao communityDetailsDao;
 
 	@POST
-	@Path("/communityId/{communityId}")
+	@Path("/{communityId}/building")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response save(@PathParam("communityId") final String communityId,
@@ -51,7 +51,7 @@ public class BuildingDetailsService {
 	}
 
 	@PUT
-	@Path("/{buildingId}")
+	@Path("/{communityId}/building/{buildingId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("buildingId") final String buildingId,final String flatDetilsPayload){
@@ -67,7 +67,7 @@ public class BuildingDetailsService {
 	}
 
 	@DELETE
-	@Path("/{buildingId}")
+	@Path("/{communityId}/building/{buildingId}")
 	public Response delete(@PathParam("buildingId") final String buildingId){
 		assertId(buildingId, "flatId should not null or empty");
 		long id=Long.parseLong(buildingId);
@@ -76,11 +76,11 @@ public class BuildingDetailsService {
 	}
 
     @GET
-    @Path("/find-building-details")
+    @Path("/{communityId}/building/find-building-details")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findBuildingDetails(@QueryParam("buildingId") final long buildingId){
     	BuildingDTO buildingDTO = buildingDao.getBuildingDetailsByBuildingId(buildingId);
-    	final String communityName = communityDetailsDao.getFindCommunityName(buildingDTO.getCommunityId());
+    	final String communityName = communityDetailsDao.getCommunityName(buildingDTO.getCommunityId());
     	buildingDTO.setCommunityName(communityName);
     	final List<FlatDTO> flatsList  = flatDao.findFlatDetails(buildingId);
     	buildingDTO.setFlatList(flatsList);
