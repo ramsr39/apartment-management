@@ -36,7 +36,7 @@ public Response save(@PathParam("buildingId") final String buildingId,
 	flatDTO.setBuildingId(buildId);
 	long flatId = dao.save(flatDTO);
 	flatDTO.setId(flatId);
-	return Response.ok().entity(JsonUtils.convertJavaObjectToJson(flatDTO)).build();
+	return Response.ok().entity(JsonUtils.parseObjectToJson(flatDTO)).build();
 }
 
 @PUT
@@ -53,7 +53,7 @@ public Response update(@PathParam("flatId") final String flatId,
 	}
 	flatDTO.setId(id);
 	dao.update(flatDTO);
-	return Response.ok().entity(JsonUtils.convertJavaObjectToJson(flatDTO)).build();
+	return Response.ok().entity(JsonUtils.parseObjectToJson(flatDTO)).build();
 }
 
 @DELETE

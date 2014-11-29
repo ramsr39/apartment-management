@@ -47,7 +47,7 @@ public class BuildingDetailsService {
 		buildingDTO.setCommunityId(commId);
 		long buildingId = buildingDao.save(buildingDTO);
 		buildingDTO.setId(buildingId);
-		return Response.ok().entity(JsonUtils.convertJavaObjectToJson(buildingId)).build();
+		return Response.ok().entity(JsonUtils.parseObjectToJson(buildingId)).build();
 	}
 
 	@PUT
@@ -63,7 +63,7 @@ public class BuildingDetailsService {
 		}
 		buildingDTO.setId(id);
 		buildingDao.update(buildingDTO);
-		return Response.ok().entity(JsonUtils.convertJavaObjectToJson(buildingDTO)).build();
+		return Response.ok().entity(JsonUtils.parseObjectToJson(buildingDTO)).build();
 	}
 
 	@DELETE
@@ -84,7 +84,7 @@ public class BuildingDetailsService {
     	buildingDTO.setCommunityName(communityName);
     	final List<FlatDTO> flatsList  = flatDao.findFlatDetails(buildingId);
     	buildingDTO.setFlatList(flatsList);
-    	final String responseEntity = JsonUtils.convertJavaObjectToJson(buildingDTO);
+    	final String responseEntity = JsonUtils.parseObjectToJson(buildingDTO);
     	return Response.ok().entity(responseEntity).build();
     }
 

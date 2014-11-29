@@ -37,7 +37,7 @@ public class CommunityDetailsService {
 		final CommunityDTO communityDTO =JsonUtils.parseJsonToObject(payload,CommunityDTO.class);
 		final long communityId = communityDetailsDao.save(emailId,communityDTO);
 		communityDTO.setId(communityId);
-		return Response.ok().entity(JsonUtils.convertJavaObjectToJson(communityDTO))
+		return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO))
 				.build();
 	}
 
@@ -49,7 +49,7 @@ public class CommunityDetailsService {
 		final CommunityDTO communityDTO =JsonUtils.parseJsonToObject(payload,CommunityDTO.class);
 		long communityId = communityDetailsDao.update(communityDTO);
 		communityDTO.setId(communityId);
-		return Response.ok().entity(JsonUtils.convertJavaObjectToJson(communityDTO))
+		return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO))
 				.build();
 	}
 	
@@ -60,12 +60,12 @@ public class CommunityDetailsService {
 	public String findCommunityDetailsByUserId(@HeaderParam("user_id") final String emailId){
 		CommunityDTO communityDTO = new CommunityDTO();
 		if(!communityDetailsDao.isCommnityExistedForUser(emailId)){
-		 return JsonUtils.convertJavaObjectToJson(communityDTO);
+		 return JsonUtils.parseObjectToJson(communityDTO);
 		}
 	    communityDTO = communityDetailsDao.findCommunityDetailsByUserId(emailId);
 		List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityDTO.getId());
 		communityDTO.setBuildingList(buildingList);
-		return JsonUtils.convertJavaObjectToJson(communityDTO);
+		return JsonUtils.parseObjectToJson(communityDTO);
 	}
 
 	@GET
@@ -76,7 +76,7 @@ public class CommunityDetailsService {
 	    communityDTO = communityDetailsDao.getCommunityDetailsByCommunityId(communityId);
 		List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityId);
 		communityDTO.setBuildingList(buildingList);
-		return JsonUtils.convertJavaObjectToJson(communityDTO);
+		return JsonUtils.parseObjectToJson(communityDTO);
 	}
 
 	@GET
@@ -91,10 +91,10 @@ public class CommunityDetailsService {
 		 List<CommunityDTO> communitiesList = new ArrayList<CommunityDTO>();
 		if (StringUtils.isNotBlank(city)) {
 			communitiesList = communityDetailsDao.findCommunitiesByCity(emailId,communityName,city);
-			return JsonUtils.convertJavaObjectToJson(communitiesList);
+			return JsonUtils.parseObjectToJson(communitiesList);
 		}
 		communitiesList = communityDetailsDao.findCommunitiesByName(emailId,communityName);
-		return JsonUtils.convertJavaObjectToJson(communitiesList);
+		return JsonUtils.parseObjectToJson(communitiesList);
 	}
 
 	public void setCommunityDetailsDao(final CommunityDetailsDao communityDetailsDao) {
