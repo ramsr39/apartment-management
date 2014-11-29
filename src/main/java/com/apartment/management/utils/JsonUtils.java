@@ -6,13 +6,14 @@ import com.google.gson.GsonBuilder;
 
 public class JsonUtils {
 
-	public static String convertJavaObjectToJson(final Object obj) {
+	public static String parseObjectToJson(final Object obj) {
 		Gson gson = new GsonBuilder().create();
 		return gson.toJson(obj);
 
 	}
 
 	public static <T> T parseJsonToObject(final String json, Class<T> clazz) {
+		System.out.println(json);
 		Gson gson = new GsonBuilder().create();
 		return gson.fromJson(json, clazz);
 	}
