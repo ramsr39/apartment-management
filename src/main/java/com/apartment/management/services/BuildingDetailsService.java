@@ -46,7 +46,7 @@ public class BuildingDetailsService {
 		buildingDTO.setCommunityId(commId);
 		long buildingId = buildingDao.save(buildingDTO);
 		buildingDTO.setId(buildingId);
-		return Response.ok().entity(JsonUtils.parseObjectToJson(buildingId)).build();
+		return Response.ok().entity(JsonUtils.parseObjectToJson(buildingDTO)).build();
 	}
 
 	@PUT

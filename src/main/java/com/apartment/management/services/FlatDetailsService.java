@@ -40,7 +40,7 @@ public Response save(@PathParam("buildingId") final String buildingId,
 }
 
 @PUT
-@Path("/building/flat/{flatId}")
+@Path("/building/{buildingId}/flat/{flatId}")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public Response update(@PathParam("flatId") final String flatId,
@@ -57,7 +57,7 @@ public Response update(@PathParam("flatId") final String flatId,
 }
 
 @DELETE
-@Path("/building/flat/{flatId}")
+@Path("/building/{buildingId}/flat/{flatId}")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public Response delete(@PathParam("flatId") final String flatId){

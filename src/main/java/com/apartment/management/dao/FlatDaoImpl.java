@@ -14,21 +14,20 @@ import com.apartment.management.dto.FlatDTO;
 
 public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao {
 	
-	private static final String INSERT_FLAT_DETAILS_QUERY="INSERT INTO flatunit(FLATID,"
+	private static final String INSERT_FLAT_DETAILS_QUERY="INSERT INTO flatunit("
 			+ "UNITNO,"
 			+ "UNITSIZE,"
 			+ "FLOORNO,"
 			+ "TOTAL_BED_ROOMS,"
 			+ "TOTAL_BATH_ROOMS,"
 			+ "TOTAL_ROOMS,"
-			+ "PARKING_TYPE,"
 			+ "RESIDENTTYPE,"
 			+ "BUILDINGID,"
 			+ "TOTAL_FOUR_WHEELER_PARKINGS,"
-			+ "TOTAL_TWO_WHEELER_PARKING,"
+			+ "TOTAL_TWO_WHEELER_PARKINGS,"
 			+ "TWO_WHEELER_PARKING,"
 			+ "FOUR_WHEELER_PARKING)"
-			   + "VALUES(:FLATID,"
+			   + "VALUES("
 			   + ":UNITNO,"
 			   + ":UNITSIZE,"
 			   + ":FLOORNO,"
@@ -38,23 +37,23 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			   + ":RESIDENTTYPE,"
 			   + ":BUILDINGID,"
 			   + ":TOTAL_FOUR_WHEELER_PARKINGS,"
-			   + ":TOTAL_TWO_WHEELER_PARKING,"
+			   + ":TOTAL_TWO_WHEELER_PARKINGS,"
 			   + ":TWO_WHEELER_PARKING,"
 			   + ":FOUR_WHEELER_PARKING)";
 	
-	private static final String UPDATE_FLAT_DETAILS_QUERY="UPDATE flatunit SET(FLATID:FLATID,"
-			+ "UNITNO:UNITNO,"
-			+ "UNITSIZE:UNITSIZE,"
-			+ "FLOORNO:FLOORNO,"
-			+ "TOTAL_BED_ROOMS:TOTAL_BED_ROOMS,"
-			+ "TOTAL_BATH_ROOMS:TOTAL_BATH_ROOMS,"
-			+ "TOTAL_ROOMS:TOTAL_ROOMS,"
-			+ "RESIDENTTYPE:RESIDENTTYPE,"
-			+ "BUILDINGID:BUILDINGID,"
-			+ "TOTAL_FOUR_WHEELER_PARKINGS:TOTAL_FOUR_WHEELER_PARKINGS,"
-			+ "TOTAL_TWO_WHEELER_PARKING:TOTAL_TWO_WHEELER_PARKING,"
-			+ "TWO_WHEELER_PARKING:TWO_WHEELER_PARKING,"
-			+ "FOUR_WHEELER_PARKING:FOUR_WHEELER_PARKING) "
+	private static final String UPDATE_FLAT_DETAILS_QUERY="UPDATE flatunit SET "
+			+ "UNITNO=:UNITNO,"
+			+ "UNITSIZE=:UNITSIZE,"
+			+ "FLOORNO=:FLOORNO,"
+			+ "TOTAL_BED_ROOMS=:TOTAL_BED_ROOMS,"
+			+ "TOTAL_BATH_ROOMS=:TOTAL_BATH_ROOMS,"
+			+ "TOTAL_ROOMS=:TOTAL_ROOMS,"
+			+ "RESIDENTTYPE=:RESIDENTTYPE,"
+			+ "BUILDINGID=:BUILDINGID,"
+			+ "TOTAL_FOUR_WHEELER_PARKINGS=:TOTAL_FOUR_WHEELER_PARKINGS,"
+			+ "TOTAL_TWO_WHEELER_PARKINGS=:TOTAL_TWO_WHEELER_PARKINGS,"
+			+ "TWO_WHEELER_PARKING=:TWO_WHEELER_PARKING,"
+			+ "FOUR_WHEELER_PARKING=:FOUR_WHEELER_PARKING "
 			+"WHERE FLATID=:FLATID";
 
 	private static final String DELETE_FLAT_QUERY = "DELETE FROM flatunit WHERE FLATID=:FLATID";
@@ -72,9 +71,9 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 		namedParameterSource.addValue("TOTAL_BATH_ROOMS", flatDTO.getTotalBathRooms());
 		namedParameterSource.addValue("TOTAL_ROOMS", flatDTO.getTotalRooms());
 		namedParameterSource.addValue("TWO_WHEELER_PARKING", flatDTO.getTwoWheelerParking());
-		namedParameterSource.addValue("TOTAL_TWO_WHEELER_PARKING", flatDTO.getTotalTwoWheelerParkings());
+		namedParameterSource.addValue("TOTAL_TWO_WHEELER_PARKINGS", flatDTO.getTotalTwoWheelerParkings());
 		namedParameterSource.addValue("FOUR_WHEELER_PARKING", flatDTO.getFourWheelerParking());
-		namedParameterSource.addValue("TOTAL_FOUR_WHEELER_PARKING", flatDTO.getFourWheelerParking());
+		namedParameterSource.addValue("TOTAL_FOUR_WHEELER_PARKINGS", flatDTO.getTotalFourWheelerParkings());
 		namedParameterSource.addValue("RESIDENTTYPE", flatDTO.getResidentType());
 		namedParameterSource.addValue("BUILDINGID", flatDTO.getBuildingId());
 		getNamedParameterJdbcTemplate().update(INSERT_FLAT_DETAILS_QUERY, namedParameterSource, keyHolder);
@@ -91,6 +90,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 	@Override
 	public void update(final FlatDTO flatDTO) {
 		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+		namedParameterSource.addValue("FLATID", flatDTO.getId());
 		namedParameterSource.addValue("UNITNO", flatDTO.getUnitNumber());
 		namedParameterSource.addValue("UNITSIZE", flatDTO.getUnitSize());
 		namedParameterSource.addValue("FLOORNO", flatDTO.getFloorNumber());
@@ -98,10 +98,11 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 		namedParameterSource.addValue("TOTAL_BATH_ROOMS", flatDTO.getTotalBathRooms());
 		namedParameterSource.addValue("TOTAL_ROOMS", flatDTO.getTotalRooms());
 		namedParameterSource.addValue("TWO_WHEELER_PARKING", flatDTO.getTwoWheelerParking());
-		namedParameterSource.addValue("TOTAL_TWO_WHEELER_PARKING", flatDTO.getTotalTwoWheelerParkings());
+		namedParameterSource.addValue("TOTAL_TWO_WHEELER_PARKINGS", flatDTO.getTotalTwoWheelerParkings());
 		namedParameterSource.addValue("FOUR_WHEELER_PARKING", flatDTO.getFourWheelerParking());
-		namedParameterSource.addValue("TOTAL_FOUR_WHEELER_PARKING", flatDTO.getFourWheelerParking());
+		namedParameterSource.addValue("TOTAL_FOUR_WHEELER_PARKINGS", flatDTO.getTotalFourWheelerParkings());
 		namedParameterSource.addValue("RESIDENTTYPE", flatDTO.getResidentType());
+		namedParameterSource.addValue("BUILDINGID", flatDTO.getBuildingId());
 		getNamedParameterJdbcTemplate().update(UPDATE_FLAT_DETAILS_QUERY, namedParameterSource);
 	}
 
