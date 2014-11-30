@@ -101,7 +101,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		mapSqlParameterSource.addValue("COMMUNITYNAME", communityDTO.getName());
 		mapSqlParameterSource.addValue("ADDRESS_LINE1", communityDTO.getAddress1());
 		mapSqlParameterSource.addValue("ADDRESS_LINE2", communityDTO.getAddress2());
-		mapSqlParameterSource.addValue("ADDRESS_LINE3", communityDTO.getAddress2());
+		mapSqlParameterSource.addValue("ADDRESS_LINE3", communityDTO.getAddress3());
 		mapSqlParameterSource.addValue("COUNTRY", communityDTO.getCountry());
 		mapSqlParameterSource.addValue("STATE", communityDTO.getState());
 		mapSqlParameterSource.addValue("CITY", communityDTO.getCity());
@@ -125,7 +125,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		mapSqlParameterSource.addValue("COMMUNITYNAME", communityDTO.getName());
 		mapSqlParameterSource.addValue("ADDRESS_LINE1", communityDTO.getAddress1());
 		mapSqlParameterSource.addValue("ADDRESS_LINE2", communityDTO.getAddress2());
-		mapSqlParameterSource.addValue("ADDRESS_LINE3", communityDTO.getAddress2());
+		mapSqlParameterSource.addValue("ADDRESS_LINE3", communityDTO.getAddress3());
 		mapSqlParameterSource.addValue("COUNTRY", communityDTO.getCountry());
 		mapSqlParameterSource.addValue("STATE", communityDTO.getState());
 		mapSqlParameterSource.addValue("CITY", communityDTO.getCity());
@@ -177,13 +177,14 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 
 	@Override
 	public List<CommunityDTO> findCommunitiesByCity(final String emailId,final String communityName,final String city) {
+		String finalquery = FIND_COMMUNITIES_BY_CITY_QUERY;
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("EMAILID", emailId);
 		if(StringUtils.isNotBlank(communityName)){
-			FIND_COMMUNITIES_BY_CITY_QUERY = FIND_COMMUNITIES_BY_CITY_QUERY + " AND COMMUNITYNAME LIKE" + "%"+communityName+"%";
+			finalquery = FIND_COMMUNITIES_BY_CITY_QUERY + " AND COMMUNITYNAME LIKE " + "'%"+communityName+"%'";
 		}
 		mapSqlParameterSource.addValue("CITY", city);
-		return getSimpleJdbcTemplate().query(FIND_COMMUNITIES_BY_CITY_QUERY, new RowMapper<CommunityDTO>() {
+		return getSimpleJdbcTemplate().query(finalquery, new RowMapper<CommunityDTO>() {
 			@Override
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
 					throws SQLException {

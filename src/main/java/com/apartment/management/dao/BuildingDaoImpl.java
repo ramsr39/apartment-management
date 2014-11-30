@@ -91,7 +91,7 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 		mapSqlParameterSource.addValue("NOOFFLOORS", buildingDTO.getTotalFloors());
 		mapSqlParameterSource.addValue("ADDRESS_LINE1", buildingDTO.getAddress1());
 		mapSqlParameterSource.addValue("ADDRESS_LINE2", buildingDTO.getAddress2());
-		mapSqlParameterSource.addValue("ADDRESS_LINE3", buildingDTO.getAddress2());
+		mapSqlParameterSource.addValue("ADDRESS_LINE3", buildingDTO.getAddress3());
 		mapSqlParameterSource.addValue("COUNTRY", buildingDTO.getCountry());
 		mapSqlParameterSource.addValue("STATE", buildingDTO.getState());
 		mapSqlParameterSource.addValue("CITY", buildingDTO.getCity());
