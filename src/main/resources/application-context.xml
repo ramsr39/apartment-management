@@ -24,9 +24,10 @@
 	  <property name="buildingDao" ref="buildingDao"/>
 	</bean>
 
-	<bean id="buildingService" class="com.apartment.management.services.BuildingDetailsService">
+	<bean id="buildingDetailsService" class="com.apartment.management.services.BuildingDetailsService">
 	  <property name="communityDetailsDao" ref="communityDetailsDao"/>
 	  <property name="flatDao" ref="flatDao"/>
+	  <property name="buildingDao" ref="buildingDao"/>
 	</bean>
 
 	<bean id="flatDetailsService" class="com.apartment.management.services.FlatDetailsService">
