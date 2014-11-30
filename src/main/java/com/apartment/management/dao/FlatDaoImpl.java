@@ -122,8 +122,8 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 						flatDTO.setTotalRooms(rs.getInt("TOTAL_ROOMS"));
 						flatDTO.setUnitNumber(rs.getString("UNITNO"));
 						flatDTO.setUnitSize(rs.getInt("UNITSIZE"));
-						flatDTO.setTotalTwoWheelerParkings(rs.getInt("TOTAL_TWO_WHEELER_PARKING"));
-						flatDTO.setTotalFourWheelerParkings(rs.getInt("TOTAL_FOUR_WHEELER_PARKING"));
+						flatDTO.setTotalTwoWheelerParkings(rs.getInt("TOTAL_TWO_WHEELER_PARKINGS"));
+						flatDTO.setTotalFourWheelerParkings(rs.getInt("TOTAL_FOUR_WHEELER_PARKINGS"));
 						flatDTO.setFourWheelerParking(rs.getString("FOUR_WHEELER_PARKING"));
 						flatDTO.setTwoWheelerParking(rs.getString("TWO_WHEELER_PARKING"));
 						flatDTO.setResidentType(rs.getString("RESIDENTTYPE"));
