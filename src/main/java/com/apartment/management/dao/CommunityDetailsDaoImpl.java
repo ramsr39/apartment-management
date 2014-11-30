@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -85,10 +86,8 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		 		+ " FROM community "
 		 		+ "WHERE COMMUNITYID=:COMMUNITYID";
 
-	 private static final String FIND_COMMUNITIES_BY_CITY_QUERY="SELECT * FROM community "
-	 		+ "WHERE COMMUNITYNAME LIKE :COMMUNITYNAME "
-	 		+ "AND (CITY=:CITY "
-	 		+ "AND EMAILID=:EMAILID)";
+	 private static String FIND_COMMUNITIES_BY_CITY_QUERY="SELECT * FROM community "
+	 		+ "WHERE CITY=:CITY AND EMAILID=:EMAILID";
 
 	 private static final String FIND_COMMUNITIES_BY_NAME_QUERY="SELECT * FROM community "
 		 		+ "WHERE COMMUNITYNAME LIKE :COMMUNITYNAME "
@@ -180,9 +179,10 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 	public List<CommunityDTO> findCommunitiesByCity(final String emailId,final String communityName,final String city) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("EMAILID", emailId);
-		mapSqlParameterSource.addValue("COMMUNITYNAME", "%"+communityName+"%");
+		if(StringUtils.isNotBlank(communityName)){
+			FIND_COMMUNITIES_BY_CITY_QUERY = FIND_COMMUNITIES_BY_CITY_QUERY + " AND COMMUNITYNAME LIKE" + "%"+communityName+"%";
+		}
 		mapSqlParameterSource.addValue("CITY", city);
-		
 		return getSimpleJdbcTemplate().query(FIND_COMMUNITIES_BY_CITY_QUERY, new RowMapper<CommunityDTO>() {
 			@Override
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)

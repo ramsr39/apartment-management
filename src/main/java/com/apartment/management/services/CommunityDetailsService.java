@@ -85,9 +85,7 @@ public class CommunityDetailsService {
 	public String findCommunitiesByNameAndCity(@QueryParam("communityName") final String communityName,
 			@QueryParam("city") final String city,
 			@HeaderParam("user_id") final String emailId) {
-		if(StringUtils.isEmpty(communityName)){
-			return "community name should not be null";
-		}
+
 		 List<CommunityDTO> communitiesList = new ArrayList<CommunityDTO>();
 		if (StringUtils.isNotBlank(city)) {
 			communitiesList = communityDetailsDao.findCommunitiesByCity(emailId,communityName,city);
