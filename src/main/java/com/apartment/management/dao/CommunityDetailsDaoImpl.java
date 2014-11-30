@@ -83,7 +83,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		 		+ "DESCRIPTION,"
 		 		+ "COMMUNITYTYPE"
 		 		+ " FROM community "
-		 		+ "WHERE EMAILID=:EMAILID";
+		 		+ "WHERE COMMUNITYID=:COMMUNITYID";
 
 	 private static final String FIND_COMMUNITIES_BY_CITY_QUERY="SELECT * FROM community "
 	 		+ "WHERE COMMUNITYNAME LIKE :COMMUNITYNAME "

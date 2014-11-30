@@ -1,5 +1,6 @@
 package com.apartment.management.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommunityDTO {
@@ -15,7 +16,7 @@ public class CommunityDTO {
 	private String address3;
 	private String type;
 	private String description;
-	private List<BuildingDTO> buildingList;
+	private List<BuildingDTO> buildingList=new ArrayList<BuildingDTO>();
 	
 
 	public long getId() {

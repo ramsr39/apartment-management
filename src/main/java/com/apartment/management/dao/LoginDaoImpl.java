@@ -16,11 +16,11 @@ public class LoginDaoImpl extends SimpleJdbcDaoSupport implements LoginDao {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(LoginDaoImpl.class);
 
-	private static String USER_QUERY = "SELECT count(EMAIL) FROM USERINFO WHERE EMAIL=:EMAILID";
+	private static String USER_QUERY = "SELECT count(EMAILID) FROM USERINFO WHERE EMAILID=:EMAILID";
 
-	private static String GET_USER_PWD_QUERY = "SELECT PASSWORD FROM USERINFO WHERE EMAIL=:EMAILID";
+	private static String GET_USER_PWD_QUERY = "SELECT PASSWORD FROM USERINFO WHERE EMAILID=:EMAILID";
 
-	private static String GET_USER_INFO_QUERY = "SELECT USERID,USERNAME,FIRSTNAME,LASTNAME,PHONE,EMAIL,USERROLE FROM USERINFO WHERE EMAIL=:EMAILID";
+	private static String GET_USER_INFO_QUERY = "SELECT USERID,USERNAME,FIRSTNAME,LASTNAME,PHONE,EMAILID,USERROLE FROM USERINFO WHERE EMAILID=:EMAILID";
 
 	@Override
 	public boolean isUserExist(final String emailId) {
@@ -57,7 +57,7 @@ public class LoginDaoImpl extends SimpleJdbcDaoSupport implements LoginDao {
 							throws SQLException {
 						UserDTO dto = new UserDTO();
 						dto.setUserId(rs.getString("USERID"));
-						dto.setEmailId(rs.getString("EMAIL"));
+						dto.setEmailId(rs.getString("EMAILID"));
 						dto.setRole(rs.getString("USERROLE"));
 						dto.setUserName(rs.getString("USERNAME"));
 						dto.setPhoneNumber(rs.getInt("PHONE"));

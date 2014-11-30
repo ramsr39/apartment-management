@@ -20,31 +20,46 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 			+ "BUILDINGNAME,"
 			+ "NOOFUNITS,"
 			+ "NOOFFLOORS,"
+			+ "COUNTRY,"
+			+ "STATE,"
+			+ "CITY,"
+		    + "PIN,"
+			+ "ADDRESS_LINE1,"
+			+ "ADDRESS_LINE2,"
+			+ "ADDRESS_LINE3,"
 			+ "IMAGE_URL) "
 			+ "VALUES("
 			+ ":COMMUNITYID,"
 			+ ":BUILDINGNAME,"
 			+ ":NOOFUNITS,"
 			+ ":NOOFFLOORS,"
+			+ ":COUNTRY,"
+			+ ":STATE,"
+			+ ":CITY,"
+			+ ":PIN,"
+			+ ":ADDRESS_LINE1,"
+			+ ":ADDRESS_LINE2,"
+			+ ":ADDRESS_LINE3,"
 			+ ":IMAGE_URL)";
 	
 	private static final String UPDATE_BUILDING_QUERY = "UPDATE building SET "
 			+ "BUILDINGNAME=:BUILDINGNAME,"
 			+ "NOOFUNITS=:NOOFUNITS,"
 			+ "NOOFFLOORS=:NOOFFLOORS,"
-			+ "IMAGE_URL=:IMAGE_URL "
+			+ "IMAGE_URL=:IMAGE_URL,"
+			+ "ADDRESS_LINE1=:ADDRESS_LINE1,"
+			+ "ADDRESS_LINE2=:ADDRESS_LINE2,"
+			+ "ADDRESS_LINE3=:ADDRESS_LINE3,"
+			+ "CITY=:CITY,"
+			+ "STATE=:STATE,"
+			+ "COUNTRY=:COUNTRY,"
+			+ "PIN=:PIN "
 			+ "WHERE BUILDINGID=:BUILDINGID"; 
 	
-	 private static final String GET_BUILDING_DETAILS_QUERY="SELECT BUILDINGID,"
-		 		+ "BUILDINGNAME,"
-		 		+ "NOOFFLOORS,"
-		 		+ "NOOFUNITS,"
-		 		+ "IMAGE_URL FROM building "
-		 		+ "WHERE COMMUNITYID=:COMMUNITYID";
-	 
+	 private static final String GET_BUILDING_DETAILS_QUERY="SELECT * FROM building WHERE COMMUNITYID=:COMMUNITYID";
+
 	 private static final String FIND_BUILDING_DETAILS_BY_BUILDINGID_QUERY="SELECT * FROM building WHERE BUILDINGID=:BUILDINGID";
-	 
-	
+
 	private static final String DELETE_BUILDING_QUERY = "DELETE FROM building WHERE BUILDINGID=:BUILDINGID"; 
 
 	@Override
@@ -55,6 +70,13 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 		mapSqlParameterSource.addValue("BUILDINGNAME", buildingDTO.getName());
 		mapSqlParameterSource.addValue("NOOFUNITS", buildingDTO.getTotalUnits());
 		mapSqlParameterSource.addValue("NOOFFLOORS", buildingDTO.getTotalFloors());
+		mapSqlParameterSource.addValue("ADDRESS_LINE1", buildingDTO.getAddress1());
+		mapSqlParameterSource.addValue("ADDRESS_LINE2", buildingDTO.getAddress2());
+		mapSqlParameterSource.addValue("ADDRESS_LINE3", buildingDTO.getAddress2());
+		mapSqlParameterSource.addValue("COUNTRY", buildingDTO.getCountry());
+		mapSqlParameterSource.addValue("STATE", buildingDTO.getState());
+		mapSqlParameterSource.addValue("CITY", buildingDTO.getCity());
+		mapSqlParameterSource.addValue("PIN", buildingDTO.getPostalCode());
 		mapSqlParameterSource.addValue("IMAGE_URL", buildingDTO.getImageUrl());
 	    getNamedParameterJdbcTemplate().update(INSERT_BUILDING_QUERY, mapSqlParameterSource,keyHolder);
 	    return keyHolder.getKey().longValue();
@@ -67,6 +89,13 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 		mapSqlParameterSource.addValue("BUILDINGNAME", buildingDTO.getName());
 		mapSqlParameterSource.addValue("NOOFUNITS", buildingDTO.getTotalUnits());
 		mapSqlParameterSource.addValue("NOOFFLOORS", buildingDTO.getTotalFloors());
+		mapSqlParameterSource.addValue("ADDRESS_LINE1", buildingDTO.getAddress1());
+		mapSqlParameterSource.addValue("ADDRESS_LINE2", buildingDTO.getAddress2());
+		mapSqlParameterSource.addValue("ADDRESS_LINE3", buildingDTO.getAddress2());
+		mapSqlParameterSource.addValue("COUNTRY", buildingDTO.getCountry());
+		mapSqlParameterSource.addValue("STATE", buildingDTO.getState());
+		mapSqlParameterSource.addValue("CITY", buildingDTO.getCity());
+		mapSqlParameterSource.addValue("PIN", buildingDTO.getPostalCode());
 		mapSqlParameterSource.addValue("IMAGE_URL", buildingDTO.getImageUrl());
 		mapSqlParameterSource.addValue("BUILDINGID", buildingDTO.getId());
 	    getNamedParameterJdbcTemplate().update(UPDATE_BUILDING_QUERY, mapSqlParameterSource);
@@ -92,6 +121,13 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 						buildingDto.setName(rs.getString("BUILDINGNAME"));
 						buildingDto.setTotalFloors(rs.getInt("NOOFFLOORS"));
 						buildingDto.setTotalUnits(rs.getInt("NOOFUNITS"));
+						buildingDto.setAddress1(rs.getString("ADDRESS_LINE1"));
+						buildingDto.setAddress2(rs.getString("ADDRESS_LINE2"));
+						buildingDto.setAddress3(rs.getString("ADDRESS_LINE3"));
+						buildingDto.setCity(rs.getString("CITY"));
+						buildingDto.setState(rs.getString("STATE"));
+						buildingDto.setCountry(rs.getString("COUNTRY"));
+						buildingDto.setPostalCode(rs.getInt("PIN"));
 						buildingDto.setImageUrl(rs.getString("IMAGE_URL"));
 						return buildingDto;
 					}
@@ -112,6 +148,13 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 						buildingDto.setName(rs.getString("BUILDINGNAME"));
 						buildingDto.setTotalFloors(rs.getInt("NOOFFLOORS"));
 						buildingDto.setTotalUnits(rs.getInt("NOOFUNITS"));
+						buildingDto.setAddress1(rs.getString("ADDRESS_LINE1"));
+						buildingDto.setAddress2(rs.getString("ADDRESS_LINE2"));
+						buildingDto.setAddress3(rs.getString("ADDRESS_LINE3"));
+						buildingDto.setCity(rs.getString("CITY"));
+						buildingDto.setState(rs.getString("STATE"));
+						buildingDto.setCountry(rs.getString("COUNTRY"));
+						buildingDto.setPostalCode(rs.getInt("PIN"));
 						buildingDto.setImageUrl(rs.getString("IMAGE_URL"));
 						return buildingDto;
 					}
