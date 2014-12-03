@@ -14,6 +14,7 @@ public class FlatDTO {
 	private String fourWheelerParking;
 	private int totalTwoWheelerParkings;
 	private int totalFourWheelerParkings;
+	private String description;
 	
 	public long getId() {
 		return id;
@@ -117,6 +118,14 @@ public class FlatDTO {
 
 	public void setTotalFourWheelerParkings(int totalFourWheelerParkings) {
 		this.totalFourWheelerParkings = totalFourWheelerParkings;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(final String description) {
+		this.description = description;
 	}
 
 }
