@@ -33,5 +33,10 @@
 	<bean id="flatDetailsService" class="com.apartment.management.services.FlatDetailsService">
 		  <property name="dao" ref="flatDao"/>
 	</bean>
+	
+	<bean id="managerUserService" class="com.apartment.management.services.ManageUserService">
+		  <property name="manageUserDao" ref="manageUserDao"/>
+	</bean>
+	
 
 </beans>
