@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -12,8 +13,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import com.apartment.management.dao.ManageUserDao;
+import com.apartment.management.dto.Address;
 import com.apartment.management.dto.EmergencyContactInfo;
 import com.apartment.management.dto.UserDTO;
+import com.sun.istack.internal.FinalArrayList;
 
 public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements ManageUserDao{
 	
@@ -56,6 +59,12 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 	
 	private static final String INSERT_EMERGENCY_CANT_INF_QUERY="INSERT INTO emrg_contact_info(NAME,REL,PHONE_NUM,EMAILID)"
 			+ " values(:NAME,:REL,:PHONE_NUM,:EMAILID)";
+	
+	private static final String UPDATE_EMERGENCY_CANT_INF_QUERY="UPDATE emrg_contact_info SET "
+			+ "NAME=:NAME,"
+			+ "REL=:REL,"
+			+ "PHONE_NUM=:PHONE_NUM "
+			+ "WHERE EMAILID=:EMAILID";
 
 	private static final String UPDATE_USER_QUERY = "UPDATE userinfo SET "
 			+ "FIRSTNAME=:FIRSTNAME,"
@@ -79,6 +88,7 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
   
   private String FIND_USERS_FOR_SEARH_QUERY="SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo";
   
+  private static final String GET_USER_DETAILS_BY_USERID_QUERY="SELECT * FROM userinfo WHERE USERID=:USERID" ;
 	@Override
 	public long save(final UserDTO user) {
 		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
@@ -137,7 +147,17 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 		namedParameterSource.addValue("STATE", user.getAddress().getState());
 		namedParameterSource.addValue("COUNTRY", user.getAddress().getCountry());
 		namedParameterSource.addValue("PIN", user.getAddress().getPostalCode());
-		getNamedParameterJdbcTemplate().update(UPDATE_USER_QUERY, namedParameterSource,keyHolder);		
+		getNamedParameterJdbcTemplate().update(UPDATE_USER_QUERY, namedParameterSource,keyHolder);
+		updateEmergencyContactInfo(user.getEmergencyContactInfo(),user.getEmailId());
+	}
+
+	private void updateEmergencyContactInfo(final EmergencyContactInfo enrgContactInfo,final String emailId) {
+		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+		namedParameterSource.addValue("NAME",enrgContactInfo.getName());
+		namedParameterSource.addValue("REL", enrgContactInfo.getRelation());
+		namedParameterSource.addValue("PHONE_NO", enrgContactInfo.getPhoneNumber());
+		namedParameterSource.addValue("EMAILID", emailId);
+		getNamedParameterJdbcTemplate().update(UPDATE_EMERGENCY_CANT_INF_QUERY, namedParameterSource);
 	}
 
 	@Override
@@ -152,22 +172,8 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 			final String phoneNumber, final String uidNumber) {
 		StringBuilder queryBuilder = new StringBuilder(FIND_USERS_FOR_SEARH_QUERY);
 		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-		if(null!=firstName){
-			queryBuilder.append(" WHERE FIRSTNAME=:FIRSTNAME");
-		}
-	
-		if(null!=emailId){
-			queryBuilder.append(" AND EMAILID=:EMAILID");
-		}
-			if(null!=lastName){
-			queryBuilder.append(" AND LASTNAME=:LASTNAME");
-		}
-		if(null!=phoneNumber){
-			queryBuilder.append(" AND PRIMARY_PH_NO=:PRIMARY_PH_NO");
-		}
-		if(null!=uidNumber){
-			queryBuilder.append(" AND UID_NUMBER=:UID_NUMBER");
-		}
+		queryBuilder = buildQuery(firstName, lastName, emailId, phoneNumber, uidNumber,
+				queryBuilder);
 		namedParameterSource.addValue("FIRSTNAME", firstName);
 		namedParameterSource.addValue("LASTNAME", lastName);
 		namedParameterSource.addValue("EMAILID", emailId);
@@ -187,4 +193,100 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 		});
 	}
 
+
+	@Override
+	public UserDTO getUserDetailsById(final long userId) {
+		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+		namedParameterSource.addValue("USERID", userId);
+		return getNamedParameterJdbcTemplate().queryForObject(GET_USER_DETAILS_BY_USERID_QUERY, namedParameterSource, new RowMapper<UserDTO>() {
+			@Override
+			public UserDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
+				UserDTO userDTO = new UserDTO();
+				userDTO.setUserId(rs.getInt("USERID"));
+				userDTO.setFirstName(rs.getString("FIRSTNAME"));
+				userDTO.setLastName(rs.getString("LASTNAME"));
+				userDTO.setEmailId(rs.getString("EMAILID"));
+				userDTO.setUid(rs.getString("UID_NUMBER"));
+				userDTO.setUidType(rs.getString("UID_TYPE"));
+				userDTO.setBloodGroup(rs.getString("BLOOD_GROUP"));
+				userDTO.setDateOfBirth(rs.getString("DOB"));
+				userDTO.setSecondaryEmail(rs.getString("SECOUNDERY_EMAIL"));
+				userDTO.setSecondaryPhoneNumber(rs.getString("SECONDERY_PH_NO"));
+				userDTO.setPrimaryPhoneNumber(rs.getString("PRIMARY_PH_NO"));
+				Address address = new Address();
+				address.setAddress1(rs.getString("ADDRESS_LINE1"));
+				address.setAddress2(rs.getString("ADDRESS_LINE2"));
+				address.setAddress3(rs.getString("ADDRESS_LINE3"));
+				address.setCity(rs.getString("CITY"));
+				address.setState(rs.getString("STATE"));
+				address.setCountry(rs.getString("COUNTRY"));
+				address.setPostalCode(rs.getInt("PIN"));
+				userDTO.setAddress(address);
+				userDTO.setEmergencyContactInfo(getEmeregencyContactInfo(userDTO.getEmailId()));
+				return userDTO;
+			}
+		});
+	}
+
+	private EmergencyContactInfo getEmeregencyContactInfo(final String emailId) {
+		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+		namedParameterSource.addValue("EMAILID", emailId);
+		return getNamedParameterJdbcTemplate().queryForObject("SELECT * FROM emrg_contact_info WHERE EMAILID=:EMAILID", namedParameterSource, new RowMapper<EmergencyContactInfo>() {
+			@Override
+			public EmergencyContactInfo mapRow(final ResultSet rs,final int rowNum) throws SQLException {
+				EmergencyContactInfo contactInfo = new EmergencyContactInfo();
+				contactInfo.setName(rs.getString("NAME"));
+				contactInfo.setRelation(rs.getString("REL"));
+				contactInfo.setPhoneNumber(rs.getString("PHONE_NUM"));
+				return contactInfo;
+			}
+		});
+	}
+	private StringBuilder buildQuery(final String firstName,
+			final String lastName, final String emailId,
+			final String phoneNumber, final String uidNumber,
+			StringBuilder queryBuilder) {
+		if (StringUtils.isNotBlank(firstName)) {
+			queryBuilder.append(" WHERE FIRSTNAME=:FIRSTNAME");
+			if (StringUtils.isNotBlank(emailId)) {
+				queryBuilder.append(" AND EMAILID=:EMAILID");
+			}
+			if (StringUtils.isNotBlank(lastName)) {
+				queryBuilder.append(" AND LASTNAME=:LASTNAME");
+			}
+			if (StringUtils.isNotBlank(phoneNumber)) {
+				queryBuilder.append(" AND PRIMARY_PH_NO=:PRIMARY_PH_NO");
+			}
+			if (StringUtils.isNotBlank(uidNumber)) {
+				queryBuilder.append(" AND UID_NUMBER=:UID_NUMBER");
+			}
+		} else if (StringUtils.isNotBlank(emailId)) {
+			queryBuilder.append(" WHERE EMAILID=:EMAILID");
+			if (StringUtils.isNotBlank(lastName)) {
+				queryBuilder.append(" AND LASTNAME=:LASTNAME");
+			}
+			if (StringUtils.isNotBlank(phoneNumber)) {
+				queryBuilder.append(" AND PRIMARY_PH_NO=:PRIMARY_PH_NO");
+			}
+			if (StringUtils.isNotBlank(uidNumber)) {
+				queryBuilder.append(" AND UID_NUMBER=:UID_NUMBER");
+			}
+		} else if (StringUtils.isNotBlank(phoneNumber)) {
+			queryBuilder.append(" WHERE PRIMARY_PH_NO=:PRIMARY_PH_NO");
+			if (StringUtils.isNotBlank(lastName)) {
+				queryBuilder.append(" AND LASTNAME=:LASTNAME");
+			}
+			if (StringUtils.isNotBlank(uidNumber)) {
+				queryBuilder.append(" AND UID_NUMBER=:UID_NUMBER");
+			}
+		} else if (StringUtils.isNotBlank(uidNumber)) {
+			queryBuilder.append(" WHERE UID_NUMBER=:UID_NUMBER");
+			if (StringUtils.isNotBlank(lastName)) {
+				queryBuilder.append(" AND LASTNAME=:LASTNAME");
+			}
+		} else if (StringUtils.isNotBlank(lastName)) {
+			queryBuilder.append(" WHERE LASTNAME=:LASTNAME");
+		}
+		return queryBuilder;
+	}
 }

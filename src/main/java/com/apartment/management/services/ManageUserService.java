@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -38,6 +39,7 @@ public class ManageUserService {
 	}
 
 	@PUT
+	@Path("/{userId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateUser(final String payload) {
@@ -63,12 +65,21 @@ public class ManageUserService {
 			@QueryParam("lastName") final String lastName,
 			@QueryParam("emailId") final String emailId,
 			@QueryParam("phoneNumber") final String phoneNumber,
-			@QueryParam("uidNumber") final String uidNumber) {
+			@QueryParam("uid") final String uid) {
 		List<UserDTO> userList = new ArrayList<UserDTO>();
-		userList = manageUserDao.findUsers(firstName,lastName,emailId,phoneNumber,uidNumber);
+		userList = manageUserDao.findUsers(firstName,lastName,emailId,phoneNumber,uid);
 		return JsonUtils.parseObjectToJson(userList);
 	}
-	
+
+	@GET
+	@Path("/{userId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserById(@PathParam("userId") final long userId) {
+		UserDTO userDTO = manageUserDao.getUserDetailsById(userId);
+		return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO))
+				.build();
+	}
 
 	public void setManageUserDao(final ManageUserDao manageUserDao) {
 		this.manageUserDao = manageUserDao;

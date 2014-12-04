@@ -19,4 +19,6 @@ public interface ManageUserDao {
 
 	public List<UserDTO> findUsers(String firstName, String lastName, String emailId,
 			String phoneNumber, String uidNumber);
+
+	public UserDTO getUserDetailsById(long userId);
 }

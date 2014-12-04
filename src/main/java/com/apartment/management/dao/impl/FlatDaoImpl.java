@@ -27,7 +27,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			+ "TOTAL_FOUR_WHEELER_PARKINGS,"
 			+ "TOTAL_TWO_WHEELER_PARKINGS,"
 			+ "TWO_WHEELER_PARKING,"
-			+ "FOUR_WHEELER_PARKING,DESCRIPTION)"
+			+ "FOUR_WHEELER_PARKING,DESCRIPTION,OWNER_ID,TENANT_ID)"
 			   + "VALUES("
 			   + ":UNITNO,"
 			   + ":UNITSIZE,"
@@ -40,7 +40,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			   + ":TOTAL_FOUR_WHEELER_PARKINGS,"
 			   + ":TOTAL_TWO_WHEELER_PARKINGS,"
 			   + ":TWO_WHEELER_PARKING,"
-			   + ":FOUR_WHEELER_PARKING,DESCRIPTION)";
+			   + ":FOUR_WHEELER_PARKING,:DESCRIPTION,:OWNER_ID,:TENANT_ID)";
 	
 	private static final String UPDATE_FLAT_DETAILS_QUERY="UPDATE flatunit SET "
 			+ "UNITNO=:UNITNO,"
@@ -55,7 +55,9 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			+ "TOTAL_TWO_WHEELER_PARKINGS=:TOTAL_TWO_WHEELER_PARKINGS,"
 			+ "TWO_WHEELER_PARKING=:TWO_WHEELER_PARKING,"
 			+ "FOUR_WHEELER_PARKING=:FOUR_WHEELER_PARKING,"
-			+ "DESCRIPTION:DESCRIPTION"
+			+ "DESCRIPTION=:DESCRIPTION,"
+			+ "OWNER_ID=:OWNER_ID,"
+			+ "TENANT_ID=:TENANT_ID"
 			+ " WHERE FLATID=:FLATID";
 
 	private static final String DELETE_FLAT_QUERY = "DELETE FROM flatunit WHERE FLATID=:FLATID";
@@ -79,6 +81,8 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 		namedParameterSource.addValue("RESIDENTTYPE", flatDTO.getResidentType());
 		namedParameterSource.addValue("BUILDINGID", flatDTO.getBuildingId());
 		namedParameterSource.addValue("DESCRIPTION", flatDTO.getDescription());
+		namedParameterSource.addValue("OWNER_ID", flatDTO.getOwnerId());
+		namedParameterSource.addValue("TENANT_ID", flatDTO.getTenantId());
 		getNamedParameterJdbcTemplate().update(INSERT_FLAT_DETAILS_QUERY, namedParameterSource, keyHolder);
 		return keyHolder.getKey().longValue();
 	}
@@ -107,6 +111,8 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 		namedParameterSource.addValue("RESIDENTTYPE", flatDTO.getResidentType());
 		namedParameterSource.addValue("BUILDINGID", flatDTO.getBuildingId());
 		namedParameterSource.addValue("DESCRIPTION", flatDTO.getDescription());
+		namedParameterSource.addValue("OWNER_ID", flatDTO.getOwnerId());
+		namedParameterSource.addValue("TENANT_ID", flatDTO.getTenantId());
 		getNamedParameterJdbcTemplate().update(UPDATE_FLAT_DETAILS_QUERY, namedParameterSource);
 	}
 
@@ -132,6 +138,8 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 						flatDTO.setTwoWheelerParking(rs.getString("TWO_WHEELER_PARKING"));
 						flatDTO.setResidentType(rs.getString("RESIDENTTYPE"));
 						flatDTO.setDescription(rs.getString("DESCRIPTION"));
+						flatDTO.setOwnerId(rs.getString("OWNER_ID"));
+						flatDTO.setTenantId(rs.getString("TENANT_ID"));
 						flatDTO.setBuildingId(buildingId);
 						return flatDTO;
 					}
