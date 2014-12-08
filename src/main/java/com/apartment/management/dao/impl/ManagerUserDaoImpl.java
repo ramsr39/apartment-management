@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -16,9 +19,10 @@ import com.apartment.management.dao.ManageUserDao;
 import com.apartment.management.dto.Address;
 import com.apartment.management.dto.EmergencyContactInfo;
 import com.apartment.management.dto.UserDTO;
-import com.sun.istack.internal.FinalArrayList;
 
 public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements ManageUserDao{
+	
+	private static final Logger LOG = LoggerFactory.getLogger(ManagerUserDaoImpl.class);
 	
 	private static final String INSERT_USER_QUERY  = "INSERT INTO userinfo(FIRSTNAME,"
 			+ "LASTNAME,"
@@ -155,7 +159,7 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
 		namedParameterSource.addValue("NAME",enrgContactInfo.getName());
 		namedParameterSource.addValue("REL", enrgContactInfo.getRelation());
-		namedParameterSource.addValue("PHONE_NO", enrgContactInfo.getPhoneNumber());
+		namedParameterSource.addValue("PHONE_NUM", enrgContactInfo.getPhoneNumber());
 		namedParameterSource.addValue("EMAILID", emailId);
 		getNamedParameterJdbcTemplate().update(UPDATE_EMERGENCY_CANT_INF_QUERY, namedParameterSource);
 	}
@@ -183,7 +187,7 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 			@Override
 			public UserDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
 				UserDTO userDTO = new UserDTO();
-				userDTO.setUserId(rs.getInt("USERID"));
+				userDTO.setUserId(rs.getLong("USERID"));
 				userDTO.setFirstName(rs.getString("FIRSTNAME"));
 				userDTO.setLastName(rs.getString("LASTNAME"));
 				userDTO.setEmailId(rs.getString("EMAILID"));
@@ -202,7 +206,7 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 			@Override
 			public UserDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
 				UserDTO userDTO = new UserDTO();
-				userDTO.setUserId(rs.getInt("USERID"));
+				userDTO.setUserId(rs.getLong("USERID"));
 				userDTO.setFirstName(rs.getString("FIRSTNAME"));
 				userDTO.setLastName(rs.getString("LASTNAME"));
 				userDTO.setEmailId(rs.getString("EMAILID"));
@@ -220,9 +224,16 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 				address.setCity(rs.getString("CITY"));
 				address.setState(rs.getString("STATE"));
 				address.setCountry(rs.getString("COUNTRY"));
+				if(rs.getInt("PIN")!=0){
 				address.setPostalCode(rs.getInt("PIN"));
+				}
 				userDTO.setAddress(address);
+				try{
 				userDTO.setEmergencyContactInfo(getEmeregencyContactInfo(userDTO.getEmailId()));
+				}catch(final EmptyResultDataAccessException ex){
+					LOG.error("caught the emptu result for user :::"+userId,ex);
+					System.out.println("caught the emptu result for user::"+userId+"::"+ex);
+				}
 				return userDTO;
 			}
 		});

@@ -18,6 +18,7 @@ public class BuildingDTO {
 	private String address1;
 	private String address2;
 	private String address3;
+	private UserDTO ownerDetails = new UserDTO();
 	private List<FlatDTO> flatList = new ArrayList<FlatDTO>();
 
 	public long getId() {
@@ -110,6 +111,12 @@ public class BuildingDTO {
 	}
 	public void setPostalCode(final int postalCode) {
 		this.postalCode = postalCode;
+	}
+	public UserDTO getOwnerDetails() {
+		return ownerDetails;
+	}
+	public void setOwnerDetails(final UserDTO ownerDetails) {
+		this.ownerDetails = ownerDetails;
 	}
 
 }

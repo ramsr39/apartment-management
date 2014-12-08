@@ -15,8 +15,8 @@ public class FlatDTO {
 	private int totalTwoWheelerParkings;
 	private int totalFourWheelerParkings;
 	private String description;
-	private String ownerId;
-	private String tenantId;
+    private UserDTO ownerDetails = new UserDTO();
+    private UserDTO tenantDetails = new UserDTO();
 
 	public long getId() {
 		return id;
@@ -130,20 +130,20 @@ public class FlatDTO {
 		this.description = description;
 	}
 
-	public String getOwnerId() {
-		return ownerId;
+	public UserDTO getOwnerDetails() {
+		return ownerDetails;
 	}
 
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
+	public void setOwnerDetails(UserDTO ownerDetails) {
+		this.ownerDetails = ownerDetails;
 	}
 
-	public String getTenantId() {
-		return tenantId;
+	public UserDTO getTenantDetails() {
+		return tenantDetails;
 	}
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
+	public void setTenantDetails(UserDTO tenantDetails) {
+		this.tenantDetails = tenantDetails;
 	}
-
+	
 }

@@ -46,7 +46,7 @@ public class App
     
     private static String getUserPayload() {
 		UserDTO dto = new UserDTO();
-		dto.setUserId(9);
+		dto.setUserId(9L);
 		dto.setFirstName("ramesh");
 		dto.setLastName("r");
 		dto.setEmailId("abc@gmail.com");
