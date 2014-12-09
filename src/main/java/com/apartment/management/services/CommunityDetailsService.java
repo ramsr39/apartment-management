@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.apartment.management.dao.BuildingDao;
 import com.apartment.management.dao.CommunityDetailsDao;
+import com.apartment.management.dao.FlatDao;
 import com.apartment.management.dto.BuildingDTO;
 import com.apartment.management.dto.CommunityDTO;
 import com.apartment.management.utils.JsonUtils;
@@ -29,6 +30,8 @@ public class CommunityDetailsService {
 	private CommunityDetailsDao communityDetailsDao;
 
 	private BuildingDao buildingDao;
+	
+	private FlatDao flatDao;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -64,8 +67,19 @@ public class CommunityDetailsService {
 		}
 	    communityDTO = communityDetailsDao.findCommunityDetailsByUserId(emailId);
 		List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityDTO.getId());
+		List<Long> buildingIdList = getBuildingIds(buildingList);
+		long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
 		communityDTO.setBuildingList(buildingList);
+		communityDTO.setTotalFlats(totalFlats);
 		return JsonUtils.parseObjectToJson(communityDTO);
+	}
+
+	private List<Long> getBuildingIds(final List<BuildingDTO> buildingList) {
+		List<Long> buildingIdList = new ArrayList<Long>();
+		for(BuildingDTO building:buildingList){
+			buildingIdList.add(building.getId());
+		}
+		return buildingIdList;
 	}
 
 	@GET
@@ -99,8 +113,12 @@ public class CommunityDetailsService {
 		this.communityDetailsDao = communityDetailsDao;
 	}
 
-	public void setBuildingDao(BuildingDao buildingDao) {
+	public void setBuildingDao(final BuildingDao buildingDao) {
 		this.buildingDao = buildingDao;
+	}
+
+	public void setFlatDao(final FlatDao flatDao) {
+		this.flatDao = flatDao;
 	}
 
 }

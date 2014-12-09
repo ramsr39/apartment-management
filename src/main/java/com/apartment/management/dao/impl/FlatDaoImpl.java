@@ -18,6 +18,8 @@ import com.apartment.management.dto.UserDTO;
 
 public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao {
 	
+	private static final String FLATID_COUNT_QUERY = "SELECT count(FLATID) from flatunit WHERE BUILDINGID=:BUILDINGID";
+
 	private static final Logger LOG = LoggerFactory.getLogger(FlatDaoImpl.class);
 	
 	private static final String INSERT_FLAT_DETAILS_QUERY="INSERT INTO flatunit("
@@ -199,6 +201,18 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 				return userDTO;
 			}
 		});
+	}
+
+	@Override
+	public long getTotalNumberOfFlatsForBuilding(final List<Long> buildingIdList) {
+		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		long toatlUnits=0;
+		for (Long buildingId : buildingIdList) {
+			mapSqlParameterSource.addValue("BUILDINGID", buildingId);
+			long count = getNamedParameterJdbcTemplate().queryForLong(FLATID_COUNT_QUERY, mapSqlParameterSource);
+			toatlUnits=toatlUnits+count;
+		}
+		return toatlUnits;
 	}
 }
 

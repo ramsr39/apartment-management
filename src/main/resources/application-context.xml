@@ -22,6 +22,7 @@
 	<bean id="comunityDetailsService" class="com.apartment.management.services.CommunityDetailsService">
 	  <property name="communityDetailsDao" ref="communityDetailsDao"/>
 	  <property name="buildingDao" ref="buildingDao"/>
+	  <property name="flatDao" ref="flatDao"/>
 	</bean>
 
 	<bean id="buildingDetailsService" class="com.apartment.management.services.BuildingDetailsService">

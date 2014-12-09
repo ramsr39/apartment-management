@@ -18,4 +18,7 @@ public interface FlatDao {
 	public void update(final FlatDTO flatDTO);
 
 	public List<FlatDTO> findFlatDetails(long buildingId);
+
+	public long getTotalNumberOfFlatsForBuilding(List<Long> buildingId);
+
 }
