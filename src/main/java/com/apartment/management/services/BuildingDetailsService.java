@@ -29,7 +29,7 @@ public class BuildingDetailsService {
 	private BuildingDao buildingDao;
 	
 	private FlatDao flatDao;
-	
+
 	private CommunityDetailsDao communityDetailsDao;
 
 	@POST

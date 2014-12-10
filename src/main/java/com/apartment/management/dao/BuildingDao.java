@@ -21,4 +21,5 @@ public interface BuildingDao {
  public List<BuildingDTO> findBuildingDetailsByCommunityId(long communityId);
  
  public BuildingDTO getBuildingDetailsByBuildingId(long buildingId);
+
 }

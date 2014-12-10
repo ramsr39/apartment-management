@@ -100,7 +100,9 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 		namedParameterSource.addValue("FIRSTNAME", user.getFirstName());
 		namedParameterSource.addValue("LASTNAME", user.getLastName());
 		namedParameterSource.addValue("EMAILID", user.getEmailId());
-		namedParameterSource.addValue("PASSWORD", RandomStringUtils.randomAlphanumeric(6));
+		namedParameterSource.addValue("PASSWORD", "admin");
+		//need to generate defult pwd in feature for time being i am setting admin as per client req
+		//namedParameterSource.addValue("PASSWORD", RandomStringUtils.randomAlphanumeric(6));
 		namedParameterSource.addValue("PRIMARY_PH_NO", user.getPrimaryPhoneNumber());
 		namedParameterSource.addValue("UID_TYPE", user.getUidType());
 		namedParameterSource.addValue("UID_NUMBER", user.getUid());

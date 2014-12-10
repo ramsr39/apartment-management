@@ -16,6 +16,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.apartment.management.dao.BuildingDao;
 import com.apartment.management.dao.CommunityDetailsDao;
@@ -26,6 +28,8 @@ import com.apartment.management.utils.JsonUtils;
 
 @Path("/community")
 public class CommunityDetailsService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(CommunityDetailsService.class);
 	
 	private CommunityDetailsDao communityDetailsDao;
 
@@ -74,14 +78,6 @@ public class CommunityDetailsService {
 		return JsonUtils.parseObjectToJson(communityDTO);
 	}
 
-	private List<Long> getBuildingIds(final List<BuildingDTO> buildingList) {
-		List<Long> buildingIdList = new ArrayList<Long>();
-		for(BuildingDTO building:buildingList){
-			buildingIdList.add(building.getId());
-		}
-		return buildingIdList;
-	}
-
 	@GET
 	@Path("/{communityId}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -90,6 +86,10 @@ public class CommunityDetailsService {
 	    communityDTO = communityDetailsDao.getCommunityDetailsByCommunityId(communityId);
 		List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityId);
 		communityDTO.setBuildingList(buildingList);
+		List<Long> buildingIdList = getBuildingIds(buildingList);
+		long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
+		communityDTO.setBuildingList(buildingList);
+		communityDTO.setTotalFlats(totalFlats);
 		return JsonUtils.parseObjectToJson(communityDTO);
 	}
 
@@ -107,6 +107,16 @@ public class CommunityDetailsService {
 		}
 		communitiesList = communityDetailsDao.findCommunitiesByName(emailId,communityName);
 		return JsonUtils.parseObjectToJson(communitiesList);
+	}
+
+	private List<Long> getBuildingIds(final List<BuildingDTO> buildingList) {
+		LOG.info("buiding list size:::"+buildingList.size());
+		List<Long> buildingIdList = new ArrayList<Long>();
+		for(BuildingDTO building:buildingList){
+			LOG.info("buidingId:::"+building.getId());
+			buildingIdList.add(building.getId());
+		}
+		return buildingIdList;
 	}
 
 	public void setCommunityDetailsDao(final CommunityDetailsDao communityDetailsDao) {
