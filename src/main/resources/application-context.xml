@@ -32,7 +32,8 @@
 	</bean>
 
 	<bean id="flatDetailsService" class="com.apartment.management.services.FlatDetailsService">
-		  <property name="dao" ref="flatDao"/>
+		  <property name="flatDao" ref="flatDao"/>
+		   <property name="buildingDao" ref="buildingDao"/>
 	</bean>
 	
 	<bean id="managerUserService" class="com.apartment.management.services.ManageUserService">

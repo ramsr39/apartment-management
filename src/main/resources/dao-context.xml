@@ -24,9 +24,10 @@
 
 	<bean id="buildingDao" class="com.apartment.management.dao.impl.BuildingDaoImpl">
 	  <property name="dataSource" ref="dataSource" />
+	  <property name="communityDetailsDao" ref="communityDetailsDao"></property>
 	</bean>
-	
-	<bean id="manageUserDao" class="com.apartment.management.dao.impl.ManagerUserDaoImpl">
+
+	<bean id="manageUserDao" class="com.apartment.management.dao.impl.ManageUserDaoImpl">
 	  <property name="dataSource" ref="dataSource" />
 	</bean>
 
