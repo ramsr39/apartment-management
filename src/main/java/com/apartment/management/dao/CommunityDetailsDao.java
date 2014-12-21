@@ -9,14 +9,14 @@ import com.apartment.management.dto.CommunityDTO;
 
 public interface CommunityDetailsDao {
 	@Transactional(propagation = Propagation.REQUIRED)
-	public long save(String emailId,CommunityDTO communityDTO);
+	public String save(String emailId,CommunityDTO communityDTO);
 
 	@Transactional(propagation = Propagation.REQUIRED)
-	public long update(CommunityDTO communityDTO);
+	public void update(CommunityDTO communityDTO);
 
 	public CommunityDTO findCommunityDetailsByUserId(String emailId);
 
-	public CommunityDTO getCommunityDetailsByCommunityId(long communityId);
+	public CommunityDTO getCommunityDetailsByCommunityId(String communityId);
 
 	public boolean isCommnityExistedForUser(String emailId);
 
@@ -25,6 +25,6 @@ public interface CommunityDetailsDao {
 	public List<CommunityDTO> findCommunitiesByCity(String emailId,
 			String communityName, String city);
 
-	public String getCommunityName(long communityId);
+	public String getCommunityName(String communityId);
 
 }

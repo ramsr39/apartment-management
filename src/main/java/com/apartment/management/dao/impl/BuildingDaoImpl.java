@@ -2,24 +2,33 @@ package com.apartment.management.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 
 import com.apartment.management.dao.BuildingDao;
+import com.apartment.management.dao.CommunityDetailsDao;
 import com.apartment.management.dto.BuildingDTO;
 import com.apartment.management.dto.UserDTO;
 
 public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 		implements BuildingDao {
 	
+	private static final String GET_COMMUNITYID_FOR_BUILDING_QUERY = "SELECT COMMUNITYID FROM building WHERE BUILDINGID=:BUILDINGID";
+
+	private CommunityDetailsDao communityDetailsDao;
+	
+	private static final String GET_BUILDINGNAME_BY_ID = "SELECT BUILDINGNAME FROM building WHERE BUILDINGID=:BUILDINGID";
+
 	private static final String INSERT_BUILDING_QUERY = "INSERT INTO building("
+			+ "BUILDINGID,"
 			+ "COMMUNITYID,"
 			+ "BUILDINGNAME,"
 			+ "NOOFUNITS,"
@@ -34,6 +43,7 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 			+ "ADDRESS_LINE3,"
 			+ "IMAGE_URL) "
 			+ "VALUES("
+			+ ":BUILDINGID,"
 			+ ":COMMUNITYID,"
 			+ ":BUILDINGNAME,"
 			+ ":NOOFUNITS,"
@@ -74,37 +84,38 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 	private static final Logger LOG = LoggerFactory.getLogger(BuildingDaoImpl.class); 
 
 	@Override
-	public long save(final BuildingDTO buildingDTO) {
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		MapSqlParameterSource mapSqlParameterSource = prepareParamenterSource(buildingDTO);
-	    getNamedParameterJdbcTemplate().update(INSERT_BUILDING_QUERY, mapSqlParameterSource,keyHolder);
-	    return keyHolder.getKey().longValue();
+	public String save(final BuildingDTO buildingDTO) {
+		final MapSqlParameterSource mapSqlParameterSource = prepareParamenterSource(buildingDTO);
+		final String buildingId="B"+RandomStringUtils.randomNumeric(8);
+		mapSqlParameterSource.addValue("BUILDINGID", buildingId);
+	    getNamedParameterJdbcTemplate().update(INSERT_BUILDING_QUERY, mapSqlParameterSource);
+	    return buildingId;
 	}
 
 	@Override
 	public void update(final BuildingDTO buildingDTO) {
-		MapSqlParameterSource mapSqlParameterSource = prepareParamenterSource(buildingDTO);
+		final MapSqlParameterSource mapSqlParameterSource = prepareParamenterSource(buildingDTO);
 		mapSqlParameterSource.addValue("BUILDINGID", buildingDTO.getId());
 	    getNamedParameterJdbcTemplate().update(UPDATE_BUILDING_QUERY, mapSqlParameterSource);
 	}
 
 	@Override
 	public void delete(final long buiildingId) {
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("BUILDINGID", buiildingId);
 		getNamedParameterJdbcTemplate().update(DELETE_BUILDING_QUERY, mapSqlParameterSource);
 	}
 
 	@Override
-	public List<BuildingDTO> findBuildingDetailsByCommunityId(final long communityId) {
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+	public List<BuildingDTO> findBuildingDetailsByCommunityId(final String communityId) {
+		final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("COMMUNITYID", communityId);
 		return getNamedParameterJdbcTemplate().query(GET_BUILDING_DETAILS_QUERY, mapSqlParameterSource,
 				new RowMapper<BuildingDTO>() {
 					@Override
 					public BuildingDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
 						BuildingDTO buildingDto = new BuildingDTO();
-						buildingDto.setId(rs.getInt("BUILDINGID"));
+						buildingDto.setId(rs.getString("BUILDINGID"));
 						buildingDto.setName(rs.getString("BUILDINGNAME"));
 						buildingDto.setTotalFloors(rs.getInt("NOOFFLOORS"));
 						buildingDto.setTotalUnits(rs.getInt("NOOFUNITS"));
@@ -126,16 +137,16 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 	}
 
 	@Override
-	public BuildingDTO getBuildingDetailsByBuildingId(final long buildingId) {
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+	public BuildingDTO getBuildingDetailsByBuildingId(final String buildingId) {
+		final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("BUILDINGID", buildingId);
 		return getNamedParameterJdbcTemplate().queryForObject(FIND_BUILDING_DETAILS_BY_BUILDINGID_QUERY, mapSqlParameterSource,
 				new RowMapper<BuildingDTO>() {
 					@Override
 					public BuildingDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
 						BuildingDTO buildingDto = new BuildingDTO();
-						buildingDto.setId(rs.getInt("BUILDINGID"));
-						buildingDto.setCommunityId(rs.getInt("COMMUNITYID"));
+						buildingDto.setId(rs.getString("BUILDINGID"));
+						buildingDto.setCommunityId(rs.getString("COMMUNITYID"));
 						buildingDto.setName(rs.getString("BUILDINGNAME"));
 						buildingDto.setTotalFloors(rs.getInt("NOOFFLOORS"));
 						buildingDto.setTotalUnits(rs.getInt("NOOFUNITS"));
@@ -152,15 +163,34 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 				});
 	}
 
+	@Override
+	public String getBuildingNameById(final String buildingId) {
+		final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		mapSqlParameterSource.addValue("BUILDINGID", buildingId);
+		return getNamedParameterJdbcTemplate().queryForObject(GET_BUILDINGNAME_BY_ID, mapSqlParameterSource, String.class);
+	}
+
+	@Override
+	public Map<String, String> getBuildingCommunityById(final String buildingId) {
+		final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		final Map<String, String> communityMap = new HashMap<String, String>();
+		mapSqlParameterSource.addValue("BUILDINGID", buildingId);
+		final String communityId = getNamedParameterJdbcTemplate().queryForObject(GET_COMMUNITYID_FOR_BUILDING_QUERY, mapSqlParameterSource,String.class);
+		final String communityName = communityDetailsDao.getCommunityName(communityId);
+		communityMap.put("communityId", String.valueOf(communityId));
+		communityMap.put("communityName", communityName);
+		return communityMap;
+	}
+
 	private MapSqlParameterSource prepareParamenterSource(final BuildingDTO buildingDTO) {
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("COMMUNITYID", buildingDTO.getCommunityId());
 		mapSqlParameterSource.addValue("BUILDINGNAME", buildingDTO.getName());
 		mapSqlParameterSource.addValue("NOOFUNITS", buildingDTO.getTotalUnits());
 		mapSqlParameterSource.addValue("NOOFFLOORS", buildingDTO.getTotalFloors());
 		mapSqlParameterSource.addValue("ADDRESS_LINE1", buildingDTO.getAddress1());
 		mapSqlParameterSource.addValue("ADDRESS_LINE2", buildingDTO.getAddress2());
-		mapSqlParameterSource.addValue("ADDRESS_LINE3", buildingDTO.getAddress2());
+		mapSqlParameterSource.addValue("ADDRESS_LINE3", buildingDTO.getAddress3());
 		mapSqlParameterSource.addValue("COUNTRY", buildingDTO.getCountry());
 		mapSqlParameterSource.addValue("STATE", buildingDTO.getState());
 		mapSqlParameterSource.addValue("CITY", buildingDTO.getCity());
@@ -178,7 +208,7 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 			public UserDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
 				LOG.info("FlatDaoImpl getOwnerDetailsForFalt mapRow ::::start");
 				UserDTO userDTO = new UserDTO();
-				userDTO.setUserId(rs.getLong("USERID"));
+				userDTO.setUserId(rs.getString("USERID"));
 				userDTO.setFirstName(rs.getString("FIRSTNAME"));
 				userDTO.setLastName(rs.getString("LASTNAME"));
 				userDTO.setEmailId(rs.getString("EMAILID"));
@@ -188,5 +218,10 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 			}
 		});
 	}
+
+	public void setCommunityDetailsDao(final CommunityDetailsDao communityDetailsDao) {
+		this.communityDetailsDao = communityDetailsDao;
+	}
+
 
 }

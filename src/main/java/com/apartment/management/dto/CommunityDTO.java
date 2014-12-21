@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CommunityDTO {
 
-	private long id;
+	private String id;
 	private String name;
 	private String country;
 	private String city;
@@ -20,11 +20,11 @@ public class CommunityDTO {
 	private List<BuildingDTO> buildingList=new ArrayList<BuildingDTO>();
 	
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(final long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

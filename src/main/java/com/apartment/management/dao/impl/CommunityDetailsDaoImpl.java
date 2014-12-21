@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,6 +20,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		CommunityDetailsDao {
 
 	private static final String INSERT_COMMUNITY_QUERY = "INSERT INTO community("
+			+ "COMMUNITYID,"
 			+ "COMMUNITYNAME, "
 			+ "ADDRESS_LINE1 ,"
 			+ "ADDRESS_LINE2, "
@@ -30,6 +32,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			+ "DESCRIPTION, "
 			+ "COMMUNITYTYPE,EMAILID) "
 			 + "VALUES("
+			 + ":COMMUNITYID,"
 			 + ":COMMUNITYNAME,"
 			 + ":ADDRESS_LINE1,"
 			 + ":ADDRESS_LINE2,"
@@ -95,10 +98,11 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		 		+ "AND EMAILID=:EMAILID";
 
 	@Override
-	public long save(final String emailId, final CommunityDTO communityDTO) {
-		KeyHolder holder = new GeneratedKeyHolder();
+	public String save(final String emailId, final CommunityDTO communityDTO) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		try{
+		final String communityId="C"+RandomStringUtils.randomNumeric(8);
+		mapSqlParameterSource.addValue("COMMUNITYID", communityId);
 		mapSqlParameterSource.addValue("COMMUNITYNAME", communityDTO.getName());
 		mapSqlParameterSource.addValue("ADDRESS_LINE1", communityDTO.getAddress1());
 		mapSqlParameterSource.addValue("ADDRESS_LINE2", communityDTO.getAddress2());
@@ -110,16 +114,16 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		mapSqlParameterSource.addValue("DESCRIPTION", communityDTO.getDescription());
 		mapSqlParameterSource.addValue("COMMUNITYTYPE", communityDTO.getType());
 		mapSqlParameterSource.addValue("EMAILID", emailId);
-		getSimpleJdbcTemplate().getNamedParameterJdbcOperations().update(
-					INSERT_COMMUNITY_QUERY, mapSqlParameterSource, holder);
-	    return holder.getKey().longValue();
+			getSimpleJdbcTemplate().getNamedParameterJdbcOperations().update(
+					INSERT_COMMUNITY_QUERY, mapSqlParameterSource);
+	    return communityId;
 		}catch(DataAccessException e){
 		throw e;
 		}
 	}
 
 	@Override
-	public long update(final CommunityDTO communityDTO) {
+	public void update(final CommunityDTO communityDTO) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		try{
 	    mapSqlParameterSource.addValue("COMMUNITYID", communityDTO.getId());
@@ -133,7 +137,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		mapSqlParameterSource.addValue("PIN", communityDTO.getPostalCode());
 		mapSqlParameterSource.addValue("DESCRIPTION", communityDTO.getDescription());
 		mapSqlParameterSource.addValue("COMMUNITYTYPE", communityDTO.getType());
-	    return getSimpleJdbcTemplate().update(UPDATE_COMMUNITY_QUERY, mapSqlParameterSource);
+	    getSimpleJdbcTemplate().update(UPDATE_COMMUNITY_QUERY, mapSqlParameterSource);
 		}catch(DataAccessException e){
 		throw e;
 		}
@@ -148,7 +152,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
 					throws SQLException {
 			CommunityDTO communityDTO = new CommunityDTO();
-			communityDTO.setId(rs.getInt("COMMUNITYID"));
+			communityDTO.setId(rs.getString("COMMUNITYID"));
 			communityDTO.setName(rs.getString("COMMUNITYNAME"));
 			communityDTO.setType(rs.getString("COMMUNITYTYPE"));
 			communityDTO.setAddress1(rs.getString("ADDRESS_LINE1"));
@@ -190,7 +194,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
 					throws SQLException {
 			CommunityDTO communityDTO = new CommunityDTO();
-			communityDTO.setId(rs.getInt("COMMUNITYID"));
+			communityDTO.setId(rs.getString("COMMUNITYID"));
 			communityDTO.setName(rs.getString("COMMUNITYNAME"));
 			communityDTO.setType(rs.getString("COMMUNITYTYPE"));
 			communityDTO.setAddress1(rs.getString("ADDRESS_LINE1"));
@@ -216,7 +220,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
 					throws SQLException {
 			CommunityDTO communityDTO = new CommunityDTO();
-			communityDTO.setId(rs.getInt("COMMUNITYID"));
+			communityDTO.setId(rs.getString("COMMUNITYID"));
 			communityDTO.setName(rs.getString("COMMUNITYNAME"));
 			communityDTO.setType(rs.getString("COMMUNITYTYPE"));
 			communityDTO.setAddress1(rs.getString("ADDRESS_LINE1"));
@@ -233,14 +237,14 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 	}
 
 	@Override
-	public String getCommunityName(long communityId) {
+	public String getCommunityName(String communityId) {
 		MapSqlParameterSource paramaSource = new MapSqlParameterSource();
 		paramaSource.addValue("COMMUNITYID", communityId);
 		return getSimpleJdbcTemplate().queryForObject(GET_COMMUNITY_NAME_QUERY, String.class, paramaSource);
 	}
 
 	@Override
-	public CommunityDTO getCommunityDetailsByCommunityId(long communityId) {
+	public CommunityDTO getCommunityDetailsByCommunityId(final String communityId) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("COMMUNITYID", communityId);
 		return getSimpleJdbcTemplate().queryForObject(GET_COMMUNITY_DETAILS_BY_ID_QUERY, new RowMapper<CommunityDTO>() {
@@ -248,7 +252,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
 					throws SQLException {
 			CommunityDTO communityDTO = new CommunityDTO();
-			communityDTO.setId(rs.getInt("COMMUNITYID"));
+			communityDTO.setId(rs.getString("COMMUNITYID"));
 			communityDTO.setName(rs.getString("COMMUNITYNAME"));
 			communityDTO.setType(rs.getString("COMMUNITYTYPE"));
 			communityDTO.setAddress1(rs.getString("ADDRESS_LINE1"));

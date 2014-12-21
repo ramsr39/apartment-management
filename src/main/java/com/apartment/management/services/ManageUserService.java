@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.apartment.management.dao.ManageUserDao;
+import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.UserDTO;
 import com.apartment.management.utils.JsonUtils;
 
@@ -32,9 +33,25 @@ public class ManageUserService {
 		if (null == userDTO) {
 			throw new RuntimeException("unable to parse user information");
 		}
-		long userId = manageUserDao.save(userDTO);
+		final String userId = manageUserDao.save(userDTO);
 		userDTO.setUserId(userId);
 		return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO))
+				.build();
+	}
+
+	@POST
+	@Path("/{userId}/add-co-occupant")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addCoOccupant(@PathParam("userId") final String userId,final String payload) {
+		CoOccupantDTO coOccupantDTO = JsonUtils.parseJsonToObject(payload, CoOccupantDTO.class);
+		if (null == coOccupantDTO) {
+			throw new RuntimeException("unable to parse user information");
+		}
+		coOccupantDTO.setUserId(userId);
+		final String coOccupentId = manageUserDao.saveCoOccupent(coOccupantDTO);
+		coOccupantDTO.setId(coOccupentId);
+		return Response.ok().entity(JsonUtils.parseObjectToJson(coOccupantDTO))
 				.build();
 	}
 
@@ -57,7 +74,14 @@ public class ManageUserService {
 		manageUserDao.delete(userId);
 		return Response.ok().build();
 	}
-	
+
+	@DELETE
+	@Path("/{userId}/delete-co-occupent")
+	public Response deleteCoOccupent(@QueryParam("coOccupentId") final String coOccupentId) {
+		manageUserDao.deleteCoOccupent(coOccupentId);
+		return Response.ok().build();
+	}
+
 	@GET
 	@Path("/search")
 	@Consumes(MediaType.APPLICATION_JSON)

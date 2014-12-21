@@ -1,7 +1,7 @@
 package com.apartment.management.dto;
 
 public class UserDTO {
-	private long userId;
+	private String userId;
 	private String emailId;
 	private String role;
 	private String firstName;
@@ -17,11 +17,11 @@ public class UserDTO {
 	private Address address;
 	private String status;
 
-	public long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(final long userId) {
+	public void setUserId(final String userId) {
 		this.userId = userId;
 	}
 

@@ -38,13 +38,12 @@ public class BuildingDetailsService {
 	public Response save(@PathParam("communityId") final String communityId,
 			final String buildingDetailsPayload){
 			assertId(communityId,"building id should not null or empty");
-		long commId=Long.parseLong(communityId);
 		BuildingDTO buildingDTO = JsonUtils.parseJsonToObject(buildingDetailsPayload, BuildingDTO.class);
 		if(null==buildingDTO){
 			throw new RuntimeException("BuildingDTO should not be null");
 		}
-		buildingDTO.setCommunityId(commId);
-		long buildingId = buildingDao.save(buildingDTO);
+		buildingDTO.setCommunityId(communityId);
+		String buildingId = buildingDao.save(buildingDTO);
 		buildingDTO.setId(buildingId);
 		return Response.ok().entity(JsonUtils.parseObjectToJson(buildingDTO)).build();
 	}
@@ -55,12 +54,11 @@ public class BuildingDetailsService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("buildingId") final String buildingId,final String flatDetilsPayload){
 		assertId(buildingId,"flatId should not null");
-		long id=Long.parseLong(buildingId);
 		BuildingDTO buildingDTO = JsonUtils.parseJsonToObject(flatDetilsPayload, BuildingDTO.class);
 		if(null==buildingDTO){
 			throw new RuntimeException("FlatDTO should not be null");
 		}
-		buildingDTO.setId(id);
+		buildingDTO.setId(buildingId);
 		buildingDao.update(buildingDTO);
 		return Response.ok().entity(JsonUtils.parseObjectToJson(buildingDTO)).build();
 	}
@@ -77,11 +75,11 @@ public class BuildingDetailsService {
     @GET
     @Path("/find-building-details")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findBuildingDetails(@QueryParam("buildingId") final long buildingId){
+    public Response findBuildingDetails(@QueryParam("buildingId") final String buildingId){
     	BuildingDTO buildingDTO = buildingDao.getBuildingDetailsByBuildingId(buildingId);
     	final String communityName = communityDetailsDao.getCommunityName(buildingDTO.getCommunityId());
     	buildingDTO.setCommunityName(communityName);
-    	final List<FlatDTO> flatsList  = flatDao.findFlatDetails(buildingId);
+    	final List<FlatDTO> flatsList  = flatDao.findFlatDetailsByBuildingId(buildingId);
     	buildingDTO.setFlatList(flatsList);
     	final String responseEntity = JsonUtils.parseObjectToJson(buildingDTO);
     	return Response.ok().entity(responseEntity).build();

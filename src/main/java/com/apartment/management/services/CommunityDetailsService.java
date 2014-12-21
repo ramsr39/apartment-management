@@ -42,7 +42,7 @@ public class CommunityDetailsService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveCommunityDetails(@HeaderParam("user_id") final String emailId,final String payload) {
 		final CommunityDTO communityDTO =JsonUtils.parseJsonToObject(payload,CommunityDTO.class);
-		final long communityId = communityDetailsDao.save(emailId,communityDTO);
+		final String communityId = communityDetailsDao.save(emailId,communityDTO);
 		communityDTO.setId(communityId);
 		return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO))
 				.build();
@@ -54,12 +54,10 @@ public class CommunityDetailsService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateCommunityDetails(final String payload) {
 		final CommunityDTO communityDTO =JsonUtils.parseJsonToObject(payload,CommunityDTO.class);
-		long communityId = communityDetailsDao.update(communityDTO);
-		communityDTO.setId(communityId);
+		communityDetailsDao.update(communityDTO);
 		return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO))
 				.build();
 	}
-	
 
 	@GET
 	@Path("/find-community-details")
@@ -71,7 +69,7 @@ public class CommunityDetailsService {
 		}
 	    communityDTO = communityDetailsDao.findCommunityDetailsByUserId(emailId);
 		List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityDTO.getId());
-		List<Long> buildingIdList = getBuildingIds(buildingList);
+		List<String> buildingIdList = getBuildingIds(buildingList);
 		long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
 		communityDTO.setBuildingList(buildingList);
 		communityDTO.setTotalFlats(totalFlats);
@@ -81,12 +79,12 @@ public class CommunityDetailsService {
 	@GET
 	@Path("/{communityId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String findCommunityDetailsByCommunityId(@PathParam("communityId") final long communityId){
+	public String findCommunityDetailsByCommunityId(@PathParam("communityId") final String communityId){
 		CommunityDTO communityDTO = new CommunityDTO();
 	    communityDTO = communityDetailsDao.getCommunityDetailsByCommunityId(communityId);
 		List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityId);
 		communityDTO.setBuildingList(buildingList);
-		List<Long> buildingIdList = getBuildingIds(buildingList);
+		List<String> buildingIdList = getBuildingIds(buildingList);
 		long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
 		communityDTO.setBuildingList(buildingList);
 		communityDTO.setTotalFlats(totalFlats);
@@ -109,9 +107,9 @@ public class CommunityDetailsService {
 		return JsonUtils.parseObjectToJson(communitiesList);
 	}
 
-	private List<Long> getBuildingIds(final List<BuildingDTO> buildingList) {
+	private List<String> getBuildingIds(final List<BuildingDTO> buildingList) {
 		LOG.info("buiding list size:::"+buildingList.size());
-		List<Long> buildingIdList = new ArrayList<Long>();
+		List<String> buildingIdList = new ArrayList<String>();
 		for(BuildingDTO building:buildingList){
 			LOG.info("buidingId:::"+building.getId());
 			buildingIdList.add(building.getId());

@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.apartment.management.dto.BuildingDTO;
+import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.CommunityDTO;
 import com.apartment.management.dto.EmergencyContactInfo;
 import com.apartment.management.dto.FlatDTO;
@@ -22,9 +23,9 @@ public class App
     {
     	ApplicationContext ctx = new ClassPathXmlApplicationContext("application-context.xml");
     	
-    	CommunityDetailsService service = (CommunityDetailsService)ctx.getBean("comunityDetailsService");
+    	//CommunityDetailsService service = (CommunityDetailsService)ctx.getBean("comunityDetailsService");
     	//System.out.println(service.saveCommunityDetails("myadmin@gmail.com",getCommunitypaylaod()).getEntity().toString());
-    	BuildingDetailsService bs = (BuildingDetailsService)ctx.getBean("buildingDetailsService");
+    	//BuildingDetailsService bs = (BuildingDetailsService)ctx.getBean("buildingDetailsService");
     	//bs.save("38", getBuildingPaylaod());
     	
     	//FlatDetailsService fs = (FlatDetailsService)ctx.getBean("flatDetailsService");
@@ -33,7 +34,7 @@ public class App
     	ManageUserService mus = (ManageUserService)ctx.getBean("managerUserService");
     	//System.out.println(mus.addUser(getUserPayload()).getEntity());
     	//System.out.println(mus.updateUser(getUserPayload()).getEntity());
-    	System.out.println(mus.findUsers(null, "r", null, null, null));
+   // 	System.out.println(mus.addCoOccupant(JsonUtils.parseObjectToJson(getCoOccupent())));
     	//System.out.println(service.updateCommunityDetails(getCommunitypaylaod()).getEntity());
     	
     	// String res = service.findCommunityDetails("abc@gmail.com");
@@ -41,12 +42,12 @@ public class App
     	 //String paylaod = "{emailId:msgshd@gmail.com,password:ds}";
     	//System.out.println(ds.ValidateUser(paylaod).getEntity());
     	
-    	System.out.println(service.findCommunitiesByNameAndCity("test", "VIZAG", "myadmin@gmail.com"));
+    //	System.out.println(service.findCommunitiesByNameAndCity("test", "VIZAG", "myadmin@gmail.com"));
     }
     
     private static String getUserPayload() {
 		UserDTO dto = new UserDTO();
-		dto.setUserId(9L);
+		dto.setUserId("9");
 		dto.setFirstName("ramesh");
 		dto.setLastName("r");
 		dto.setEmailId("abc@gmail.com");
@@ -90,7 +91,7 @@ public class App
     private static String getFlatpaylaod(){
     	FlatDTO dto = new FlatDTO();
     	//dto.setId(32);
-    	dto.setBuildingId(24);
+    	dto.setBuildingId("24");
     	dto.setFloorNumber("222");
     	dto.setTotalBathRooms(3);
     	dto.setTotalBedRooms(3);
@@ -104,4 +105,16 @@ public class App
     	dto.setTotalTwoWheelerParkings(2);
     	return JsonUtils.parseObjectToJson(dto);
     }
+   private static String getCoOccupent(){
+	   CoOccupantDTO co = new CoOccupantDTO();
+	   co.setFirstName("abc");
+	   co.setLastName("a");
+	   co.setEmailId("abc@gmail.com");
+	   co.setPhoneNumber("9000000000");
+	   co.setUserId("myadmin@gmail.com");
+	   co.setRelation("father");
+	   //co.setDateOfBirth("10/11/1986");
+	   System.out.println(JsonUtils.parseObjectToJson(co));
+	   return JsonUtils.parseObjectToJson(co);
+   }
 }

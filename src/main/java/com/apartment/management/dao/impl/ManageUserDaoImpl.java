@@ -12,17 +12,16 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 
 import com.apartment.management.dao.ManageUserDao;
 import com.apartment.management.dto.Address;
+import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.EmergencyContactInfo;
 import com.apartment.management.dto.UserDTO;
 
-public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements ManageUserDao{
-	
-	private static final Logger LOG = LoggerFactory.getLogger(ManagerUserDaoImpl.class);
+public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements ManageUserDao{
+
+	private static final Logger LOG = LoggerFactory.getLogger(ManageUserDaoImpl.class);
 	
 	private static final String INSERT_USER_QUERY  = "INSERT INTO userinfo(FIRSTNAME,"
 			+ "LASTNAME,"
@@ -87,6 +86,25 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 			+ "CITY=:CITY,"
 			+ "STATE=:STATE,"
 			+ "COUNTRY=:COUNTRY WHERE USERID=:USERID";
+	
+  private static final String INSERT_OCCUPANTS_QUERY="INSERT INTO co_occupants_info(CO_OCCUPANT_ID,"
+  		+ "FIRST_NAME,"
+  		+ "LAST_NAME,"
+  		+ "EMAIL_ID,"
+  		+ "PHONE_NO,"
+  		+ "RELATION,"
+  		+ "DATE_OF_BIRTH,"
+  		+ "USERID) "
+  		    + "values(:CO_OCCUPANT_ID,"
+  		    + ":FIRST_NAME,"
+  		    + ":LAST_NAME,"
+  		    + ":EMAIL_ID,"
+  		    + ":PHONE_NO,"
+  		    + ":RELATION,"
+  		    + ":DATE_OF_BIRTH,"
+  		    + ":USERID)";
+
+ private static final String DELETE_CO_OCCUPANT_QUERY = "DELETE FROM co_occupants_info WHERE CO_OCCUPENT_ID=:CO_OCCUPENT_ID";
 
   private static final String DELETE_USER_QUERY="DELETE FROM userinfo WHERE USERID=:USERID";
   
@@ -94,77 +112,26 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
   
   private static final String GET_USER_DETAILS_BY_USERID_QUERY="SELECT * FROM userinfo WHERE USERID=:USERID" ;
 	@Override
-	public long save(final UserDTO user) {
-		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		namedParameterSource.addValue("FIRSTNAME", user.getFirstName());
-		namedParameterSource.addValue("LASTNAME", user.getLastName());
-		namedParameterSource.addValue("EMAILID", user.getEmailId());
+	public String save(final UserDTO userDto) {
+		final MapSqlParameterSource namedParameterSource = prepareNamedSqlParameterSource(userDto);
+		final String userId = "USER"+RandomStringUtils.randomNumeric(8);
+		namedParameterSource.addValue("USERID", userId);
 		namedParameterSource.addValue("PASSWORD", "admin");
 		//need to generate defult pwd in feature for time being i am setting admin as per client req
 		//namedParameterSource.addValue("PASSWORD", RandomStringUtils.randomAlphanumeric(6));
-		namedParameterSource.addValue("PRIMARY_PH_NO", user.getPrimaryPhoneNumber());
-		namedParameterSource.addValue("UID_TYPE", user.getUidType());
-		namedParameterSource.addValue("UID_NUMBER", user.getUid());
-		namedParameterSource.addValue("DOB", user.getDateOfBirth());
-		namedParameterSource.addValue("SECONDERY_PH_NO", user.getSecondaryPhoneNumber());
-		namedParameterSource.addValue("SECOUNDERY_EMAIL", user.getSecondaryEmail());
-		namedParameterSource.addValue("BLOOD_GROUP", user.getBloodGroup());
-		namedParameterSource.addValue("ADDRESS_LINE1", user.getAddress().getAddress1());
-		namedParameterSource.addValue("ADDRESS_LINE2", user.getAddress().getAddress2());
-		namedParameterSource.addValue("ADDRESS_LINE3", user.getAddress().getAddress3());
-		namedParameterSource.addValue("CITY", user.getAddress().getCity());
-		namedParameterSource.addValue("STATE", user.getAddress().getState());
-		namedParameterSource.addValue("COUNTRY", user.getAddress().getCountry());
-		namedParameterSource.addValue("PIN", user.getAddress().getPostalCode());
-		getNamedParameterJdbcTemplate().update(INSERT_USER_QUERY, namedParameterSource,keyHolder);
-		insertEmergencyContactInfo(user.getEmergencyContactInfo(),user.getEmailId());
-		return keyHolder.getKey().longValue();
-	}
-
-	private void insertEmergencyContactInfo(final EmergencyContactInfo emrgCantInfo,final String emailId) {
-		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-		namedParameterSource.addValue("NAME", emrgCantInfo.getName());		
-		namedParameterSource.addValue("REL", emrgCantInfo.getRelation());
-		namedParameterSource.addValue("PHONE_NUM", emrgCantInfo.getPhoneNumber());
-		namedParameterSource.addValue("EMAILID", emailId);
-		getNamedParameterJdbcTemplate().update(INSERT_EMERGENCY_CANT_INF_QUERY, namedParameterSource);
+		getNamedParameterJdbcTemplate().update(INSERT_USER_QUERY, namedParameterSource);
+		insertEmergencyContactInfo(userDto.getEmergencyContactInfo(),userDto.getEmailId());
+		return userId;
 	}
 
 	@Override
-	public void update(final UserDTO user) {
-		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		namedParameterSource.addValue("USERID", user.getUserId());		
-		namedParameterSource.addValue("FIRSTNAME", user.getFirstName());
-		namedParameterSource.addValue("LASTNAME", user.getLastName());
-		namedParameterSource.addValue("EMAILID", user.getEmailId());
-		namedParameterSource.addValue("PRIMARY_PH_NO", user.getPrimaryPhoneNumber());
-		namedParameterSource.addValue("UID_TYPE", user.getUidType());
-		namedParameterSource.addValue("UID_NUMBER", user.getUid());
-		namedParameterSource.addValue("DOB", user.getDateOfBirth());
-		namedParameterSource.addValue("SECONDERY_PH_NO", user.getSecondaryPhoneNumber());
-		namedParameterSource.addValue("SECOUNDERY_EMAIL", user.getSecondaryEmail());
-		namedParameterSource.addValue("BLOOD_GROUP", user.getBloodGroup());
-		namedParameterSource.addValue("ADDRESS_LINE1", user.getAddress().getAddress1());
-		namedParameterSource.addValue("ADDRESS_LINE2", user.getAddress().getAddress2());
-		namedParameterSource.addValue("ADDRESS_LINE3", user.getAddress().getAddress3());
-		namedParameterSource.addValue("CITY", user.getAddress().getCity());
-		namedParameterSource.addValue("STATE", user.getAddress().getState());
-		namedParameterSource.addValue("COUNTRY", user.getAddress().getCountry());
-		namedParameterSource.addValue("PIN", user.getAddress().getPostalCode());
-		getNamedParameterJdbcTemplate().update(UPDATE_USER_QUERY, namedParameterSource,keyHolder);
-		updateEmergencyContactInfo(user.getEmergencyContactInfo(),user.getEmailId());
+	public void update(final UserDTO userDto) {
+		final MapSqlParameterSource namedParameterSource = prepareNamedSqlParameterSource(userDto);
+		namedParameterSource.addValue("USERID", userDto.getUserId());		
+		getNamedParameterJdbcTemplate().update(UPDATE_USER_QUERY, namedParameterSource);
+		updateEmergencyContactInfo(userDto.getEmergencyContactInfo(),userDto.getEmailId());
 	}
 
-	private void updateEmergencyContactInfo(final EmergencyContactInfo enrgContactInfo,final String emailId) {
-		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-		namedParameterSource.addValue("NAME",enrgContactInfo.getName());
-		namedParameterSource.addValue("REL", enrgContactInfo.getRelation());
-		namedParameterSource.addValue("PHONE_NUM", enrgContactInfo.getPhoneNumber());
-		namedParameterSource.addValue("EMAILID", emailId);
-		getNamedParameterJdbcTemplate().update(UPDATE_EMERGENCY_CANT_INF_QUERY, namedParameterSource);
-	}
 
 	@Override
 	public void delete(final long userId) {
@@ -189,7 +156,7 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 			@Override
 			public UserDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
 				UserDTO userDTO = new UserDTO();
-				userDTO.setUserId(rs.getLong("USERID"));
+				userDTO.setUserId(rs.getString("USERID"));
 				userDTO.setFirstName(rs.getString("FIRSTNAME"));
 				userDTO.setLastName(rs.getString("LASTNAME"));
 				userDTO.setEmailId(rs.getString("EMAILID"));
@@ -199,7 +166,6 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 		});
 	}
 
-
 	@Override
 	public UserDTO getUserDetailsById(final long userId) {
 		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
@@ -208,7 +174,7 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 			@Override
 			public UserDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
 				UserDTO userDTO = new UserDTO();
-				userDTO.setUserId(rs.getLong("USERID"));
+				userDTO.setUserId(rs.getString("USERID"));
 				userDTO.setFirstName(rs.getString("FIRSTNAME"));
 				userDTO.setLastName(rs.getString("LASTNAME"));
 				userDTO.setEmailId(rs.getString("EMAILID"));
@@ -255,6 +221,71 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 			}
 		});
 	}
+
+	@Override
+	public String saveCoOccupent(final CoOccupantDTO coOccupantDTO) {
+		final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+		final String coOccupentId = "CO"+RandomStringUtils.randomNumeric(8).toUpperCase();
+		namedParameterSource.addValue("CO_OCCUPANT_ID",coOccupentId);
+		namedParameterSource.addValue("FIRST_NAME", coOccupantDTO.getFirstName());
+		namedParameterSource.addValue("LAST_NAME", coOccupantDTO.getLastName());
+		namedParameterSource.addValue("EMAIL_ID", coOccupantDTO.getEmailId());
+		namedParameterSource.addValue("PHONE_NO", coOccupantDTO.getPhoneNumber());
+		namedParameterSource.addValue("RELATION", coOccupantDTO.getRelation());
+		namedParameterSource.addValue("DATE_OF_BIRTH", coOccupantDTO.getDateOfBirth());
+		namedParameterSource.addValue("USERID", coOccupantDTO.getUserId());
+		getNamedParameterJdbcTemplate().update(INSERT_OCCUPANTS_QUERY, namedParameterSource);
+		return coOccupentId;
+	}
+
+	@Override
+	public void deleteCoOccupent(final String coOccupentId) {
+	final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+	namedParameterSource.addValue("CO_OCCUPANT_ID",coOccupentId);
+	getNamedParameterJdbcTemplate().update(DELETE_CO_OCCUPANT_QUERY, namedParameterSource);
+	}
+
+
+	private MapSqlParameterSource prepareNamedSqlParameterSource(final UserDTO user) {
+		final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+		namedParameterSource.addValue("FIRSTNAME", user.getFirstName());
+		namedParameterSource.addValue("LASTNAME", user.getLastName());
+		namedParameterSource.addValue("EMAILID", user.getEmailId());
+		namedParameterSource.addValue("PRIMARY_PH_NO", user.getPrimaryPhoneNumber());
+		namedParameterSource.addValue("UID_TYPE", user.getUidType());
+		namedParameterSource.addValue("UID_NUMBER", user.getUid());
+		namedParameterSource.addValue("DOB", user.getDateOfBirth());
+		namedParameterSource.addValue("SECONDERY_PH_NO", user.getSecondaryPhoneNumber());
+		namedParameterSource.addValue("SECOUNDERY_EMAIL", user.getSecondaryEmail());
+		namedParameterSource.addValue("BLOOD_GROUP", user.getBloodGroup());
+		namedParameterSource.addValue("ADDRESS_LINE1", user.getAddress().getAddress1());
+		namedParameterSource.addValue("ADDRESS_LINE2", user.getAddress().getAddress2());
+		namedParameterSource.addValue("ADDRESS_LINE3", user.getAddress().getAddress3());
+		namedParameterSource.addValue("CITY", user.getAddress().getCity());
+		namedParameterSource.addValue("STATE", user.getAddress().getState());
+		namedParameterSource.addValue("COUNTRY", user.getAddress().getCountry());
+		namedParameterSource.addValue("PIN", user.getAddress().getPostalCode());
+		return namedParameterSource;
+	}
+
+	private void updateEmergencyContactInfo(final EmergencyContactInfo enrgContactInfo,final String emailId) {
+		final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+		namedParameterSource.addValue("NAME",enrgContactInfo.getName());
+		namedParameterSource.addValue("REL", enrgContactInfo.getRelation());
+		namedParameterSource.addValue("PHONE_NUM", enrgContactInfo.getPhoneNumber());
+		namedParameterSource.addValue("EMAILID", emailId);
+		getNamedParameterJdbcTemplate().update(UPDATE_EMERGENCY_CANT_INF_QUERY, namedParameterSource);
+	}
+
+	private void insertEmergencyContactInfo(final EmergencyContactInfo emrgCantInfo,final String emailId) {
+		final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+		namedParameterSource.addValue("NAME", emrgCantInfo.getName());		
+		namedParameterSource.addValue("REL", emrgCantInfo.getRelation());
+		namedParameterSource.addValue("PHONE_NUM", emrgCantInfo.getPhoneNumber());
+		namedParameterSource.addValue("EMAILID", emailId);
+		getNamedParameterJdbcTemplate().update(INSERT_EMERGENCY_CANT_INF_QUERY, namedParameterSource);
+	}
+
 	private StringBuilder buildQuery(final String firstName,
 			final String lastName, final String emailId,
 			final String phoneNumber, final String uidNumber,
@@ -302,4 +333,5 @@ public class ManagerUserDaoImpl extends NamedParameterJdbcDaoSupport implements 
 		}
 		return queryBuilder;
 	}
+
 }

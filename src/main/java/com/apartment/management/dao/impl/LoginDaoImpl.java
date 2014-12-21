@@ -17,11 +17,11 @@ public class LoginDaoImpl extends SimpleJdbcDaoSupport implements LoginDao {
 	private static final Logger LOG = LoggerFactory
 			.getLogger(LoginDaoImpl.class);
 
-	private static String USER_QUERY = "SELECT count(EMAILID) FROM USERINFO WHERE EMAILID=:EMAILID";
+	private static String USER_QUERY = "SELECT count(EMAILID) FROM userinfo WHERE EMAILID=:EMAILID";
 
-	private static String GET_USER_PWD_QUERY = "SELECT PASSWORD FROM USERINFO WHERE EMAILID=:EMAILID";
+	private static String GET_USER_PWD_QUERY = "SELECT PASSWORD FROM userinfo WHERE EMAILID=:EMAILID";
 
-	private static String GET_USER_INFO_QUERY = "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,USERROLE FROM USERINFO WHERE EMAILID=:EMAILID";
+	private static String GET_USER_INFO_QUERY = "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,USERROLE FROM userinfo WHERE EMAILID=:EMAILID";
 
 	@Override
 	public boolean isUserExist(final String emailId) {
