@@ -23,7 +23,8 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 
 	private static final Logger LOG = LoggerFactory.getLogger(ManageUserDaoImpl.class);
 	
-	private static final String INSERT_USER_QUERY  = "INSERT INTO userinfo(FIRSTNAME,"
+	private static final String INSERT_USER_QUERY  = "INSERT INTO userinfo(USERID,"
+			+ "FIRSTNAME,"
 			+ "LASTNAME,"
 			+ "EMAILID,"
 			+ "PASSWORD,"
@@ -41,7 +42,8 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 			+ "STATE,"
 			+ "COUNTRY,"
 			+ "PIN) "
-			 + "values(:FIRSTNAME,"
+			 + "values(:USERID,"
+			 + ":FIRSTNAME,"
 			 + ":LASTNAME,"
 			 + ":EMAILID,"
 			 + ":PASSWORD,"
