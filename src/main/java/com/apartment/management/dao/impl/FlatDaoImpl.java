@@ -20,7 +20,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 	private static final Logger LOG = LoggerFactory.getLogger(FlatDaoImpl.class);
 	
 	private static final String INSERT_FLAT_DETAILS_QUERY="INSERT INTO flatunit("
-			+ "FLATID,"
+			+ "FLAT_ID,"
 			+ "UNITNO,"
 			+ "UNITSIZE,"
 			+ "FLOORNO,"
@@ -34,7 +34,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			+ "TWO_WHEELER_PARKING,"
 			+ "FOUR_WHEELER_PARKING,DESCRIPTION,OWNER_ID,TENANT_ID)"
 			   + "VALUES("
-			   + ":FLATID,"
+			   + ":FLAT_ID,"
 			   + ":UNITNO,"
 			   + ":UNITSIZE,"
 			   + ":FLOORNO,"
@@ -64,19 +64,19 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			+ "DESCRIPTION=:DESCRIPTION,"
 			+ "OWNER_ID=:OWNER_ID,"
 			+ "TENANT_ID=:TENANT_ID"
-			+ " WHERE FLATID=:FLATID";
+			+ " WHERE FLAT_ID=:FLAT_ID";
 
-	private static final String DELETE_FLAT_QUERY = "DELETE FROM flatunit WHERE FLATID=:FLATID";
+	private static final String DELETE_FLAT_QUERY = "DELETE FROM flatunit WHERE FLAT_ID=:FLAT_ID";
 
 	private static final String FIND_FLAT_DETAILS = "SELECT * FROM flatunit WHERE BUILDINGID=:BUILDINGID";
 	
-	private static final String FIND_FLAT_DETAILS_BY_FLAT_ID = "SELECT * FROM flatunit WHERE FLATID=:FLATID";
+	private static final String FIND_FLAT_DETAILS_BY_FLAT_ID = "SELECT * FROM flatunit WHERE FLAT_ID=:FLAT_ID";
 
 	private static final String GET_FLAT_OWNER_QUERY = "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE EMAILID=:OWNERID";
 
 	private static final String GET_FLAT_TENANT_QUERY = "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE EMAILID=:TENANTID";
 	
-	private static final String GET_FLAT_DETAILS_BY_USER = "SELECT FLATID,"
+	private static final String GET_FLAT_DETAILS_BY_USER = "SELECT FLAT_ID,"
 			+ "FLOORNO,"
 			+ "UNITNO,"
 			+ "OWNER_ID,"
@@ -85,7 +85,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			+ " FROM flatunit"
 			+ " WHERE OWNER_ID=:OWNER_ID OR TENANT_ID=:TENANT_ID";
 
-	private static final String FLATID_COUNT_QUERY = "SELECT count(FLATID) from flatunit WHERE BUILDINGID=:BUILDINGID";
+	private static final String FLAT_ID_COUNT_QUERY = "SELECT count(FLAT_ID) from flatunit WHERE BUILDINGID=:BUILDINGID";
 
 
 	@Override
@@ -93,7 +93,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 		LOG.info("FlatDaoImpl save::::start");
 		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
 		final String flatId = "F"+RandomStringUtils.randomNumeric(8).toUpperCase();
-		namedParameterSource.addValue("FLATID", flatId);
+		namedParameterSource.addValue("FLAT_ID", flatId);
 		prepareParameterSource(flatDTO, namedParameterSource);
 		getNamedParameterJdbcTemplate().update(INSERT_FLAT_DETAILS_QUERY, namedParameterSource);
 		LOG.info("FlatDaoImpl save::::end");
@@ -104,7 +104,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 	public void update(final FlatDTO flatDTO) {
 		LOG.info("FlatDaoImpl update::::start");
 		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-		namedParameterSource.addValue("FLATID", flatDTO.getId());
+		namedParameterSource.addValue("FLAT_ID", flatDTO.getId());
 		prepareParameterSource(flatDTO, namedParameterSource);
 		getNamedParameterJdbcTemplate().update(UPDATE_FLAT_DETAILS_QUERY, namedParameterSource);
 		LOG.info("FlatDaoImpl update::::end");
@@ -114,7 +114,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 	public void delete(final String flatId) {
 		LOG.info("FlatDaoImpl delete::::start");
 		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-		namedParameterSource.addValue("FLATID", flatId);
+		namedParameterSource.addValue("FLAT_ID", flatId);
 		getNamedParameterJdbcTemplate().update(DELETE_FLAT_QUERY, namedParameterSource);
 		LOG.info("FlatDaoImpl delete::::end");
 	}
@@ -130,7 +130,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 					public FlatDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
 						LOG.info("FlatDaoImpl findFlatDetails mapRow::::start");
 						FlatDTO flatDTO = new FlatDTO();
-						flatDTO.setId(rs.getString("FLATID"));
+						flatDTO.setId(rs.getString("FLAT_ID"));
 						flatDTO.setFloorNumber(rs.getString("FLOORNO"));
 						flatDTO.setTotalBathRooms(rs.getInt("TOTAL_BATH_ROOMS"));
 						flatDTO.setTotalBedRooms(rs.getInt("TOTAL_BED_ROOMS"));
@@ -163,7 +163,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 	public FlatDTO getFlatDetailsByFaltId(final String flatId) {
 		LOG.info("FlatDaoImpl getFlatDetailsByFaltId::::start");
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-		mapSqlParameterSource.addValue("FLATID", flatId);
+		mapSqlParameterSource.addValue("FLAT_ID", flatId);
 		return getNamedParameterJdbcTemplate().queryForObject(FIND_FLAT_DETAILS_BY_FLAT_ID, mapSqlParameterSource,
 				new RowMapper<FlatDTO>() {
 					@Override
@@ -207,7 +207,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 		long toatlUnits=0;
 		for (String buildingId : buildingIdList) {
 			mapSqlParameterSource.addValue("BUILDINGID", buildingId);
-			long count = getNamedParameterJdbcTemplate().queryForLong(FLATID_COUNT_QUERY, mapSqlParameterSource);
+			long count = getNamedParameterJdbcTemplate().queryForLong(FLAT_ID_COUNT_QUERY, mapSqlParameterSource);
 			toatlUnits=toatlUnits+count;
 			LOG.info("toatlUnits::::"+toatlUnits);
 		}
@@ -227,7 +227,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 					public FlatDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
 						LOG.info("FlatDaoImpl getFlatDetailsByUser mapRow::::start");
 						FlatDTO flatDTO = new FlatDTO();
-						flatDTO.setId(rs.getString("FLATID"));
+						flatDTO.setId(rs.getString("FLAT_ID"));
 						flatDTO.setFloorNumber(rs.getString("FLOORNO"));
 						flatDTO.setUnitNumber(rs.getString("UNITNO"));
 						String ownerId =rs.getString("OWNER_ID");

@@ -28,8 +28,9 @@ public class App
     	//BuildingDetailsService bs = (BuildingDetailsService)ctx.getBean("buildingDetailsService");
     	//bs.save("38", getBuildingPaylaod());
     	
-    	//FlatDetailsService fs = (FlatDetailsService)ctx.getBean("flatDetailsService");
+    	FlatDetailsService fs = (FlatDetailsService)ctx.getBean("flatDetailsService");
     	//fs.save("24", getFlatpaylaod());
+    	fs.getUserResidenceDetails("myadmin@gmail.com");
     	
     	ManageUserService mus = (ManageUserService)ctx.getBean("managerUserService");
     	//System.out.println(mus.addUser(getUserPayload()).getEntity());

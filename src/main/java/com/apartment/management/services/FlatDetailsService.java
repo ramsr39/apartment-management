@@ -101,15 +101,16 @@ public String getUserResidenceDetails(@QueryParam("userId") final String userId)
 		  flatDTO.setBuildingDTO(buildingDTO);
 		  filteredFlatList.add(flatDTO);
 	  }
-	  if(flatDTO.getTenantDetails().getEmailId().equalsIgnoreCase(userId)){
-		  final String buildingName = buildingDao.getBuildingNameById(flatDTO.getBuildingId());
-		  final Map<String, String> communityMap = buildingDao.getBuildingCommunityById(flatDTO.getBuildingId());
-		  final BuildingDTO buildingDTO = prepareBuildingDTO(buildingName,communityMap);
-		  buildingDTO.setId(flatDTO.getBuildingId());
-		  flatDTO.setBuildingDTO(buildingDTO);
-		  filteredFlatList.add(flatDTO);
-	  }
-   }
+			if (StringUtils.isNotBlank(flatDTO.getTenantDetails().getEmailId())
+					&& flatDTO.getTenantDetails().getEmailId().equalsIgnoreCase(userId)) {
+				final String buildingName = buildingDao.getBuildingNameById(flatDTO.getBuildingId());
+				final Map<String, String> communityMap = buildingDao.getBuildingCommunityById(flatDTO.getBuildingId());
+				final BuildingDTO buildingDTO = prepareBuildingDTO(buildingName, communityMap);
+				buildingDTO.setId(flatDTO.getBuildingId());
+				flatDTO.setBuildingDTO(buildingDTO);
+				filteredFlatList.add(flatDTO);
+			}
+		}
   return JsonUtils.parseObjectToJson(filteredFlatList);
 }
 
@@ -121,8 +122,9 @@ public String getLeasedUnitsDetails(@QueryParam("userId") final String userId){
   final  List<FlatDTO> flatList = flatDao.getFlatDetailsByUser(userId);
   final List<FlatDTO> filterFlatList = new ArrayList<FlatDTO>();
   for(FlatDTO flatDTO:flatList){
-	  if(flatDTO.getOwnerDetails().getEmailId().equalsIgnoreCase(userId) && 
-			  flatDTO.getTenantDetails().getEmailId()!=null){
+			if (null != flatDTO.getOwnerDetails().getEmailId()
+					&& flatDTO.getOwnerDetails().getEmailId().equalsIgnoreCase(userId)
+					&& flatDTO.getTenantDetails().getEmailId() != null) {
 		  final String buildingName = buildingDao.getBuildingNameById(flatDTO.getBuildingId());
 		  final Map<String, String> communityMap = buildingDao.getBuildingCommunityById(flatDTO.getBuildingId());
 		  final BuildingDTO buildingDTO = prepareBuildingDTO(buildingName,communityMap);

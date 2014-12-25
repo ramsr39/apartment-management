@@ -106,7 +106,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
   		    + ":DATE_OF_BIRTH,"
   		    + ":USERID)";
 
- private static final String DELETE_CO_OCCUPANT_QUERY = "DELETE FROM co_occupants_info WHERE CO_OCCUPENT_ID=:CO_OCCUPENT_ID";
+ private static final String DELETE_CO_OCCUPANT_QUERY = "DELETE FROM co_occupants_info WHERE CO_OCCUPANT_ID=:CO_OCCUPANT_ID";
 
   private static final String DELETE_USER_QUERY="DELETE FROM userinfo WHERE USERID=:USERID";
   

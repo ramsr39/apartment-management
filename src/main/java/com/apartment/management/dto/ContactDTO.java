@@ -10,6 +10,11 @@ public final class ContactDTO {
 	private String webSite;
 	private String name;
 	private Address address = new Address();
+	private String utilityId;
+	private String communityId;
+	private String buildingId;
+	private String flatId;
+	public String userId;
 
 	public String getId() {
 		return id;
@@ -81,6 +86,46 @@ public final class ContactDTO {
 
 	public void setAddress(final Address address) {
 		this.address = address;
+	}
+
+	public String getUtilityId() {
+		return utilityId;
+	}
+
+	public void setUtilityId(final String utilityId) {
+		this.utilityId = utilityId;
+	}
+
+	public String getCommunityId() {
+		return communityId;
+	}
+
+	public void setCommunityId(final String communityId) {
+		this.communityId = communityId;
+	}
+
+	public String getBuildingId() {
+		return buildingId;
+	}
+
+	public void setBuildingId(final String buildingId) {
+		this.buildingId = buildingId;
+	}
+
+	public String getFlatId() {
+		return flatId;
+	}
+
+	public void setFlatId(final String flatId) {
+		this.flatId = flatId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(final String userId) {
+		this.userId = userId;
 	}
 
 }

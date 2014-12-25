@@ -4,14 +4,14 @@ public class BillDTO {
 	private String id;
 	private String billNumber;
 	private String billDate;
-	private String ammount;
+	private String amount;
 	private String dueDate;
 	private String description;
 	private String remindMe;
 	private String serviceFrom;
 	private String serviceTo;
 	private String paymentDate;
-	private String receiptNUmber;
+	private String receiptNumber;
 	private String utilityId;
 
 	public String getId() {
@@ -38,12 +38,12 @@ public class BillDTO {
 		this.billDate = billDate;
 	}
 
-	public String getAmmount() {
-		return ammount;
+	public String getAmount() {
+		return amount;
 	}
 
-	public void setAmmount(final String ammount) {
-		this.ammount = ammount;
+	public void setAmount(final String amount) {
+		this.amount = amount;
 	}
 
 	public String getDueDate() {
@@ -102,12 +102,12 @@ public class BillDTO {
 		this.paymentDate = paymentDate;
 	}
 
-	public String getReceiptNUmber() {
-		return receiptNUmber;
+	public String getReceiptNumber() {
+		return receiptNumber;
 	}
 
-	public void setReceiptNUmber(final String receiptNUmber) {
-		this.receiptNUmber = receiptNUmber;
+	public void setReceiptNumber(final String receiptNumber) {
+		this.receiptNumber = receiptNumber;
 	}
 
 }

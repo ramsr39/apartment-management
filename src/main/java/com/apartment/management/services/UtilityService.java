@@ -27,7 +27,7 @@ private UtilityDao utilityDao;
 		UtilityDTO utilityDTO = JsonUtils.parseJsonToObject(paylaod,
 				UtilityDTO.class);
 		utilityDTO = utilityDao.save(utilityDTO);
-		return Response.ok().entity(utilityDTO).build();
+		return Response.ok().entity(JsonUtils.parseObjectToJson(utilityDTO)).build();
 	}
 
 	@POST
@@ -39,7 +39,7 @@ private UtilityDao utilityDao;
 				BillDTO.class);
 		final String billId = utilityDao.addBill(billDTO);
 		billDTO.setId(billId);
-		return Response.ok().entity(billDTO).build();
+		return Response.ok().entity(JsonUtils.parseObjectToJson(billDTO)).build();
 	}
 
 	@DELETE
