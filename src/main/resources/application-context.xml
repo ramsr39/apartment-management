@@ -40,5 +40,13 @@
 		  <property name="manageUserDao" ref="manageUserDao"/>
 	</bean>
 	
+	<bean id="contactDetailsService" class="com.apartment.management.services.ContactDetailsService">
+		  <property name="contactDao" ref="contactDao"/>
+	</bean>
+	
+	<bean id="utilitService" class="com.apartment.management.services.UtilityService">
+		  <property name="utilityDao" ref="utilityDao"/>
+	</bean>
+	
 
 </beans>
