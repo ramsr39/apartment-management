@@ -51,28 +51,28 @@ public class UtilityService {
 	}
 
 	@GET
-	@Path("/{communityId}/get-utilities")
+	@Path("/{communityId}/find-community-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
    public String getUtilitiesByCommunityId(@PathParam("communityId") final String communityId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByCommunityId(communityId));
 	}
 
 	@GET
-	@Path("/{buildingId}/get-utilities")
+	@Path("/{buildingId}/find-building-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
    public String getUtilitiesByBuildingId(@PathParam("buildingId") final String buildingId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByBuildingId(buildingId));
 	}
 
 	@GET
-	@Path("/{flatId}/get-utilities")
+	@Path("/{flatId}/find-flat-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
    public String getUtilitiesByFlatId(@PathParam("flatId") final String flatId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByFlatId(flatId));
 	}
 
 	@GET
-	@Path("/{userId}/get-utilities")
+	@Path("/{userId}/find-user-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
    public String getUtilitiesByUserId(@PathParam("userId") final String userId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByUserId(userId));

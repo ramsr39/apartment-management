@@ -219,20 +219,20 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 		return getSimpleJdbcTemplate().query(GET_UTILITY_BILL_HISTORY_QUERY,new RowMapper<BillDTO>() {
 			@Override
 			public BillDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
-				BillDTO utilityDTO = new BillDTO();
-				utilityDTO.setId(rs.getString("ID"));
-				utilityDTO.setBillNumber(rs.getString("BILL_NO"));
-				utilityDTO.setAmount(rs.getString("AMOUNT"));
-				utilityDTO.setBillDate(rs.getString("BILL_DATE"));
-				utilityDTO.setDueDate(rs.getString("DUE_DATE"));
-				utilityDTO.setServiceFrom(rs.getString("SERVICE_FROM"));
-				utilityDTO.setServiceTo(rs.getString("SERVICE_TO"));
-				utilityDTO.setRemindMe(rs.getString("REMIND_ME"));
-				utilityDTO.setDescription(rs.getString("DESCRIPTION"));
-				utilityDTO.setPaymentDate(rs.getString("PAYMENT_DATE"));
-				utilityDTO.setReceiptNumber(rs.getString("RECEIPT_NO"));
-				utilityDTO.setUtilityId(utilityId);
-				return utilityDTO;
+				BillDTO billDto = new BillDTO();
+				billDto.setId(rs.getString("ID"));
+				billDto.setBillNumber(rs.getString("BILL_NO"));
+				billDto.setAmount(rs.getString("AMOUNT"));
+				billDto.setBillDate(rs.getString("BILL_DATE"));
+				billDto.setDueDate(rs.getString("DUE_DATE"));
+				billDto.setServiceFrom(rs.getString("SERVICE_FROM"));
+				billDto.setServiceTo(rs.getString("SERVICE_TO"));
+				billDto.setRemindMe(rs.getString("REMIND_ME"));
+				billDto.setDescription(rs.getString("DESCRIPTION"));
+				billDto.setPaymentDate(rs.getString("PAYMENT_DATE"));
+				billDto.setReceiptNumber(rs.getString("RECEIPT_NO"));
+				billDto.setUtilityId(utilityId);
+				return billDto;
 			}
 		},namedSqlParamSource);
 		}catch(final EmptyResultDataAccessException er){
