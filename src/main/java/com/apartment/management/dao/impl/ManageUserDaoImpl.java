@@ -96,7 +96,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
   		+ "PHONE_NO,"
   		+ "RELATION,"
   		+ "DATE_OF_BIRTH,"
-  		+ "USERID) "
+  		+ "USER_ID,FLAT_ID) "
   		    + "values(:CO_OCCUPANT_ID,"
   		    + ":FIRST_NAME,"
   		    + ":LAST_NAME,"
@@ -104,15 +104,16 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
   		    + ":PHONE_NO,"
   		    + ":RELATION,"
   		    + ":DATE_OF_BIRTH,"
-  		    + ":USERID)";
+  		    + ":USER_ID,:FLAT_ID)";
 
- private static final String DELETE_CO_OCCUPANT_QUERY = "DELETE FROM co_occupants_info WHERE CO_OCCUPANT_ID=:CO_OCCUPANT_ID";
+	private static final String DELETE_CO_OCCUPANT_QUERY = "DELETE FROM co_occupants_info WHERE CO_OCCUPANT_ID=:CO_OCCUPANT_ID";
 
-  private static final String DELETE_USER_QUERY="DELETE FROM userinfo WHERE USERID=:USERID";
-  
-  private String FIND_USERS_FOR_SEARH_QUERY="SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo";
-  
-  private static final String GET_USER_DETAILS_BY_USERID_QUERY="SELECT * FROM userinfo WHERE USERID=:USERID" ;
+	private static final String DELETE_USER_QUERY = "DELETE FROM userinfo WHERE USERID=:USERID";
+
+	private String FIND_USERS_FOR_SEARH_QUERY = "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo";
+
+	private static final String GET_USER_DETAILS_BY_USERID_QUERY = "SELECT * FROM userinfo WHERE USERID=:USERID";
+
 	@Override
 	public String save(final UserDTO userDto) {
 		final MapSqlParameterSource namedParameterSource = prepareNamedSqlParameterSource(userDto);
@@ -209,21 +210,6 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 		});
 	}
 
-	private EmergencyContactInfo getEmeregencyContactInfo(final String emailId) {
-		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-		namedParameterSource.addValue("EMAILID", emailId);
-		return getNamedParameterJdbcTemplate().queryForObject("SELECT * FROM emrg_contact_info WHERE EMAILID=:EMAILID", namedParameterSource, new RowMapper<EmergencyContactInfo>() {
-			@Override
-			public EmergencyContactInfo mapRow(final ResultSet rs,final int rowNum) throws SQLException {
-				EmergencyContactInfo contactInfo = new EmergencyContactInfo();
-				contactInfo.setName(rs.getString("NAME"));
-				contactInfo.setRelation(rs.getString("REL"));
-				contactInfo.setPhoneNumber(rs.getString("PHONE_NUM"));
-				return contactInfo;
-			}
-		});
-	}
-
 	@Override
 	public String saveCoOccupent(final CoOccupantDTO coOccupantDTO) {
 		final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
@@ -235,7 +221,8 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 		namedParameterSource.addValue("PHONE_NO", coOccupantDTO.getPhoneNumber());
 		namedParameterSource.addValue("RELATION", coOccupantDTO.getRelation());
 		namedParameterSource.addValue("DATE_OF_BIRTH", coOccupantDTO.getDateOfBirth());
-		namedParameterSource.addValue("USERID", coOccupantDTO.getUserId());
+		namedParameterSource.addValue("USER_ID", coOccupantDTO.getUserId());
+		namedParameterSource.addValue("FLAT_ID", coOccupantDTO.getFlatId());
 		getNamedParameterJdbcTemplate().update(INSERT_OCCUPANTS_QUERY, namedParameterSource);
 		return coOccupentId;
 	}
@@ -286,6 +273,21 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 		namedParameterSource.addValue("PHONE_NUM", emrgCantInfo.getPhoneNumber());
 		namedParameterSource.addValue("EMAILID", emailId);
 		getNamedParameterJdbcTemplate().update(INSERT_EMERGENCY_CANT_INF_QUERY, namedParameterSource);
+	}
+
+	private EmergencyContactInfo getEmeregencyContactInfo(final String emailId) {
+		MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+		namedParameterSource.addValue("EMAILID", emailId);
+		return getNamedParameterJdbcTemplate().queryForObject("SELECT * FROM emrg_contact_info WHERE EMAILID=:EMAILID", namedParameterSource, new RowMapper<EmergencyContactInfo>() {
+			@Override
+			public EmergencyContactInfo mapRow(final ResultSet rs,final int rowNum) throws SQLException {
+				EmergencyContactInfo contactInfo = new EmergencyContactInfo();
+				contactInfo.setName(rs.getString("NAME"));
+				contactInfo.setRelation(rs.getString("REL"));
+				contactInfo.setPhoneNumber(rs.getString("PHONE_NUM"));
+				return contactInfo;
+			}
+		});
 	}
 
 	private StringBuilder buildQuery(final String firstName,

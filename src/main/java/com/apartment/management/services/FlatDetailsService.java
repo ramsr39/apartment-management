@@ -3,6 +3,7 @@ package com.apartment.management.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,10 +15,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang3.StringUtils;
+
 import com.apartment.management.dao.BuildingDao;
 import com.apartment.management.dao.FlatDao;
 import com.apartment.management.dto.BuildingDTO;
+import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.FlatDTO;
 import com.apartment.management.utils.JsonUtils;
 
@@ -86,6 +90,15 @@ public String getFlatDetailsByFlatId(@PathParam("flatId") final String flatId){
 }
 
 @GET
+@Path("/find-co-occupents")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public String findCoOccupents(@QueryParam("flatId") final String flatId,@QueryParam("userId") final String userId){
+   List<CoOccupantDTO> coOccupantList = flatDao.findCoOccupents(flatId,userId);
+  return JsonUtils.parseObjectToJson(coOccupantList);
+}
+
+@GET
 @Path("/myresidence")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -136,27 +149,27 @@ public String getLeasedUnitsDetails(@QueryParam("userId") final String userId){
   return JsonUtils.parseObjectToJson(filterFlatList);
 }
 
-private BuildingDTO prepareBuildingDTO(final String buildingName,
-		final Map<String, String> communityMap) {
-	BuildingDTO buildingDTO = new BuildingDTO();
-	buildingDTO.setCommunityId(communityMap.get("cpmmunityId"));
-	buildingDTO.setCommunityName(communityMap.get("communityName"));
-	buildingDTO.setName(buildingName);
-	return buildingDTO;
-}
-
-private void assetId(final String id,final String message) {
-	if (StringUtils.isBlank(id)) {
-		throw new IllegalArgumentException(message);
+	private BuildingDTO prepareBuildingDTO(final String buildingName,
+			final Map<String, String> communityMap) {
+		BuildingDTO buildingDTO = new BuildingDTO();
+		buildingDTO.setCommunityId(communityMap.get("cpmmunityId"));
+		buildingDTO.setCommunityName(communityMap.get("communityName"));
+		buildingDTO.setName(buildingName);
+		return buildingDTO;
 	}
-}
 
-public void setFlatDao(final FlatDao flatDao) {
-	this.flatDao = flatDao;
-}
+	private void assetId(final String id, final String message) {
+		if (StringUtils.isBlank(id)) {
+			throw new IllegalArgumentException(message);
+		}
+	}
 
-public void setBuildingDao(BuildingDao buildingDao) {
-	this.buildingDao = buildingDao;
-}
+	public void setFlatDao(final FlatDao flatDao) {
+		this.flatDao = flatDao;
+	}
+
+	public void setBuildingDao(BuildingDao buildingDao) {
+		this.buildingDao = buildingDao;
+	}
 
 }

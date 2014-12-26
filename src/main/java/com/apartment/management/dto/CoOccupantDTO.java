@@ -9,6 +9,7 @@ public final class CoOccupantDTO {
 	private String relation;
 	private String dateOfBirth;
 	private String userId;
+	private String flatId;
 
 	public String getId() {
 		return id;
@@ -72,6 +73,14 @@ public final class CoOccupantDTO {
 
 	public void setUserId(final String userId) {
 		this.userId = userId;
+	}
+
+	public String getFlatId() {
+		return flatId;
+	}
+
+	public void setFlatId(final String flatId) {
+		this.flatId = flatId;
 	}
 
 }

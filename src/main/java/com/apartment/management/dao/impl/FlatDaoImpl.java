@@ -2,20 +2,25 @@ package com.apartment.management.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 
 import com.apartment.management.dao.FlatDao;
+import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.FlatDTO;
 import com.apartment.management.dto.UserDTO;
 
 public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao {
+
+	private static final String FIND_CO_OCCUPANTS_FOR_FLAT_USER_QUERY = "SELECT *FROM co_occupants_info WHERE FLAT_ID=:FLAT_ID AND USER_ID=:USER_ID";
 
 	private static final Logger LOG = LoggerFactory.getLogger(FlatDaoImpl.class);
 	
@@ -285,6 +290,36 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 		});
 	}
 
+	@Override
+	public List<CoOccupantDTO> findCoOccupents(final String flatId, final String userId) {
+		try{
+		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		mapSqlParameterSource.addValue("FLAT_ID", flatId);
+		mapSqlParameterSource.addValue("USER_ID", userId);
+		return getNamedParameterJdbcTemplate().query(FIND_CO_OCCUPANTS_FOR_FLAT_USER_QUERY, mapSqlParameterSource,new RowMapper<CoOccupantDTO>() {
+			@Override
+			public CoOccupantDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
+				LOG.info("FlatDaoImpl findCoOccupents mapRow::::start");
+				CoOccupantDTO coOccupantDto = new CoOccupantDTO();
+				coOccupantDto.setId("CO_OCCUPANT_ID");
+				coOccupantDto.setFirstName(rs.getString("FIRST_NAME"));
+				coOccupantDto.setLastName(rs.getString("LAST_NAME"));
+				coOccupantDto.setEmailId(rs.getString("EMAIL_ID"));
+				coOccupantDto.setPhoneNumber(rs.getString("PHONE_NO"));
+				coOccupantDto.setRelation(rs.getString("RELATION"));
+				coOccupantDto.setDateOfBirth(rs.getString("DATE_OF_BIRTH"));
+				coOccupantDto.setFlatId(flatId);
+				coOccupantDto.setUserId(userId);
+				LOG.info("FlatDaoImpl getTenantDetailsForFalt mapRow::::end");
+				return coOccupantDto;
+			}
+		});
+		}catch(final EmptyResultDataAccessException er){
+			LOG.info("found empty coocupants for the user::"+userId+"::"+"flatId:"+flatId);
+			return new ArrayList<CoOccupantDTO>();
+		}
+	}
+
 	private UserDTO getFaltTenantDetails(final String ownerId) {
 		LOG.info("FlatDaoImpl getTenantDetailsForFalt ::::start");
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -304,7 +339,6 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			}
 		});
 	}
-
 }
 
 
