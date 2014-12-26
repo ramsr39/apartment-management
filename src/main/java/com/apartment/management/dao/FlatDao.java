@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.FlatDTO;
 
 public interface FlatDao {
@@ -24,5 +25,7 @@ public interface FlatDao {
 	public FlatDTO getFlatDetailsByFaltId(String flatId);
 
 	public List<FlatDTO> getFlatDetailsByUser(String emailId);
+
+	public List<CoOccupantDTO> findCoOccupents(String flatId, String userId);
 
 }

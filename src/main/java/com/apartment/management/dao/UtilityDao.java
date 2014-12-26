@@ -22,15 +22,15 @@ public interface UtilityDao {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void deleteBill(String billId);
 
-	public List<UtilityDTO> getUtilitiesByCommunityId(String communityId);
+	public List<UtilityDTO> findUtilitiesByCommunityId(String communityId);
 
-	public List<UtilityDTO> getUtilitiesByFlatId(String flatId);
+	public List<UtilityDTO> findUtilitiesByFlatId(String flatId);
 
-	public List<UtilityDTO> getUtilitiesByBuildingId(String buildingId);
+	public List<UtilityDTO> findUtilitiesByBuildingId(String buildingId);
 
-	public List<UtilityDTO> getUtilitiesByUserId(String userId);
+	public List<UtilityDTO> findUtilitiesByUserId(String userId);
 
-	public List<UtilityDTO> getUtilitiesByUtilityId(String utilityId);
+	public List<UtilityDTO> findUtilitiesByUtilityId(String utilityId);
 
 	public List<BillDTO> getUtilityBillsHistory(String utilityId);
 }
