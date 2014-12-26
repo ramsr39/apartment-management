@@ -7,6 +7,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -51,37 +52,37 @@ public class UtilityService {
 	}
 
 	@GET
-	@Path("/{communityId}/find-community-utilities")
+	@Path("/find-community-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
-   public String getUtilitiesByCommunityId(@PathParam("communityId") final String communityId){
+   public String findUtilitiesByCommunityId(@QueryParam("communityId") final String communityId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByCommunityId(communityId));
 	}
 
 	@GET
-	@Path("/{buildingId}/find-building-utilities")
+	@Path("/find-building-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
-   public String getUtilitiesByBuildingId(@PathParam("buildingId") final String buildingId){
+   public String findUtilitiesByBuildingId(@QueryParam("buildingId") final String buildingId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByBuildingId(buildingId));
 	}
 
 	@GET
-	@Path("/{flatId}/find-flat-utilities")
+	@Path("/find-flat-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
-   public String getUtilitiesByFlatId(@PathParam("flatId") final String flatId){
+   public String findUtilitiesByFlatId(@QueryParam("flatId") final String flatId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByFlatId(flatId));
 	}
 
 	@GET
 	@Path("/{userId}/find-user-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
-   public String getUtilitiesByUserId(@PathParam("userId") final String userId){
+   public String findUtilitiesByUserId(@QueryParam("userId") final String userId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByUserId(userId));
 	}
 
 	@GET
-	@Path("/{utilityId}/get-utilities")
+	@Path("/find-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
-    public String getUtilitiesByUtilityId(@PathParam("utilityId") final String utilityId){
+    public String findUtilitiesByUtilityId(@QueryParam("utilityId") final String utilityId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByUtilityId(utilityId));
 	}
 	
