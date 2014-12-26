@@ -1,6 +1,11 @@
 package com.apartment.management.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
 
@@ -11,8 +16,8 @@ import com.apartment.management.dto.ContactDTO;
 import com.apartment.management.dto.UtilityDTO;
 
 public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
-	
-   private ContactDao contactDao;
+
+	private ContactDao contactDao;
 
 	private static final String INSER_UTILITY_QUERY= "INSERT INTO utility(UTILITY_ID,"
 			+ "UTILITY_TYPE,"
@@ -21,10 +26,10 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 			+ "SERVICE_PROVIDER_NAME,"
 			+ "REMIND_ME,"
 			+ "PAID_BY,"
-			+ "FLATID,"
-			+ "BUILDINGID,"
-			+ "COMMUNITYID,"
-			+ "USERID) "
+			+ "FLAT_ID,"
+			+ "BUILDING_ID,"
+			+ "COMMUNITY_ID,"
+			+ "USER_ID) "
 			+ "VALUES(:UTILITY_ID,"
 			         + ":UTILITY_TYPE,"
 			         + ":LEVEL,"
@@ -32,10 +37,10 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 			         + ":SERVICE_PROVIDER_NAME,"
 			         + ":REMIND_ME,"
 			         + ":PAID_BY,"
-			         + ":FLATID,"
-			         + ":BUILDINGID,"
-			         + ":COMMUNITYID,"
-			         + ":USERID)";
+			         + ":FLAT_ID,"
+			         + ":BUILDING_ID,"
+			         + ":COMMUNITY_ID,"
+			         + ":USER_ID)";
 	private static final String INSERT_BILL_QUERY= "INSERT INTO bill(BILL_ID,"
 			+ "BILL_NO,"
 			+ "AMOUNT,"
@@ -65,6 +70,18 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 
 	private static final String DELETE_UTILITY_QUERY = "DELETE FROM utility WHERE UTILITY_ID=:UTILITY_ID";
 
+	private static final String GET_UTILITY_BILL_HISTORY_QUERY = "SELECT *FROM bill WHERE UTILITY_ID=:UTILITY_ID";
+
+	private static final String GET_UTILITIES_BY_FLAT_ID_QUERY = "SELECT *FROM utility WHERE FLAT_ID=:FALT_ID";
+
+	private static final String GET_UTILITIES_BY_BUILDING_ID_QUERY = "SELECT *FROM utility WHERE BUILDING_ID=:BUILDING_ID";
+
+	private static final String GET_UTILITIES_BY_USER_ID_QUERY = "SELECT *FROM utility WHERE USER_ID=:USER_ID";
+
+	private static final String GET_UTILITIES_BY_UTILITY_ID_QUERY = "SELECT *FROM utility WHERE UTILITY_ID=:UTILITY_ID";
+
+	private static final String GET_UTILITIES_BY_COMMUNITY_ID = "SELECT *FROM utility WHERE COMMUNITY_ID=:COMMUNITY_ID";
+
 	@Override
 	public UtilityDTO save(final UtilityDTO utilityDTO) {
 	final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
@@ -76,10 +93,10 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 	namedSqlParamSource.addValue("SERVICE_PROVIDER_NAME", utilityDTO.getServiceProviderName());
 	namedSqlParamSource.addValue("REMIND_ME", utilityDTO.getRemindMe());
 	namedSqlParamSource.addValue("PAID_BY", utilityDTO.getPaidBy());
-	namedSqlParamSource.addValue("FLATID", utilityDTO.getFlatId());
-	namedSqlParamSource.addValue("BUILDINGID", utilityDTO.getBuildingId());
-	namedSqlParamSource.addValue("COMMUNITYID", utilityDTO.getCommunityId());
-	namedSqlParamSource.addValue("USERID", utilityDTO.getUserId());
+	namedSqlParamSource.addValue("FLAT_ID", utilityDTO.getFlatId());
+	namedSqlParamSource.addValue("BUILDING_ID", utilityDTO.getBuildingId());
+	namedSqlParamSource.addValue("COMMUNITY_ID", utilityDTO.getCommunityId());
+	namedSqlParamSource.addValue("USER_ID", utilityDTO.getUserId());
 	getSimpleJdbcTemplate().update(INSER_UTILITY_QUERY, namedSqlParamSource);
 	ContactDTO contactDTO = utilityDTO.getContactDTO();
 	final String contactId = contactDao.save(contactDTO);
@@ -123,6 +140,92 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 		namedSqlParamSource.addValue("ID", billId);
 		getSimpleJdbcTemplate().update(DELETE_BILL_QUERY, namedSqlParamSource);	
 	}
+
+
+	@Override
+	public List<UtilityDTO> getUtilitiesByCommunityId(final String communityId) {
+		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+		namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
+		return getSimpleJdbcTemplate().query(GET_UTILITIES_BY_COMMUNITY_ID, getUtilityRowmapper(),namedSqlParamSource);
+	}
+
+	@Override
+	public List<UtilityDTO> getUtilitiesByFlatId(final String flatId) {
+		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+		namedSqlParamSource.addValue("FLAT_ID", flatId);
+		return getSimpleJdbcTemplate().query(GET_UTILITIES_BY_FLAT_ID_QUERY, getUtilityRowmapper(),namedSqlParamSource);
+	}
+
+
+	@Override
+	public List<UtilityDTO> getUtilitiesByBuildingId(final String buildingId) {
+		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+		namedSqlParamSource.addValue("BUILDING_ID", buildingId);
+		return getSimpleJdbcTemplate().query(GET_UTILITIES_BY_BUILDING_ID_QUERY, getUtilityRowmapper(),namedSqlParamSource);
+	}
+
+
+	@Override
+	public List<UtilityDTO> getUtilitiesByUserId(final String userId) {
+		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+		namedSqlParamSource.addValue("USER_ID", userId);
+		return getSimpleJdbcTemplate().query(GET_UTILITIES_BY_USER_ID_QUERY, getUtilityRowmapper(),namedSqlParamSource);
+	}
+
+
+	@Override
+	public List<UtilityDTO> getUtilitiesByUtilityId(final String utilityId) {
+		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+		namedSqlParamSource.addValue("UTILITY_ID", utilityId);
+		return getSimpleJdbcTemplate().query(GET_UTILITIES_BY_UTILITY_ID_QUERY, getUtilityRowmapper(),namedSqlParamSource);
+	}
+
+	@Override
+	public List<BillDTO> getUtilityBillsHistory(final String utilityId) {
+		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+		namedSqlParamSource.addValue("UTILITY_ID", utilityId);
+		return getSimpleJdbcTemplate().query(GET_UTILITY_BILL_HISTORY_QUERY,new RowMapper<BillDTO>() {
+			@Override
+			public BillDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
+				BillDTO utilityDTO = new BillDTO();
+				utilityDTO.setId(rs.getString("ID"));
+				utilityDTO.setBillNumber(rs.getString("BILL_NO"));
+				utilityDTO.setAmount(rs.getString("AMOUNT"));
+				utilityDTO.setBillDate(rs.getString("BILL_DATE"));
+				utilityDTO.setDueDate(rs.getString("DUE_DATE"));
+				utilityDTO.setServiceFrom(rs.getString("SERVICE_FROM"));
+				utilityDTO.setServiceTo(rs.getString("SERVICE_TO"));
+				utilityDTO.setRemindMe(rs.getString("REMIND_ME"));
+				utilityDTO.setDescription(rs.getString("DESCRIPTION"));
+				utilityDTO.setPaymentDate(rs.getString("PAYMENT_DATE"));
+				utilityDTO.setReceiptNumber(rs.getString("RECEIPT_NO"));
+				utilityDTO.setUtilityId(utilityId);
+				return utilityDTO;
+			}
+		},namedSqlParamSource);
+	}
+
+	private RowMapper<UtilityDTO> getUtilityRowmapper() {
+		return new RowMapper<UtilityDTO>() {
+			@Override
+			public UtilityDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
+				UtilityDTO utilityDTO = new UtilityDTO();
+				utilityDTO.setId(rs.getString("UTILITY_ID"));
+				utilityDTO.setType(rs.getString("UTILITY_TYPE"));
+				utilityDTO.setLevel(rs.getString("LEVEL"));
+				utilityDTO.setServiceNumber(rs.getString("SERVICE_NO"));
+				utilityDTO.setServiceProviderName(rs.getString("SERVICE_PROVIDER_NAME"));
+				utilityDTO.setRemindMe(rs.getString("REMIND_ME"));
+				utilityDTO.setPaidBy(rs.getString("PAID_BY"));
+				utilityDTO.setCommunityId(rs.getString("COMMUNITY_ID"));
+				utilityDTO.setBuildingId(rs.getString("BUILDING_ID"));
+				utilityDTO.setFlatId(rs.getString("FLAT_ID"));
+				utilityDTO.setUserId(rs.getString("USER_ID"));
+				return utilityDTO;
+			}
+		};
+	}
+
 
 	public void setContactDao(final ContactDao contactDao) {
 		this.contactDao = contactDao;

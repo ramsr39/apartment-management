@@ -2,6 +2,7 @@ package com.apartment.management.services;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,7 +18,7 @@ import com.apartment.management.utils.JsonUtils;
 @Path("/utility")
 public class UtilityService {
 
-private UtilityDao utilityDao;
+	private UtilityDao utilityDao;
 
 	@POST
 	@Path("/save")
@@ -47,6 +48,48 @@ private UtilityDao utilityDao;
 	public Response deleteUtility(@PathParam("utilityId") final String utilityId) {
 		utilityDao.delete(utilityId);
 		return Response.ok().build();
+	}
+
+	@GET
+	@Path("/{communityId}/get-utilities")
+	@Produces(MediaType.APPLICATION_JSON)
+   public String getUtilitiesByCommunityId(@PathParam("communityId") final String communityId){
+		return JsonUtils.parseObjectToJson(utilityDao.getUtilitiesByCommunityId(communityId));
+	}
+
+	@GET
+	@Path("/{buildingId}/get-utilities")
+	@Produces(MediaType.APPLICATION_JSON)
+   public String getUtilitiesByBuildingId(@PathParam("buildingId") final String buildingId){
+		return JsonUtils.parseObjectToJson(utilityDao.getUtilitiesByBuildingId(buildingId));
+	}
+
+	@GET
+	@Path("/{flatId}/get-utilities")
+	@Produces(MediaType.APPLICATION_JSON)
+   public String getUtilitiesByFlatId(@PathParam("flatId") final String flatId){
+		return JsonUtils.parseObjectToJson(utilityDao.getUtilitiesByFlatId(flatId));
+	}
+
+	@GET
+	@Path("/{userId}/get-utilities")
+	@Produces(MediaType.APPLICATION_JSON)
+   public String getUtilitiesByUserId(@PathParam("userId") final String userId){
+		return JsonUtils.parseObjectToJson(utilityDao.getUtilitiesByUserId(userId));
+	}
+
+	@GET
+	@Path("/{utilityId}/get-utilities")
+	@Produces(MediaType.APPLICATION_JSON)
+    public String getUtilitiesByUtilityId(@PathParam("utilityId") final String utilityId){
+		return JsonUtils.parseObjectToJson(utilityDao.getUtilitiesByUtilityId(utilityId));
+	}
+	
+	@GET
+	@Path("/{utilityId}/get-utility-bill-history")
+	@Produces(MediaType.APPLICATION_JSON)
+    public String getUtilityBillsHistory(@PathParam("utilityId") final String utilityId){
+		return JsonUtils.parseObjectToJson(utilityDao.getUtilityBillsHistory(utilityId));
 	}
 
 	public void setUtilityDao(final UtilityDao utilityDao) {
