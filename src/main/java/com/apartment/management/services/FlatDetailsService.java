@@ -90,11 +90,11 @@ public String getFlatDetailsByFlatId(@PathParam("flatId") final String flatId){
 }
 
 @GET
-@Path("/find-co-occupents")
+@Path("/find-co-occupants")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public String findCoOccupents(@QueryParam("flatId") final String flatId,@QueryParam("userId") final String userId){
-   List<CoOccupantDTO> coOccupantList = flatDao.findCoOccupents(flatId,userId);
+public String findCoOccupants(@QueryParam("flatId") final String flatId,@QueryParam("userId") final String userId){
+   List<CoOccupantDTO> coOccupantList = flatDao.findCoOccupants(flatId,userId);
   return JsonUtils.parseObjectToJson(coOccupantList);
 }
 

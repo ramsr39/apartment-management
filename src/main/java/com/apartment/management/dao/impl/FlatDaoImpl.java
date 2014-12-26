@@ -291,7 +291,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 	}
 
 	@Override
-	public List<CoOccupantDTO> findCoOccupents(final String flatId, final String userId) {
+	public List<CoOccupantDTO> findCoOccupants(final String flatId, final String userId) {
 		try{
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		mapSqlParameterSource.addValue("FLAT_ID", flatId);
