@@ -1,7 +1,11 @@
 package com.apartment.management.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -9,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.apartment.management.dao.ContactDao;
 import com.apartment.management.dto.ContactDTO;
@@ -55,6 +61,30 @@ public class ContactDetailsService {
 		return Response.ok().build();
 	}
 
+	@GET
+	@Path("/get-contact-details")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getContactDetails(
+			@QueryParam("communityId") final String communityId,
+			@QueryParam("buildingId") final String buildingId,
+			@QueryParam("flatId") final String flatId,
+			@QueryParam("userId") final String userId) {
+		final List<ContactDTO> contactList = new ArrayList<ContactDTO>();
+		if (StringUtils.isNotBlank(communityId)) {
+			contactList.addAll(contactDao.findContactsByCommunityId(communityId));
+		}
+		if (StringUtils.isNotBlank(buildingId)) {
+			contactList.addAll(contactDao.findContactsByBuildingId(buildingId));
+		}
+		if (StringUtils.isNotBlank(flatId)) {
+			contactList.addAll(contactDao.findContactsByFlatId(flatId));
+		}
+		if (StringUtils.isNotBlank(userId)) {
+			contactList.addAll(contactDao.findContactsByUserId(userId));
+		}
+		return JsonUtils.parseObjectToJson(contactList);
+	}
+   
 	public void setContactDao(ContactDao contactDao) {
 		this.contactDao = contactDao;
 	}

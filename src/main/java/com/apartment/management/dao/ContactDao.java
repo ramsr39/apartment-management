@@ -1,5 +1,7 @@
 package com.apartment.management.dao;
 
+import java.util.List;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,5 +17,15 @@ public interface ContactDao {
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void delete(final String contactId);
+
+	public List<ContactDTO> findContactsByCommunityId(String communityId);
+
+	public List<ContactDTO> findContactsByBuildingId(String buildingId);
+
+	public List<ContactDTO> findContactsByFlatId(String flatId);
+
+	public ContactDTO findContactsByUtilityId(String utilityId);
+
+	public List<ContactDTO> findContactsByUserId(String userId);
 
 }

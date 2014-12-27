@@ -80,11 +80,11 @@ public Response delete(@PathParam("flatId") final String flatId){
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public String getFlatDetailsByFlatId(@PathParam("flatId") final String flatId){
-   FlatDTO flatDTO = flatDao.getFlatDetailsByFaltId(flatId);
-  final String buildingName = buildingDao.getBuildingNameById(flatDTO.getBuildingId());
+  final FlatDTO flatDTO = flatDao.getFlatDetailsByFaltId(flatId);
+  final BuildingDTO buildingDTO = buildingDao.getBuildingDetailsByBuildingId(flatDTO.getBuildingId());
   final Map<String, String> communityMap = buildingDao.getBuildingCommunityById(flatDTO.getBuildingId());
-  final BuildingDTO buildingDTO = prepareBuildingDTO(buildingName,communityMap);
   buildingDTO.setId(flatDTO.getBuildingId());
+  buildingDTO.setCommunityName(communityMap.get("communityName"));
   flatDTO.setBuildingDTO(buildingDTO);
   return JsonUtils.parseObjectToJson(flatDTO);
 }
@@ -152,7 +152,7 @@ public String getLeasedUnitsDetails(@QueryParam("userId") final String userId){
 	private BuildingDTO prepareBuildingDTO(final String buildingName,
 			final Map<String, String> communityMap) {
 		BuildingDTO buildingDTO = new BuildingDTO();
-		buildingDTO.setCommunityId(communityMap.get("cpmmunityId"));
+		buildingDTO.setCommunityId(communityMap.get("communityId"));
 		buildingDTO.setCommunityName(communityMap.get("communityName"));
 		buildingDTO.setName(buildingName);
 		return buildingDTO;

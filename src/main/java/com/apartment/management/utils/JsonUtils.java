@@ -11,7 +11,7 @@ public class JsonUtils {
 		Gson gson = new GsonBuilder().create();
 		return gson.toJson(obj);
 		}catch(Exception e){
-			throw new RuntimeException("unable to parse object to json",e);
+			throw new RuntimeException("unable to parse object to json::",e);
 		}
 
 	}
@@ -21,7 +21,7 @@ public class JsonUtils {
 		Gson gson = new GsonBuilder().create();
 		return gson.fromJson(json, clazz);
 		}catch(Exception e){
-			throw new RuntimeException("unable to parse json to object",e);
+			throw new RuntimeException("unable to parse json to object::"+json,e);
 		}
 	}
 

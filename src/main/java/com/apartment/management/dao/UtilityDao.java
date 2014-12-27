@@ -30,7 +30,18 @@ public interface UtilityDao {
 
 	public List<UtilityDTO> findUtilitiesByUserId(String userId);
 
-	public List<UtilityDTO> findUtilitiesByUtilityId(String utilityId);
+	public UtilityDTO findUtilitiesByUtilityId(String utilityId);
 
-	public List<BillDTO> getUtilityBillsHistory(String utilityId);
+	public List<BillDTO> findUtilityBillsHistory(String utilityId);
+
+	public String updateBill(BillDTO billDTO);
+
+	public List<BillDTO> findCommunityPendingBills(final String communityId);
+
+	public List<BillDTO> findBuildingPendingBills(final String buildingId);
+
+	public List<BillDTO> findFlatPendingBills(final String flatId);
+
+	public List<BillDTO> findUserPendingBills(final String userId);
+
 }
