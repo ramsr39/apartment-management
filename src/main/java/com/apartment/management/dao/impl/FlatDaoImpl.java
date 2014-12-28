@@ -33,7 +33,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			+ "TOTAL_BATH_ROOMS,"
 			+ "TOTAL_ROOMS,"
 			+ "RESIDENTTYPE,"
-			+ "BUILDINGID,"
+			+ "BUILDING_ID,"
 			+ "TOTAL_FOUR_WHEELER_PARKINGS,"
 			+ "TOTAL_TWO_WHEELER_PARKINGS,"
 			+ "TWO_WHEELER_PARKING,"
@@ -47,7 +47,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			   + ":TOTAL_BATH_ROOMS,"
 			   + ":TOTAL_ROOMS,"
 			   + ":RESIDENTTYPE,"
-			   + ":BUILDINGID,"
+			   + ":BUILDING_ID,"
 			   + ":TOTAL_FOUR_WHEELER_PARKINGS,"
 			   + ":TOTAL_TWO_WHEELER_PARKINGS,"
 			   + ":TWO_WHEELER_PARKING,"
@@ -61,7 +61,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			+ "TOTAL_BATH_ROOMS=:TOTAL_BATH_ROOMS,"
 			+ "TOTAL_ROOMS=:TOTAL_ROOMS,"
 			+ "RESIDENTTYPE=:RESIDENTTYPE,"
-			+ "BUILDINGID=:BUILDINGID,"
+			+ "BUILDING_ID=:BUILDING_ID,"
 			+ "TOTAL_FOUR_WHEELER_PARKINGS=:TOTAL_FOUR_WHEELER_PARKINGS,"
 			+ "TOTAL_TWO_WHEELER_PARKINGS=:TOTAL_TWO_WHEELER_PARKINGS,"
 			+ "TWO_WHEELER_PARKING=:TWO_WHEELER_PARKING,"
@@ -73,7 +73,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 
 	private static final String DELETE_FLAT_QUERY = "DELETE FROM flatunit WHERE FLAT_ID=:FLAT_ID";
 
-	private static final String FIND_FLAT_DETAILS = "SELECT * FROM flatunit WHERE BUILDINGID=:BUILDINGID";
+	private static final String FIND_FLAT_DETAILS = "SELECT * FROM flatunit WHERE BUILDING_ID=:BUILDING_ID";
 	
 	private static final String FIND_FLAT_DETAILS_BY_FLAT_ID = "SELECT * FROM flatunit WHERE FLAT_ID=:FLAT_ID";
 
@@ -86,11 +86,11 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 			+ "UNITNO,"
 			+ "OWNER_ID,"
 			+ "TENANT_ID,"
-			+ "BUILDINGID"
+			+ "BUILDING_ID"
 			+ " FROM flatunit"
 			+ " WHERE OWNER_ID=:OWNER_ID OR TENANT_ID=:TENANT_ID";
 
-	private static final String FLAT_ID_COUNT_QUERY = "SELECT count(FLAT_ID) from flatunit WHERE BUILDINGID=:BUILDINGID";
+	private static final String FLAT_ID_COUNT_QUERY = "SELECT count(FLAT_ID) from flatunit WHERE BUILDING_ID=:BUILDING_ID";
 
 
 	@Override
@@ -128,7 +128,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 	public List<FlatDTO> findFlatDetailsByBuildingId(final String buildingId) {
 		LOG.info("FlatDaoImpl findFlatDetails by buildingId::::start");
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-		mapSqlParameterSource.addValue("BUILDINGID", buildingId);
+		mapSqlParameterSource.addValue("BUILDING_ID", buildingId);
 		return getNamedParameterJdbcTemplate().query(FIND_FLAT_DETAILS, mapSqlParameterSource,
 				new RowMapper<FlatDTO>() {
 					@Override
@@ -190,7 +190,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 						flatDTO.setDescription(rs.getString("DESCRIPTION"));
 						String ownerId =rs.getString("OWNER_ID");
 						String tenantId=rs.getString("TENANT_ID");
-						flatDTO.setBuildingId(rs.getString("BUILDINGID"));
+						flatDTO.setBuildingId(rs.getString("BUILDING_ID"));
 						if (null != ownerId) {
 							flatDTO.setOwnerDetails(getFlatOwnerDetails(ownerId));
 						}
@@ -211,7 +211,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 		LOG.info("getTotalNumberOfFlatsForBuilding::::start");
 		long toatlUnits=0;
 		for (String buildingId : buildingIdList) {
-			mapSqlParameterSource.addValue("BUILDINGID", buildingId);
+			mapSqlParameterSource.addValue("BUILDING_ID", buildingId);
 			long count = getNamedParameterJdbcTemplate().queryForLong(FLAT_ID_COUNT_QUERY, mapSqlParameterSource);
 			toatlUnits=toatlUnits+count;
 			LOG.info("toatlUnits::::"+toatlUnits);
@@ -237,7 +237,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 						flatDTO.setUnitNumber(rs.getString("UNITNO"));
 						String ownerId =rs.getString("OWNER_ID");
 						String tenantId=rs.getString("TENANT_ID");
-						flatDTO.setBuildingId(rs.getString("BUILDINGID"));
+						flatDTO.setBuildingId(rs.getString("BUILDING_ID"));
 						UserDTO ownerDto = new UserDTO();
 						ownerDto.setEmailId(ownerId);
 						UserDTO tenantDto = new UserDTO();
@@ -265,7 +265,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
 		namedParameterSource.addValue("FOUR_WHEELER_PARKING", flatDTO.getFourWheelerParking());
 		namedParameterSource.addValue("TOTAL_FOUR_WHEELER_PARKINGS", flatDTO.getTotalFourWheelerParkings());
 		namedParameterSource.addValue("RESIDENTTYPE", flatDTO.getResidentType());
-		namedParameterSource.addValue("BUILDINGID", flatDTO.getBuildingId());
+		namedParameterSource.addValue("BUILDING_ID", flatDTO.getBuildingId());
 		namedParameterSource.addValue("DESCRIPTION", flatDTO.getDescription());
 		namedParameterSource.addValue("OWNER_ID", flatDTO.getOwnerDetails().getEmailId());
 		namedParameterSource.addValue("TENANT_ID", flatDTO.getTenantDetails().getEmailId());

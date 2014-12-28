@@ -18,7 +18,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		CommunityDetailsDao {
 
 	private static final String INSERT_COMMUNITY_QUERY = "INSERT INTO community("
-			+ "COMMUNITYID,"
+			+ "COMMUNITY_ID,"
 			+ "COMMUNITYNAME, "
 			+ "ADDRESS_LINE1 ,"
 			+ "ADDRESS_LINE2, "
@@ -30,7 +30,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			+ "DESCRIPTION, "
 			+ "COMMUNITYTYPE,EMAILID) "
 			 + "VALUES("
-			 + ":COMMUNITYID,"
+			 + ":COMMUNITY_ID,"
 			 + ":COMMUNITYNAME,"
 			 + ":ADDRESS_LINE1,"
 			 + ":ADDRESS_LINE2,"
@@ -54,13 +54,13 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			+ "PIN=:PIN,"
 			+ "DESCRIPTION=:DESCRIPTION,"
 			+ "COMMUNITYTYPE=:COMMUNITYTYPE"
-			+ " WHERE COMMUNITYID=:COMMUNITYID";
+			+ " WHERE COMMUNITY_ID=:COMMUNITY_ID";
 	
-	 private static final String GET_COMMUNITY_NAME_QUERY = "SELECT COMMUNITYNAME FROM community  WHERE COMMUNITYID=:COMMUNITYID"; 
+	 private static final String GET_COMMUNITY_NAME_QUERY = "SELECT COMMUNITYNAME FROM community  WHERE COMMUNITY_ID=:COMMUNITY_ID"; 
 	 
 	 private static final String FIND_EMAILID_QUERY="SELECT count(EMAILID) FROM community WHERE EMAILID=:EMAILID";
 	 
-	 private static final String GET_COMMUNITY_DETAILS_QUERY="SELECT COMMUNITYID,"
+	 private static final String GET_COMMUNITY_DETAILS_QUERY="SELECT COMMUNITY_ID,"
 	 		+ "COMMUNITYNAME,"
 	 		+ "ADDRESS_LINE1,"
 	 		+ "ADDRESS_LINE2,"
@@ -74,7 +74,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 	 		+ " FROM community "
 	 		+ "WHERE EMAILID=:EMAILID";
 
-	 private static final String GET_COMMUNITY_DETAILS_BY_ID_QUERY="SELECT COMMUNITYID,"
+	 private static final String GET_COMMUNITY_DETAILS_BY_ID_QUERY="SELECT COMMUNITY_ID,"
 		 		+ "COMMUNITYNAME,"
 		 		+ "ADDRESS_LINE1,"
 		 		+ "ADDRESS_LINE2,"
@@ -86,7 +86,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		 		+ "DESCRIPTION,"
 		 		+ "COMMUNITYTYPE"
 		 		+ " FROM community "
-		 		+ "WHERE COMMUNITYID=:COMMUNITYID";
+		 		+ "WHERE COMMUNITY_ID=:COMMUNITY_ID";
 
 	 private static String FIND_COMMUNITIES_BY_CITY_QUERY="SELECT * FROM community "
 	 		+ "WHERE CITY=:CITY AND EMAILID=:EMAILID";
@@ -100,7 +100,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		try{
 		final String communityId="C"+RandomStringUtils.randomNumeric(8);
-		mapSqlParameterSource.addValue("COMMUNITYID", communityId);
+		mapSqlParameterSource.addValue("COMMUNITY_ID", communityId);
 		mapSqlParameterSource.addValue("COMMUNITYNAME", communityDTO.getName());
 		mapSqlParameterSource.addValue("ADDRESS_LINE1", communityDTO.getAddress1());
 		mapSqlParameterSource.addValue("ADDRESS_LINE2", communityDTO.getAddress2());
@@ -124,7 +124,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 	public void update(final CommunityDTO communityDTO) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 		try{
-	    mapSqlParameterSource.addValue("COMMUNITYID", communityDTO.getId());
+	    mapSqlParameterSource.addValue("COMMUNITY_ID", communityDTO.getId());
 		mapSqlParameterSource.addValue("COMMUNITYNAME", communityDTO.getName());
 		mapSqlParameterSource.addValue("ADDRESS_LINE1", communityDTO.getAddress1());
 		mapSqlParameterSource.addValue("ADDRESS_LINE2", communityDTO.getAddress2());
@@ -150,7 +150,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
 					throws SQLException {
 			CommunityDTO communityDTO = new CommunityDTO();
-			communityDTO.setId(rs.getString("COMMUNITYID"));
+			communityDTO.setId(rs.getString("COMMUNITY_ID"));
 			communityDTO.setName(rs.getString("COMMUNITYNAME"));
 			communityDTO.setType(rs.getString("COMMUNITYTYPE"));
 			communityDTO.setAddress1(rs.getString("ADDRESS_LINE1"));
@@ -192,7 +192,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
 					throws SQLException {
 			CommunityDTO communityDTO = new CommunityDTO();
-			communityDTO.setId(rs.getString("COMMUNITYID"));
+			communityDTO.setId(rs.getString("COMMUNITY_ID"));
 			communityDTO.setName(rs.getString("COMMUNITYNAME"));
 			communityDTO.setType(rs.getString("COMMUNITYTYPE"));
 			communityDTO.setAddress1(rs.getString("ADDRESS_LINE1"));
@@ -218,7 +218,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
 					throws SQLException {
 			CommunityDTO communityDTO = new CommunityDTO();
-			communityDTO.setId(rs.getString("COMMUNITYID"));
+			communityDTO.setId(rs.getString("COMMUNITY_ID"));
 			communityDTO.setName(rs.getString("COMMUNITYNAME"));
 			communityDTO.setType(rs.getString("COMMUNITYTYPE"));
 			communityDTO.setAddress1(rs.getString("ADDRESS_LINE1"));
@@ -237,20 +237,20 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 	@Override
 	public String getCommunityName(String communityId) {
 		MapSqlParameterSource paramaSource = new MapSqlParameterSource();
-		paramaSource.addValue("COMMUNITYID", communityId);
+		paramaSource.addValue("COMMUNITY_ID", communityId);
 		return getSimpleJdbcTemplate().queryForObject(GET_COMMUNITY_NAME_QUERY, String.class, paramaSource);
 	}
 
 	@Override
 	public CommunityDTO getCommunityDetailsByCommunityId(final String communityId) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-		mapSqlParameterSource.addValue("COMMUNITYID", communityId);
+		mapSqlParameterSource.addValue("COMMUNITY_ID", communityId);
 		return getSimpleJdbcTemplate().queryForObject(GET_COMMUNITY_DETAILS_BY_ID_QUERY, new RowMapper<CommunityDTO>() {
 			@Override
 			public CommunityDTO mapRow(final ResultSet rs, final int rowNum)
 					throws SQLException {
 			CommunityDTO communityDTO = new CommunityDTO();
-			communityDTO.setId(rs.getString("COMMUNITYID"));
+			communityDTO.setId(rs.getString("COMMUNITY_ID"));
 			communityDTO.setName(rs.getString("COMMUNITYNAME"));
 			communityDTO.setType(rs.getString("COMMUNITYTYPE"));
 			communityDTO.setAddress1(rs.getString("ADDRESS_LINE1"));
