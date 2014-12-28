@@ -46,7 +46,7 @@ public class ContactDetailsService {
 	public Response updateContactDetails(final String paylaod) {
     	final ContactDTO contactDTO = JsonUtils.parseJsonToObject(paylaod, ContactDTO.class);
     	if(null ==contactDTO){
-    		throw new RuntimeException("contacts dto is null");
+    		throw new RuntimeException("contactdto is null");
     	}
     	contactDao.update(contactDTO);
 		return Response.ok().entity(JsonUtils.parseObjectToJson(contactDTO)).build();
