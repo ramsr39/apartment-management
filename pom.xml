@@ -13,7 +13,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.0.5.RELEASE</spring.version>
-		<taget.war.file.name>target/${war.name}-${version}.war</taget.war.file.name>
+		<!-- <taget.war.file.name>target/${war.name}-${version}.war</taget.war.file.name>-->
 		<context.path>apartment</context.path>
 	</properties>
 
@@ -24,7 +24,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.5</version>
 				<configuration>
-					<warName>${project.artifactId}-${version}</warName>
+					<warName>${project.artifactId}-${project.version}</warName>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -49,7 +49,7 @@
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-server</artifactId>
-			<version>1.8</version>
+			<version>1.17</version>
 		</dependency>
 
 		<dependency>
