@@ -22,13 +22,13 @@ import com.apartment.management.dto.BillDTO;
 import com.apartment.management.dto.UtilityDTO;
 import com.apartment.management.utils.JsonUtils;
 
-@Path("/")
+@Path("/utility")
 public class UtilityService {
 
 	private UtilityDao utilityDao;
 
 	@POST
-	@Path("/utility/save")
+	@Path("/save")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveUtility(final String paylaod) {
@@ -39,7 +39,7 @@ public class UtilityService {
 	}
 
 	@POST
-	@Path("/utility/add-bill")
+	@Path("/add-bill")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addBill(final String paylaod) {
@@ -51,7 +51,7 @@ public class UtilityService {
 	}
 	
 	@PUT
-	@Path("/utility/update-bill")
+	@Path("/update-bill")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateBill(final String paylaod) {
@@ -63,49 +63,49 @@ public class UtilityService {
 	}
 
 	@DELETE
-	@Path("/utility/{utilityId}")
+	@Path("/{utilityId}")
 	public Response deleteUtility(@PathParam("utilityId") final String utilityId) {
 		utilityDao.delete(utilityId);
 		return Response.ok().build();
 	}
 
 	@GET
-	@Path("/utility/find-community-utilities")
+	@Path("/find-community-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
    public String findUtilitiesByCommunityId(@QueryParam("communityId") final String communityId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByCommunityId(communityId));
 	}
 
 	@GET
-	@Path("/utility/find-building-utilities")
+	@Path("/find-building-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
    public String findUtilitiesByBuildingId(@QueryParam("buildingId") final String buildingId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByBuildingId(buildingId));
 	}
 
 	@GET
-	@Path("/utility/find-flat-utilities")
+	@Path("/find-flat-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
    public String findUtilitiesByFlatId(@QueryParam("flatId") final String flatId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByFlatId(flatId));
 	}
 
 	@GET
-	@Path("/utility/find-user-utilities")
+	@Path("/find-user-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
    public String findUtilitiesByUserId(@QueryParam("userId") final String userId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByUserId(userId));
 	}
 
 	@GET
-	@Path("/utility/find-utilities")
+	@Path("/find-utilities")
 	@Produces(MediaType.APPLICATION_JSON)
     public String findUtilitiesByUtilityId(@QueryParam("utilityId") final String utilityId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilitiesByUtilityId(utilityId));
 	}
 
 	@GET
-	@Path("/utility/{utilityId}/get-utility-bill-history")
+	@Path("/{utilityId}/get-utility-bill-history")
 	@Produces(MediaType.APPLICATION_JSON)
     public String findUtilityBillsHistory(@PathParam("utilityId") final String utilityId){
 		return JsonUtils.parseObjectToJson(utilityDao.findUtilityBillsHistory(utilityId));
