@@ -9,23 +9,23 @@ import com.apartment.management.dto.ContactDTO;
 
 public interface ContactDao {
 
-	@Transactional(propagation = Propagation.REQUIRED)
-	public String save(final ContactDTO contactDTO);
+  @Transactional(propagation = Propagation.REQUIRED)
+  public String save(final ContactDTO contactDTO);
 
-	@Transactional(propagation = Propagation.REQUIRED)
-	public void update(final ContactDTO contactDTO);
+  @Transactional(propagation = Propagation.REQUIRED)
+  public void update(final ContactDTO contactDTO);
 
-	@Transactional(propagation = Propagation.REQUIRED)
-	public void delete(final String contactId);
+  @Transactional(propagation = Propagation.REQUIRED)
+  public void delete(final String contactId);
 
-	public List<ContactDTO> findContactsByCommunityId(String communityId);
+  public List<ContactDTO> findContactsByCommunityId(String communityId);
 
-	public List<ContactDTO> findContactsByBuildingId(String buildingId);
+  public List<ContactDTO> findContactsByBuildingId(String buildingId);
 
-	public List<ContactDTO> findContactsByFlatId(String flatId);
+  public List<ContactDTO> findContactsByFlatId(String flatId);
 
-	public ContactDTO findContactsByUtilityId(String utilityId);
+  public ContactDTO findContactsByUtilityId(String utilityId);
 
-	public List<ContactDTO> findContactsByUserId(String userId);
+  public List<ContactDTO> findContactsByUserId(String userId);
 
 }

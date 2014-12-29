@@ -8,23 +8,22 @@ import org.springframework.transaction.annotation.Transactional;
 import com.apartment.management.dto.CommunityDTO;
 
 public interface CommunityDetailsDao {
-	@Transactional(propagation = Propagation.REQUIRED)
-	public String save(String emailId,CommunityDTO communityDTO);
+  @Transactional(propagation = Propagation.REQUIRED)
+  public String save(String emailId, CommunityDTO communityDTO);
 
-	@Transactional(propagation = Propagation.REQUIRED)
-	public void update(CommunityDTO communityDTO);
+  @Transactional(propagation = Propagation.REQUIRED)
+  public void update(CommunityDTO communityDTO);
 
-	public CommunityDTO findCommunityDetailsByUserId(String emailId);
+  public CommunityDTO findCommunityDetailsByUserId(String emailId);
 
-	public CommunityDTO getCommunityDetailsByCommunityId(String communityId);
+  public CommunityDTO getCommunityDetailsByCommunityId(String communityId);
 
-	public boolean isCommnityExistedForUser(String emailId);
+  public boolean isCommnityExistedForUser(String emailId);
 
-	public List<CommunityDTO> findCommunitiesByName(String emailId, String communityName);
+  public List<CommunityDTO> findCommunitiesByName(String emailId, String communityName);
 
-	public List<CommunityDTO> findCommunitiesByCity(String emailId,
-			String communityName, String city);
+  public List<CommunityDTO> findCommunitiesByCity(String emailId, String communityName, String city);
 
-	public String getCommunityName(String communityId);
+  public String getCommunityName(String communityId);
 
 }
