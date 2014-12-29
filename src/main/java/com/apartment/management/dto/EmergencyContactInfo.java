@@ -1,32 +1,34 @@
 package com.apartment.management.dto;
 
 public class EmergencyContactInfo {
-	private String name;
-	private String phoneNumber;
-	private String relation;
+  private String name;
 
-	public String getName() {
-		return name;
-	}
+  private String phoneNumber;
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+  private String relation;
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setPhoneNumber(final String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-	public String getRelation() {
-		return relation;
-	}
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-	public void setRelation(final String relation) {
-		this.relation = relation;
-	}
+  public void setPhoneNumber(final String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getRelation() {
+    return relation;
+  }
+
+  public void setRelation(final String relation) {
+    this.relation = relation;
+  }
 
 }

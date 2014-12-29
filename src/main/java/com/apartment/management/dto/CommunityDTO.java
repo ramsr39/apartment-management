@@ -5,123 +5,134 @@ import java.util.List;
 
 public class CommunityDTO {
 
-	private String id;
-	private String name;
-	private String country;
-	private String city;
-	private String state;
-	private int postalCode;
-	private String address1;
-	private String address2;
-	private String address3;
-	private String type;
-	private String description;
-	private long totalFlats;
-	private List<BuildingDTO> buildingList=new ArrayList<BuildingDTO>();
-	
+  private String id;
 
-	public String getId() {
-		return id;
-	}
+  private String name;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  private String country;
 
-	public String getName() {
-		return name;
-	}
+  private String city;
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+  private String state;
 
-	public String getCountry() {
-		return country;
-	}
+  private int postalCode;
 
-	public void setCountry(final String country) {
-		this.country = country;
-	}
+  private String address1;
 
-	public String getCity() {
-		return city;
-	}
+  private String address2;
 
-	public void setCity(final String city) {
-		this.city = city;
-	}
+  private String address3;
 
-	public String getState() {
-		return state;
-	}
+  private String type;
 
-	public void setState(final String state) {
-		this.state = state;
-	}
+  private String description;
 
-	public int getPostalCode() {
-		return postalCode;
-	}
+  private long totalFlats;
 
-	public void setPostalCode(final int postalCode) {
-		this.postalCode = postalCode;
-	}
+  private List<BuildingDTO> buildingList = new ArrayList<BuildingDTO>();
 
-	public String getAddress1() {
-		return address1;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public void setAddress1(final String address1) {
-		this.address1 = address1;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public String getAddress2() {
-		return address2;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setAddress2(final String address2) {
-		this.address2 = address2;
-	}
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-	public String getAddress3() {
-		return address3;
-	}
+  public String getCountry() {
+    return country;
+  }
 
-	public void setAddress3(final String address3) {
-		this.address3 = address3;
-	}
+  public void setCountry(final String country) {
+    this.country = country;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public String getCity() {
+    return city;
+  }
 
-	public void setType(final String type) {
-		this.type = type;
-	}
+  public void setCity(final String city) {
+    this.city = city;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public String getState() {
+    return state;
+  }
 
-	public void setDescription(final String description) {
-		this.description = description;
-	}
+  public void setState(final String state) {
+    this.state = state;
+  }
 
-	public long getTotalFlats() {
-		return totalFlats;
-	}
+  public int getPostalCode() {
+    return postalCode;
+  }
 
-	public void setTotalFlats(final long totalFlats) {
-		this.totalFlats = totalFlats;
-	}
+  public void setPostalCode(final int postalCode) {
+    this.postalCode = postalCode;
+  }
 
-	public List<BuildingDTO> getBuildingList() {
-		return buildingList;
-	}
+  public String getAddress1() {
+    return address1;
+  }
 
-	public void setBuildingList(List<BuildingDTO> buildingList) {
-		this.buildingList = buildingList;
-	}
+  public void setAddress1(final String address1) {
+    this.address1 = address1;
+  }
+
+  public String getAddress2() {
+    return address2;
+  }
+
+  public void setAddress2(final String address2) {
+    this.address2 = address2;
+  }
+
+  public String getAddress3() {
+    return address3;
+  }
+
+  public void setAddress3(final String address3) {
+    this.address3 = address3;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(final String type) {
+    this.type = type;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(final String description) {
+    this.description = description;
+  }
+
+  public long getTotalFlats() {
+    return totalFlats;
+  }
+
+  public void setTotalFlats(final long totalFlats) {
+    this.totalFlats = totalFlats;
+  }
+
+  public List<BuildingDTO> getBuildingList() {
+    return buildingList;
+  }
+
+  public void setBuildingList(List<BuildingDTO> buildingList) {
+    this.buildingList = buildingList;
+  }
 
 }

@@ -4,149 +4,164 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BuildingDTO {
-	private String id;
-	private String communityId;
-	private String name;
-	private int totalUnits;
-	private int totalFloors;
-	private String imageUrl;
-	private String communityName;
-	private String country;
-	private String city;
-	private String state;
-	private int postalCode;
-	private String address1;
-	private String address2;
-	private String address3;
-	private UserDTO ownerDetails = new UserDTO();
-	private List<FlatDTO> flatList = new ArrayList<FlatDTO>();
+  private String id;
 
-	public String getId() {
-		return id;
-	}
+  private String communityId;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  private String name;
 
-	public String getCommunityId() {
-		return communityId;
-	}
+  private int totalUnits;
 
-	public void setCommunityId(String communityId) {
-		this.communityId = communityId;
-	}
+  private int totalFloors;
 
-	public String getName() {
-		return name;
-	}
+  private String imageUrl;
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+  private String communityName;
 
-	public int getTotalUnits() {
-		return totalUnits;
-	}
+  private String country;
 
-	public void setTotalUnits(final int totalUnits) {
-		this.totalUnits = totalUnits;
-	}
+  private String city;
 
-	public int getTotalFloors() {
-		return totalFloors;
-	}
+  private String state;
 
-	public void setTotalFloors(final int totalFloors) {
-		this.totalFloors = totalFloors;
-	}
+  private int postalCode;
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
+  private String address1;
 
-	public void setImageUrl(final String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
+  private String address2;
 
-	public String getCommunityName() {
-		return communityName;
-	}
+  private String address3;
 
-	public void setCommunityName(final String communityName) {
-		this.communityName = communityName;
-	}
+  private UserDTO ownerDetails = new UserDTO();
 
-	public List<FlatDTO> getFlatList() {
-		return flatList;
-	}
+  private List<FlatDTO> flatList = new ArrayList<FlatDTO>();
 
-	public void setFlatList(final List<FlatDTO> flatList) {
-		this.flatList = flatList;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public String getAddress1() {
-		return address1;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public void setAddress1(final String address1) {
-		this.address1 = address1;
-	}
+  public String getCommunityId() {
+    return communityId;
+  }
 
-	public String getAddress2() {
-		return address2;
-	}
+  public void setCommunityId(String communityId) {
+    this.communityId = communityId;
+  }
 
-	public void setAddress2(final String address2) {
-		this.address2 = address2;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public String getAddress3() {
-		return address3;
-	}
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-	public void setAddress3(final String address3) {
-		this.address3 = address3;
-	}
+  public int getTotalUnits() {
+    return totalUnits;
+  }
 
-	public String getCountry() {
-		return country;
-	}
+  public void setTotalUnits(final int totalUnits) {
+    this.totalUnits = totalUnits;
+  }
 
-	public void setCountry(final String country) {
-		this.country = country;
-	}
+  public int getTotalFloors() {
+    return totalFloors;
+  }
 
-	public String getCity() {
-		return city;
-	}
+  public void setTotalFloors(final int totalFloors) {
+    this.totalFloors = totalFloors;
+  }
 
-	public void setCity(final String city) {
-		this.city = city;
-	}
+  public String getImageUrl() {
+    return imageUrl;
+  }
 
-	public String getState() {
-		return state;
-	}
+  public void setImageUrl(final String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
 
-	public void setState(final String state) {
-		this.state = state;
-	}
+  public String getCommunityName() {
+    return communityName;
+  }
 
-	public int getPostalCode() {
-		return postalCode;
-	}
+  public void setCommunityName(final String communityName) {
+    this.communityName = communityName;
+  }
 
-	public void setPostalCode(final int postalCode) {
-		this.postalCode = postalCode;
-	}
+  public List<FlatDTO> getFlatList() {
+    return flatList;
+  }
 
-	public UserDTO getOwnerDetails() {
-		return ownerDetails;
-	}
+  public void setFlatList(final List<FlatDTO> flatList) {
+    this.flatList = flatList;
+  }
 
-	public void setOwnerDetails(final UserDTO ownerDetails) {
-		this.ownerDetails = ownerDetails;
-	}
+  public String getAddress1() {
+    return address1;
+  }
+
+  public void setAddress1(final String address1) {
+    this.address1 = address1;
+  }
+
+  public String getAddress2() {
+    return address2;
+  }
+
+  public void setAddress2(final String address2) {
+    this.address2 = address2;
+  }
+
+  public String getAddress3() {
+    return address3;
+  }
+
+  public void setAddress3(final String address3) {
+    this.address3 = address3;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(final String country) {
+    this.country = country;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(final String city) {
+    this.city = city;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public void setState(final String state) {
+    this.state = state;
+  }
+
+  public int getPostalCode() {
+    return postalCode;
+  }
+
+  public void setPostalCode(final int postalCode) {
+    this.postalCode = postalCode;
+  }
+
+  public UserDTO getOwnerDetails() {
+    return ownerDetails;
+  }
+
+  public void setOwnerDetails(final UserDTO ownerDetails) {
+    this.ownerDetails = ownerDetails;
+  }
 
 }

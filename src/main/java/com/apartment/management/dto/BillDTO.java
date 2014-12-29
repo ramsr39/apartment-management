@@ -1,113 +1,124 @@
 package com.apartment.management.dto;
 
 public class BillDTO {
-	private String id;
-	private String billNumber;
-	private String billDate;
-	private String amount;
-	private String dueDate;
-	private String description;
-	private String remindMe;
-	private String serviceFrom;
-	private String serviceTo;
-	private String paymentDate;
-	private String receiptNumber;
-	private String utilityId;
+  private String id;
 
-	public String getId() {
-		return id;
-	}
+  private String billNumber;
 
-	public void setId(final String id) {
-		this.id = id;
-	}
+  private String billDate;
 
-	public String getBillNumber() {
-		return billNumber;
-	}
+  private String amount;
 
-	public void setBillNumber(String billNumber) {
-		this.billNumber = billNumber;
-	}
+  private String dueDate;
 
-	public String getBillDate() {
-		return billDate;
-	}
+  private String description;
 
-	public void setBillDate(final String billDate) {
-		this.billDate = billDate;
-	}
+  private String remindMe;
 
-	public String getAmount() {
-		return amount;
-	}
+  private String serviceFrom;
 
-	public void setAmount(final String amount) {
-		this.amount = amount;
-	}
+  private String serviceTo;
 
-	public String getDueDate() {
-		return dueDate;
-	}
+  private String paymentDate;
 
-	public void setDueDate(final String dueDate) {
-		this.dueDate = dueDate;
-	}
+  private String receiptNumber;
 
-	public String getDescription() {
-		return description;
-	}
+  private String utilityId;
 
-	public void setDescription(final String description) {
-		this.description = description;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public String getRemindMe() {
-		return remindMe;
-	}
+  public void setId(final String id) {
+    this.id = id;
+  }
 
-	public void setRemindMe(final String remindMe) {
-		this.remindMe = remindMe;
-	}
+  public String getBillNumber() {
+    return billNumber;
+  }
 
-	public String getUtilityId() {
-		return utilityId;
-	}
+  public void setBillNumber(String billNumber) {
+    this.billNumber = billNumber;
+  }
 
-	public void setUtilityId(final String utilityId) {
-		this.utilityId = utilityId;
-	}
+  public String getBillDate() {
+    return billDate;
+  }
 
-	public String getServiceFrom() {
-		return serviceFrom;
-	}
+  public void setBillDate(final String billDate) {
+    this.billDate = billDate;
+  }
 
-	public void setServiceFrom(final String serviceFrom) {
-		this.serviceFrom = serviceFrom;
-	}
+  public String getAmount() {
+    return amount;
+  }
 
-	public String getServiceTo() {
-		return serviceTo;
-	}
+  public void setAmount(final String amount) {
+    this.amount = amount;
+  }
 
-	public void setServiceTo(final String serviceTo) {
-		this.serviceTo = serviceTo;
-	}
+  public String getDueDate() {
+    return dueDate;
+  }
 
-	public String getPaymentDate() {
-		return paymentDate;
-	}
+  public void setDueDate(final String dueDate) {
+    this.dueDate = dueDate;
+  }
 
-	public void setPaymentDate(final String paymentDate) {
-		this.paymentDate = paymentDate;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public String getReceiptNumber() {
-		return receiptNumber;
-	}
+  public void setDescription(final String description) {
+    this.description = description;
+  }
 
-	public void setReceiptNumber(final String receiptNumber) {
-		this.receiptNumber = receiptNumber;
-	}
+  public String getRemindMe() {
+    return remindMe;
+  }
+
+  public void setRemindMe(final String remindMe) {
+    this.remindMe = remindMe;
+  }
+
+  public String getUtilityId() {
+    return utilityId;
+  }
+
+  public void setUtilityId(final String utilityId) {
+    this.utilityId = utilityId;
+  }
+
+  public String getServiceFrom() {
+    return serviceFrom;
+  }
+
+  public void setServiceFrom(final String serviceFrom) {
+    this.serviceFrom = serviceFrom;
+  }
+
+  public String getServiceTo() {
+    return serviceTo;
+  }
+
+  public void setServiceTo(final String serviceTo) {
+    this.serviceTo = serviceTo;
+  }
+
+  public String getPaymentDate() {
+    return paymentDate;
+  }
+
+  public void setPaymentDate(final String paymentDate) {
+    this.paymentDate = paymentDate;
+  }
+
+  public String getReceiptNumber() {
+    return receiptNumber;
+  }
+
+  public void setReceiptNumber(final String receiptNumber) {
+    this.receiptNumber = receiptNumber;
+  }
 
 }

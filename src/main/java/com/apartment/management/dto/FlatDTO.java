@@ -1,158 +1,174 @@
 package com.apartment.management.dto;
 
 public class FlatDTO {
-	private String id;
-	private String buildingId;
-	private String unitNumber;
-	private String floorNumber;
-	private int unitSize;
-	private int totalBedRooms;
-	private int totalBathRooms;
-	private int totalRooms;
-	private String residentType;
-	private String twoWheelerParking;
-	private String fourWheelerParking;
-	private int totalTwoWheelerParkings;
-	private int totalFourWheelerParkings;
-	private String description;
-    private UserDTO ownerDetails = new UserDTO();
-    private UserDTO tenantDetails = new UserDTO();
-    private BuildingDTO buildingDTO = new BuildingDTO();
+  private String id;
 
-	public String getId() {
-		return id;
-	}
+  private String buildingId;
 
-	public void setId(final String id) {
-		this.id = id;
-	}
+  private String unitNumber;
 
-	public String getBuildingId() {
-		return buildingId;
-	}
+  private String floorNumber;
 
-	public void setBuildingId(String buildingId) {
-		this.buildingId = buildingId;
-	}
+  private int unitSize;
 
-	public String getUnitNumber() {
-		return unitNumber;
-	}
+  private int totalBedRooms;
 
-	public void setUnitNumber(final String unitNumber) {
-		this.unitNumber = unitNumber;
-	}
+  private int totalBathRooms;
 
-	public String getFloorNumber() {
-		return floorNumber;
-	}
+  private int totalRooms;
 
-	public void setFloorNumber(final String floorNumber) {
-		this.floorNumber = floorNumber;
-	}
+  private String residentType;
 
-	public int getUnitSize() {
-		return unitSize;
-	}
+  private String twoWheelerParking;
 
-	public void setUnitSize(final int unitSize) {
-		this.unitSize = unitSize;
-	}
+  private String fourWheelerParking;
 
-	public int getTotalBedRooms() {
-		return totalBedRooms;
-	}
+  private int totalTwoWheelerParkings;
 
-	public void setTotalBedRooms(final int totalBedRooms) {
-		this.totalBedRooms = totalBedRooms;
-	}
+  private int totalFourWheelerParkings;
 
-	public int getTotalBathRooms() {
-		return totalBathRooms;
-	}
+  private String description;
 
-	public void setTotalBathRooms(final int totalBathRooms) {
-		this.totalBathRooms = totalBathRooms;
-	}
+  private UserDTO ownerDetails = new UserDTO();
 
-	public int getTotalRooms() {
-		return totalRooms;
-	}
+  private UserDTO tenantDetails = new UserDTO();
 
-	public void setTotalRooms(final int totalRooms) {
-		this.totalRooms = totalRooms;
-	}
+  private BuildingDTO buildingDTO = new BuildingDTO();
 
-	public String getResidentType() {
-		return residentType;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public void setResidentType(final String residentType) {
-		this.residentType = residentType;
-	}
+  public void setId(final String id) {
+    this.id = id;
+  }
 
-	public String getTwoWheelerParking() {
-		return twoWheelerParking;
-	}
+  public String getBuildingId() {
+    return buildingId;
+  }
 
-	public void setTwoWheelerParking(final String twoWheelerParking) {
-		this.twoWheelerParking = twoWheelerParking;
-	}
+  public void setBuildingId(String buildingId) {
+    this.buildingId = buildingId;
+  }
 
-	public String getFourWheelerParking() {
-		return fourWheelerParking;
-	}
+  public String getUnitNumber() {
+    return unitNumber;
+  }
 
-	public void setFourWheelerParking(final String fourWheelerParking) {
-		this.fourWheelerParking = fourWheelerParking;
-	}
+  public void setUnitNumber(final String unitNumber) {
+    this.unitNumber = unitNumber;
+  }
 
-	public int getTotalTwoWheelerParkings() {
-		return totalTwoWheelerParkings;
-	}
+  public String getFloorNumber() {
+    return floorNumber;
+  }
 
-	public void setTotalTwoWheelerParkings(final int totalTwoWheelerParkings) {
-		this.totalTwoWheelerParkings = totalTwoWheelerParkings;
-	}
+  public void setFloorNumber(final String floorNumber) {
+    this.floorNumber = floorNumber;
+  }
 
-	public int getTotalFourWheelerParkings() {
-		return totalFourWheelerParkings;
-	}
+  public int getUnitSize() {
+    return unitSize;
+  }
 
-	public void setTotalFourWheelerParkings(final int totalFourWheelerParkings) {
-		this.totalFourWheelerParkings = totalFourWheelerParkings;
-	}
+  public void setUnitSize(final int unitSize) {
+    this.unitSize = unitSize;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public int getTotalBedRooms() {
+    return totalBedRooms;
+  }
 
-	public void setDescription(final String description) {
-		this.description = description;
-	}
+  public void setTotalBedRooms(final int totalBedRooms) {
+    this.totalBedRooms = totalBedRooms;
+  }
 
-	public UserDTO getOwnerDetails() {
-		return ownerDetails;
-	}
+  public int getTotalBathRooms() {
+    return totalBathRooms;
+  }
 
-	public void setOwnerDetails(final UserDTO ownerDetails) {
-		this.ownerDetails = ownerDetails;
-	}
+  public void setTotalBathRooms(final int totalBathRooms) {
+    this.totalBathRooms = totalBathRooms;
+  }
 
-	public UserDTO getTenantDetails() {
-		return tenantDetails;
-	}
+  public int getTotalRooms() {
+    return totalRooms;
+  }
 
-	public void setTenantDetails(final UserDTO tenantDetails) {
-		this.tenantDetails = tenantDetails;
-	}
+  public void setTotalRooms(final int totalRooms) {
+    this.totalRooms = totalRooms;
+  }
 
-	public BuildingDTO getBuildingDTO() {
-		return buildingDTO;
-	}
+  public String getResidentType() {
+    return residentType;
+  }
 
-	public void setBuildingDTO(final BuildingDTO buildingDTO) {
-		this.buildingDTO = buildingDTO;
-	}
+  public void setResidentType(final String residentType) {
+    this.residentType = residentType;
+  }
+
+  public String getTwoWheelerParking() {
+    return twoWheelerParking;
+  }
+
+  public void setTwoWheelerParking(final String twoWheelerParking) {
+    this.twoWheelerParking = twoWheelerParking;
+  }
+
+  public String getFourWheelerParking() {
+    return fourWheelerParking;
+  }
+
+  public void setFourWheelerParking(final String fourWheelerParking) {
+    this.fourWheelerParking = fourWheelerParking;
+  }
+
+  public int getTotalTwoWheelerParkings() {
+    return totalTwoWheelerParkings;
+  }
+
+  public void setTotalTwoWheelerParkings(final int totalTwoWheelerParkings) {
+    this.totalTwoWheelerParkings = totalTwoWheelerParkings;
+  }
+
+  public int getTotalFourWheelerParkings() {
+    return totalFourWheelerParkings;
+  }
+
+  public void setTotalFourWheelerParkings(final int totalFourWheelerParkings) {
+    this.totalFourWheelerParkings = totalFourWheelerParkings;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(final String description) {
+    this.description = description;
+  }
+
+  public UserDTO getOwnerDetails() {
+    return ownerDetails;
+  }
+
+  public void setOwnerDetails(final UserDTO ownerDetails) {
+    this.ownerDetails = ownerDetails;
+  }
+
+  public UserDTO getTenantDetails() {
+    return tenantDetails;
+  }
+
+  public void setTenantDetails(final UserDTO tenantDetails) {
+    this.tenantDetails = tenantDetails;
+  }
+
+  public BuildingDTO getBuildingDTO() {
+    return buildingDTO;
+  }
+
+  public void setBuildingDTO(final BuildingDTO buildingDTO) {
+    this.buildingDTO = buildingDTO;
+  }
 
 }

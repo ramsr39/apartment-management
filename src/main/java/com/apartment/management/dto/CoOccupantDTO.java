@@ -1,86 +1,94 @@
 package com.apartment.management.dto;
 
 public final class CoOccupantDTO {
-	private String id;
-	private String firstName;
-	private String lastName;
-	private String emailId;
-	private String phoneNumber;
-	private String relation;
-	private String dateOfBirth;
-	private String userId;
-	private String flatId;
+  private String id;
 
-	public String getId() {
-		return id;
-	}
+  private String firstName;
 
-	public void setId(final String id) {
-		this.id = id;
-	}
+  private String lastName;
 
-	public String getFirstName() {
-		return firstName;
-	}
+  private String emailId;
 
-	public void setFirstName(final String firstName) {
-		this.firstName = firstName;
-	}
+  private String phoneNumber;
 
-	public String getLastName() {
-		return lastName;
-	}
+  private String relation;
 
-	public void setLastName(final String lastName) {
-		this.lastName = lastName;
-	}
+  private String dateOfBirth;
 
-	public String getEmailId() {
-		return emailId;
-	}
+  private String userId;
 
-	public void setEmailId(final String emailId) {
-		this.emailId = emailId;
-	}
+  private String flatId;
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public void setPhoneNumber(final String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+  public void setId(final String id) {
+    this.id = id;
+  }
 
-	public String getRelation() {
-		return relation;
-	}
+  public String getFirstName() {
+    return firstName;
+  }
 
-	public void setRelation(final String relation) {
-		this.relation = relation;
-	}
+  public void setFirstName(final String firstName) {
+    this.firstName = firstName;
+  }
 
-	public String getDateOfBirth() {
-		return dateOfBirth;
-	}
+  public String getLastName() {
+    return lastName;
+  }
 
-	public void setDateOfBirth(final String dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+  public void setLastName(final String lastName) {
+    this.lastName = lastName;
+  }
 
-	public String getUserId() {
-		return userId;
-	}
+  public String getEmailId() {
+    return emailId;
+  }
 
-	public void setUserId(final String userId) {
-		this.userId = userId;
-	}
+  public void setEmailId(final String emailId) {
+    this.emailId = emailId;
+  }
 
-	public String getFlatId() {
-		return flatId;
-	}
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
 
-	public void setFlatId(final String flatId) {
-		this.flatId = flatId;
-	}
+  public void setPhoneNumber(final String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public String getRelation() {
+    return relation;
+  }
+
+  public void setRelation(final String relation) {
+    this.relation = relation;
+  }
+
+  public String getDateOfBirth() {
+    return dateOfBirth;
+  }
+
+  public void setDateOfBirth(final String dateOfBirth) {
+    this.dateOfBirth = dateOfBirth;
+  }
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(final String userId) {
+    this.userId = userId;
+  }
+
+  public String getFlatId() {
+    return flatId;
+  }
+
+  public void setFlatId(final String flatId) {
+    this.flatId = flatId;
+  }
 
 }
