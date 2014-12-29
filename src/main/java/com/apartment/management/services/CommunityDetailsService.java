@@ -28,105 +28,107 @@ import com.apartment.management.utils.JsonUtils;
 
 @Path("/community")
 public class CommunityDetailsService {
-	
-	private static final Logger LOG = LoggerFactory.getLogger(CommunityDetailsService.class);
-	
-	private CommunityDetailsDao communityDetailsDao;
 
-	private BuildingDao buildingDao;
-	
-	private FlatDao flatDao;
+  private static final Logger LOG = LoggerFactory.getLogger(CommunityDetailsService.class);
 
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response saveCommunityDetails(@HeaderParam("user_id") final String emailId,final String payload) {
-		final CommunityDTO communityDTO =JsonUtils.parseJsonToObject(payload,CommunityDTO.class);
-		final String communityId = communityDetailsDao.save(emailId,communityDTO);
-		communityDTO.setId(communityId);
-		return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO))
-				.build();
-	}
+  private CommunityDetailsDao communityDetailsDao;
 
-	@PUT
-	@Path("/{communityId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateCommunityDetails(final String payload) {
-		final CommunityDTO communityDTO =JsonUtils.parseJsonToObject(payload,CommunityDTO.class);
-		communityDetailsDao.update(communityDTO);
-		return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO))
-				.build();
-	}
+  private BuildingDao buildingDao;
 
-	@GET
-	@Path("/find-community-details")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String findCommunityDetailsByUserId(@HeaderParam("user_id") final String emailId){
-		CommunityDTO communityDTO = new CommunityDTO();
-		if(!communityDetailsDao.isCommnityExistedForUser(emailId)){
-		 return JsonUtils.parseObjectToJson(communityDTO);
-		}
-	    communityDTO = communityDetailsDao.findCommunityDetailsByUserId(emailId);
-		List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityDTO.getId());
-		List<String> buildingIdList = getBuildingIds(buildingList);
-		long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
-		communityDTO.setBuildingList(buildingList);
-		communityDTO.setTotalFlats(totalFlats);
-		return JsonUtils.parseObjectToJson(communityDTO);
-	}
+  private FlatDao flatDao;
 
-	@GET
-	@Path("/{communityId}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String findCommunityDetailsByCommunityId(@PathParam("communityId") final String communityId){
-		CommunityDTO communityDTO = new CommunityDTO();
-	    communityDTO = communityDetailsDao.getCommunityDetailsByCommunityId(communityId);
-		List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityId);
-		communityDTO.setBuildingList(buildingList);
-		List<String> buildingIdList = getBuildingIds(buildingList);
-		long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
-		communityDTO.setBuildingList(buildingList);
-		communityDTO.setTotalFlats(totalFlats);
-		return JsonUtils.parseObjectToJson(communityDTO);
-	}
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response saveCommunityDetails(@HeaderParam("user_id")
+  final String emailId, final String payload) {
+    final CommunityDTO communityDTO = JsonUtils.parseJsonToObject(payload, CommunityDTO.class);
+    final String communityId = communityDetailsDao.save(emailId, communityDTO);
+    communityDTO.setId(communityId);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO)).build();
+  }
 
-	@GET
-	@Path("/search")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String findCommunitiesByNameAndCity(@QueryParam("communityName") final String communityName,
-			@QueryParam("city") final String city,
-			@HeaderParam("user_id") final String emailId) {
+  @PUT
+  @Path("/{communityId}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updateCommunityDetails(final String payload) {
+    final CommunityDTO communityDTO = JsonUtils.parseJsonToObject(payload, CommunityDTO.class);
+    communityDetailsDao.update(communityDTO);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO)).build();
+  }
 
-		 List<CommunityDTO> communitiesList = new ArrayList<CommunityDTO>();
-		if (StringUtils.isNotBlank(city)) {
-			communitiesList = communityDetailsDao.findCommunitiesByCity(emailId,communityName,city);
-			return JsonUtils.parseObjectToJson(communitiesList);
-		}
-		communitiesList = communityDetailsDao.findCommunitiesByName(emailId,communityName);
-		return JsonUtils.parseObjectToJson(communitiesList);
-	}
+  @GET
+  @Path("/find-community-details")
+  @Produces(MediaType.APPLICATION_JSON)
+  public String findCommunityDetailsByUserId(@HeaderParam("user_id")
+  final String emailId) {
+    CommunityDTO communityDTO = new CommunityDTO();
+    if (!communityDetailsDao.isCommnityExistedForUser(emailId)) {
+      return JsonUtils.parseObjectToJson(communityDTO);
+    }
+    communityDTO = communityDetailsDao.findCommunityDetailsByUserId(emailId);
+    List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityDTO.getId());
+    List<String> buildingIdList = getBuildingIds(buildingList);
+    long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
+    communityDTO.setBuildingList(buildingList);
+    communityDTO.setTotalFlats(totalFlats);
+    return JsonUtils.parseObjectToJson(communityDTO);
+  }
 
-	private List<String> getBuildingIds(final List<BuildingDTO> buildingList) {
-		LOG.info("buiding list size:::"+buildingList.size());
-		List<String> buildingIdList = new ArrayList<String>();
-		for(BuildingDTO building:buildingList){
-			LOG.info("buidingId:::"+building.getId());
-			buildingIdList.add(building.getId());
-		}
-		return buildingIdList;
-	}
+  @GET
+  @Path("/{communityId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public String findCommunityDetailsByCommunityId(@PathParam("communityId")
+  final String communityId) {
+    CommunityDTO communityDTO = new CommunityDTO();
+    communityDTO = communityDetailsDao.getCommunityDetailsByCommunityId(communityId);
+    List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityId);
+    communityDTO.setBuildingList(buildingList);
+    List<String> buildingIdList = getBuildingIds(buildingList);
+    long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
+    communityDTO.setBuildingList(buildingList);
+    communityDTO.setTotalFlats(totalFlats);
+    return JsonUtils.parseObjectToJson(communityDTO);
+  }
 
-	public void setCommunityDetailsDao(final CommunityDetailsDao communityDetailsDao) {
-		this.communityDetailsDao = communityDetailsDao;
-	}
+  @GET
+  @Path("/search")
+  @Produces(MediaType.APPLICATION_JSON)
+  public String findCommunitiesByNameAndCity(@QueryParam("communityName")
+  final String communityName, @QueryParam("city")
+  final String city, @HeaderParam("user_id")
+  final String emailId) {
 
-	public void setBuildingDao(final BuildingDao buildingDao) {
-		this.buildingDao = buildingDao;
-	}
+    List<CommunityDTO> communitiesList = new ArrayList<CommunityDTO>();
+    if (StringUtils.isNotBlank(city)) {
+      communitiesList = communityDetailsDao.findCommunitiesByCity(emailId, communityName, city);
+      return JsonUtils.parseObjectToJson(communitiesList);
+    }
+    communitiesList = communityDetailsDao.findCommunitiesByName(emailId, communityName);
+    return JsonUtils.parseObjectToJson(communitiesList);
+  }
 
-	public void setFlatDao(final FlatDao flatDao) {
-		this.flatDao = flatDao;
-	}
+  private List<String> getBuildingIds(final List<BuildingDTO> buildingList) {
+    LOG.info("buiding list size:::" + buildingList.size());
+    List<String> buildingIdList = new ArrayList<String>();
+    for (BuildingDTO building : buildingList) {
+      LOG.info("buidingId:::" + building.getId());
+      buildingIdList.add(building.getId());
+    }
+    return buildingIdList;
+  }
+
+  public void setCommunityDetailsDao(final CommunityDetailsDao communityDetailsDao) {
+    this.communityDetailsDao = communityDetailsDao;
+  }
+
+  public void setBuildingDao(final BuildingDao buildingDao) {
+    this.buildingDao = buildingDao;
+  }
+
+  public void setFlatDao(final FlatDao flatDao) {
+    this.flatDao = flatDao;
+  }
 
 }
