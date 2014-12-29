@@ -26,82 +26,84 @@ import com.apartment.management.utils.JsonUtils;
 @Path("/community/{communityId}/building")
 public class BuildingDetailsService {
 
-	private BuildingDao buildingDao;
-	
-	private FlatDao flatDao;
+  private BuildingDao buildingDao;
 
-	private CommunityDetailsDao communityDetailsDao;
+  private FlatDao flatDao;
 
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response save(@PathParam("communityId") final String communityId,
-			final String buildingDetailsPayload){
-			assertId(communityId,"building id should not null or empty");
-		BuildingDTO buildingDTO = JsonUtils.parseJsonToObject(buildingDetailsPayload, BuildingDTO.class);
-		if(null==buildingDTO){
-			throw new RuntimeException("BuildingDTO should not be null");
-		}
-		buildingDTO.setCommunityId(communityId);
-		String buildingId = buildingDao.save(buildingDTO);
-		buildingDTO.setId(buildingId);
-		return Response.ok().entity(JsonUtils.parseObjectToJson(buildingDTO)).build();
-	}
+  private CommunityDetailsDao communityDetailsDao;
 
-	@PUT
-	@Path("/{buildingId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response update(@PathParam("buildingId") final String buildingId,final String flatDetilsPayload){
-		assertId(buildingId,"flatId should not null");
-		BuildingDTO buildingDTO = JsonUtils.parseJsonToObject(flatDetilsPayload, BuildingDTO.class);
-		if(null==buildingDTO){
-			throw new RuntimeException("FlatDTO should not be null");
-		}
-		buildingDTO.setId(buildingId);
-		buildingDao.update(buildingDTO);
-		return Response.ok().entity(JsonUtils.parseObjectToJson(buildingDTO)).build();
-	}
-
-	@DELETE
-	@Path("/{buildingId}")
-	public Response delete(@PathParam("buildingId") final String buildingId){
-		assertId(buildingId, "flatId should not null or empty");
-		long id=Long.parseLong(buildingId);
-		buildingDao.delete(id);
-		return Response.ok().build();
-	}
-
-    @GET
-    @Path("/find-building-details")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response findBuildingDetails(@QueryParam("buildingId") final String buildingId){
-    	BuildingDTO buildingDTO = buildingDao.getBuildingDetailsByBuildingId(buildingId);
-    	final String communityName = communityDetailsDao.getCommunityName(buildingDTO.getCommunityId());
-    	buildingDTO.setCommunityName(communityName);
-    	final List<FlatDTO> flatsList  = flatDao.findFlatDetailsByBuildingId(buildingId);
-    	buildingDTO.setFlatList(flatsList);
-    	final String responseEntity = JsonUtils.parseObjectToJson(buildingDTO);
-    	return Response.ok().entity(responseEntity).build();
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response save(@PathParam("communityId")
+  final String communityId, final String buildingDetailsPayload) {
+    assertId(communityId, "building id should not null or empty");
+    BuildingDTO buildingDTO = JsonUtils.parseJsonToObject(buildingDetailsPayload, BuildingDTO.class);
+    if (null == buildingDTO) {
+      throw new RuntimeException("BuildingDTO should not be null");
     }
+    buildingDTO.setCommunityId(communityId);
+    String buildingId = buildingDao.save(buildingDTO);
+    buildingDTO.setId(buildingId);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(buildingDTO)).build();
+  }
 
-	public void setCommunityDetailsDao(final CommunityDetailsDao communityDetailsDao) {
-		this.communityDetailsDao = communityDetailsDao;
-	}
+  @PUT
+  @Path("/{buildingId}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response update(@PathParam("buildingId")
+  final String buildingId, final String flatDetilsPayload) {
+    assertId(buildingId, "flatId should not null");
+    BuildingDTO buildingDTO = JsonUtils.parseJsonToObject(flatDetilsPayload, BuildingDTO.class);
+    if (null == buildingDTO) {
+      throw new RuntimeException("FlatDTO should not be null");
+    }
+    buildingDTO.setId(buildingId);
+    buildingDao.update(buildingDTO);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(buildingDTO)).build();
+  }
 
-	private void assertId(final String id,final String message) {
-		if (StringUtils.isBlank(id)) {
-			throw new IllegalArgumentException(message);
-		}
-	}
+  @DELETE
+  @Path("/{buildingId}")
+  public Response delete(@PathParam("buildingId")
+  final String buildingId) {
+    assertId(buildingId, "flatId should not null or empty");
+    long id = Long.parseLong(buildingId);
+    buildingDao.delete(id);
+    return Response.ok().build();
+  }
 
-	public void setBuildingDao(final BuildingDao buildingDao) {
-		this.buildingDao = buildingDao;
-	}
+  @GET
+  @Path("/find-building-details")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response findBuildingDetails(@QueryParam("buildingId")
+  final String buildingId) {
+    BuildingDTO buildingDTO = buildingDao.getBuildingDetailsByBuildingId(buildingId);
+    final String communityName = communityDetailsDao.getCommunityName(buildingDTO.getCommunityId());
+    buildingDTO.setCommunityName(communityName);
+    final List<FlatDTO> flatsList = flatDao.findFlatDetailsByBuildingId(buildingId);
+    buildingDTO.setFlatList(flatsList);
+    final String responseEntity = JsonUtils.parseObjectToJson(buildingDTO);
+    return Response.ok().entity(responseEntity).build();
+  }
 
-	public void setFlatDao(final FlatDao flatDao) {
-		this.flatDao = flatDao;
-	}
-	
-	
+  public void setCommunityDetailsDao(final CommunityDetailsDao communityDetailsDao) {
+    this.communityDetailsDao = communityDetailsDao;
+  }
+
+  private void assertId(final String id, final String message) {
+    if (StringUtils.isBlank(id)) {
+      throw new IllegalArgumentException(message);
+    }
+  }
+
+  public void setBuildingDao(final BuildingDao buildingDao) {
+    this.buildingDao = buildingDao;
+  }
+
+  public void setFlatDao(final FlatDao flatDao) {
+    this.flatDao = flatDao;
+  }
+
 }
