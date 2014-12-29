@@ -10,21 +10,21 @@ import com.apartment.management.dto.BuildingDTO;
 
 public interface BuildingDao {
 
- @Transactional(propagation = Propagation.REQUIRED)
- public String save(BuildingDTO buildingDTO);
+  @Transactional(propagation = Propagation.REQUIRED)
+  public String save(BuildingDTO buildingDTO);
 
-@Transactional(propagation = Propagation.REQUIRED)
- public void update(BuildingDTO buildingDTO);
+  @Transactional(propagation = Propagation.REQUIRED)
+  public void update(BuildingDTO buildingDTO);
 
-@Transactional(propagation = Propagation.REQUIRED)
- public void delete(long buiildingId);
+  @Transactional(propagation = Propagation.REQUIRED)
+  public void delete(long buiildingId);
 
- public List<BuildingDTO> findBuildingDetailsByCommunityId(String communityId);
+  public List<BuildingDTO> findBuildingDetailsByCommunityId(String communityId);
 
- public BuildingDTO getBuildingDetailsByBuildingId(String buildingId);
+  public BuildingDTO getBuildingDetailsByBuildingId(String buildingId);
 
- public String getBuildingNameById(final String buildingId);
+  public String getBuildingNameById(final String buildingId);
 
- public Map<String, String> getBuildingCommunityById(final String buildingId);
+  public Map<String, String> getBuildingCommunityById(final String buildingId);
 
 }
