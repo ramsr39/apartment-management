@@ -83,152 +83,153 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 			   + "USER_ID=:USER_ID WHERE CONTACT_ID=:CONTAT_ID";
 
 	
-	private static final String FIND_CONTACT_BASE_QUERY="SELECT *FROM contact ";
+  private static final String FIND_CONTACT_BASE_QUERY = "SELECT *FROM contact ";
 
-	private static final String DELETE_CONTACT = "DELETE FROM contact WHERE CONTACT_ID=:CONTACT_ID";
+  private static final String DELETE_CONTACT = "DELETE FROM contact WHERE CONTACT_ID=:CONTACT_ID";
 
-	@Override
-	public String save(final ContactDTO contactDTO) {
-		final String contactId = "CN"+RandomStringUtils.randomNumeric(8);
-		final MapSqlParameterSource namedSqlParamSource = prepareNamedParamSource(contactDTO,contactId);
-		getSimpleJdbcTemplate().update(INSERT_CONTACT_DETAILS_QUERY, namedSqlParamSource);
-		return contactId;
-	}
+  @Override
+  public String save(final ContactDTO contactDTO) {
+    final String contactId = "CN" + RandomStringUtils.randomNumeric(8);
+    final MapSqlParameterSource namedSqlParamSource = prepareNamedParamSource(contactDTO, contactId);
+    getSimpleJdbcTemplate().update(INSERT_CONTACT_DETAILS_QUERY, namedSqlParamSource);
+    return contactId;
+  }
 
-	@Override
-	public void update(final ContactDTO contactDTO) {
-		final MapSqlParameterSource namedSqlParamSource = prepareNamedParamSource(contactDTO,contactDTO.getId());
-		getSimpleJdbcTemplate().update(UPDATE_CONTACT_DETAILS_QUERY, namedSqlParamSource);
-	}
+  @Override
+  public void update(final ContactDTO contactDTO) {
+    final MapSqlParameterSource namedSqlParamSource = prepareNamedParamSource(contactDTO, contactDTO.getId());
+    getSimpleJdbcTemplate().update(UPDATE_CONTACT_DETAILS_QUERY, namedSqlParamSource);
+  }
 
-	@Override
-	public void delete(final String contactId) {
-		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-		namedSqlParamSource.addValue("CONTACT_ID", contactId);
-		getSimpleJdbcTemplate().update(DELETE_CONTACT, namedSqlParamSource);
-	}
+  @Override
+  public void delete(final String contactId) {
+    final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+    namedSqlParamSource.addValue("CONTACT_ID", contactId);
+    getSimpleJdbcTemplate().update(DELETE_CONTACT, namedSqlParamSource);
+  }
 
-	@Override
-	public List<ContactDTO> findContactsByCommunityId(final String communityId) {
-		try{
-		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-		namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
-		final StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE COMMUNITY_ID=:COMMUNITY_ID");
-		return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
-		}catch(final EmptyResultDataAccessException ex){
-			LOG.info("no contacts registerd for given communityId:"+communityId+":"+ex);
-			return new ArrayList<ContactDTO>();
-		}
-	}
+  @Override
+  public List<ContactDTO> findContactsByCommunityId(final String communityId) {
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE COMMUNITY_ID=:COMMUNITY_ID");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException ex) {
+      LOG.info("no contacts registerd for given communityId:" + communityId + ":" + ex);
+      return new ArrayList<ContactDTO>();
+    }
+  }
 
-	@Override
-	public List<ContactDTO> findContactsByBuildingId(final String buildingId) {
-		try{
-		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-		namedSqlParamSource.addValue("BUILDING_ID", buildingId);
-		final StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE BUILDING_ID=:BUILDING_ID");
-		return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
-		}catch(final EmptyResultDataAccessException ex){
-			LOG.info("no contacts registerd for given buildingId:"+buildingId+":"+ex);
-			return new ArrayList<ContactDTO>();
-		}
-	}
+  @Override
+  public List<ContactDTO> findContactsByBuildingId(final String buildingId) {
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("BUILDING_ID", buildingId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE BUILDING_ID=:BUILDING_ID");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException ex) {
+      LOG.info("no contacts registerd for given buildingId:" + buildingId + ":" + ex);
+      return new ArrayList<ContactDTO>();
+    }
+  }
 
-	@Override
-	public List<ContactDTO> findContactsByFlatId(final String flatId) {
-		try{
-		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-		namedSqlParamSource.addValue("FLAT_ID", flatId);
-		final StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE FLAT_ID=:FLAT_ID");
-		return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
-		}catch(final EmptyResultDataAccessException ex){
-			LOG.info("no contacts registerd for given flatId:"+flatId+":"+ex);
-			return new ArrayList<ContactDTO>();
-		}
-	}
+  @Override
+  public List<ContactDTO> findContactsByFlatId(final String flatId) {
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("FLAT_ID", flatId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE FLAT_ID=:FLAT_ID");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException ex) {
+      LOG.info("no contacts registerd for given flatId:" + flatId + ":" + ex);
+      return new ArrayList<ContactDTO>();
+    }
+  }
 
-	@Override
-	public List<ContactDTO> findContactsByUserId(final String userId) {
-		try{
-		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-		namedSqlParamSource.addValue("USER_ID", userId);
-		final StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE USER_ID=:USER_ID");
-		return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
-		}catch(final EmptyResultDataAccessException ex){
-			LOG.info("no contacts registerd for given userId:"+userId+":"+ex);
-			return new ArrayList<ContactDTO>();
-		}
-	}
+  @Override
+  public List<ContactDTO> findContactsByUserId(final String userId) {
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("USER_ID", userId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE USER_ID=:USER_ID");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException ex) {
+      LOG.info("no contacts registerd for given userId:" + userId + ":" + ex);
+      return new ArrayList<ContactDTO>();
+    }
+  }
 
-	@Override
-	public ContactDTO findContactsByUtilityId(final String utilityId) {
-		try{
-		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-		namedSqlParamSource.addValue("UTILITY_ID", utilityId);
-		final StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE UTILITY_ID=:UTILITY_ID");
-		return getSimpleJdbcTemplate().queryForObject(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
-		}catch(final EmptyResultDataAccessException ex){
-			return new ContactDTO();
-		}
-	}
+  @Override
+  public ContactDTO findContactsByUtilityId(final String utilityId) {
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("UTILITY_ID", utilityId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE UTILITY_ID=:UTILITY_ID");
+      return getSimpleJdbcTemplate().queryForObject(queryBuilder.toString(), getContactsRowmapper(),
+          namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException ex) {
+      return new ContactDTO();
+    }
+  }
 
-	private RowMapper<ContactDTO> getContactsRowmapper() {
-		return new RowMapper<ContactDTO>() {
-			@Override
-			public ContactDTO mapRow(final ResultSet rs,final int rowNum) throws SQLException {
-				ContactDTO contactDTO = new ContactDTO();
-				contactDTO.setId(rs.getString("CONTACT_ID"));
-				contactDTO.setType(rs.getString("TYPE"));
-				contactDTO.setEmailId(rs.getString("EMAIL_ID"));
-				contactDTO.setPhoneNumber(rs.getString("PHONE_NO"));
-				contactDTO.setDescription(rs.getString("DESCRIPTION"));
-				contactDTO.setWebSite(rs.getString("WEB_SITE"));
-				contactDTO.setName(rs.getString("NAME"));
-				contactDTO.setCommunityId(rs.getString("COMMUNITY_ID"));
-				contactDTO.setBuildingId(rs.getString("BUILDING_ID"));
-				contactDTO.setFlatId(rs.getString("FLAT_ID"));
-				contactDTO.setUserId(rs.getString("USER_ID"));
-				final Address address = new Address();
-				address.setAddress1(rs.getString("ADDRESS_LINE1"));
-				address.setAddress2(rs.getString("ADDRESS_LINE2"));
-				address.setAddress3(rs.getString("ADDRESS_LINE3"));
-				address.setCity(rs.getString("CITY"));
-				address.setState(rs.getString("STATE"));
-				address.setCountry(rs.getString("COUNTRY"));
-				address.setPostalCode(rs.getInt("PIN"));
-				contactDTO.setAddress(address);
-				return contactDTO;
-			}
-		};
-	}
+  private RowMapper<ContactDTO> getContactsRowmapper() {
+    return new RowMapper<ContactDTO>() {
+      @Override
+      public ContactDTO mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        ContactDTO contactDTO = new ContactDTO();
+        contactDTO.setId(rs.getString("CONTACT_ID"));
+        contactDTO.setType(rs.getString("TYPE"));
+        contactDTO.setEmailId(rs.getString("EMAIL_ID"));
+        contactDTO.setPhoneNumber(rs.getString("PHONE_NO"));
+        contactDTO.setDescription(rs.getString("DESCRIPTION"));
+        contactDTO.setWebSite(rs.getString("WEB_SITE"));
+        contactDTO.setName(rs.getString("NAME"));
+        contactDTO.setCommunityId(rs.getString("COMMUNITY_ID"));
+        contactDTO.setBuildingId(rs.getString("BUILDING_ID"));
+        contactDTO.setFlatId(rs.getString("FLAT_ID"));
+        contactDTO.setUserId(rs.getString("USER_ID"));
+        final Address address = new Address();
+        address.setAddress1(rs.getString("ADDRESS_LINE1"));
+        address.setAddress2(rs.getString("ADDRESS_LINE2"));
+        address.setAddress3(rs.getString("ADDRESS_LINE3"));
+        address.setCity(rs.getString("CITY"));
+        address.setState(rs.getString("STATE"));
+        address.setCountry(rs.getString("COUNTRY"));
+        address.setPostalCode(rs.getInt("PIN"));
+        contactDTO.setAddress(address);
+        return contactDTO;
+      }
+    };
+  }
 
-	private MapSqlParameterSource prepareNamedParamSource(final ContactDTO contactDTO,final String contactId){
-		final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-		namedSqlParamSource.addValue("CONTACT_ID", contactId);
-		namedSqlParamSource.addValue("PHONE_NO", contactDTO.getPhoneNumber());
-		namedSqlParamSource.addValue("EMAIL_ID", contactDTO.getEmailId());
-		namedSqlParamSource.addValue("WEB_SITE", contactDTO.getWebSite());
-		namedSqlParamSource.addValue("TYPE", contactDTO.getType());
-		namedSqlParamSource.addValue("IS_VISIBLE_TO_PUBLIC", contactDTO.getIsVisableToPublic());
-		namedSqlParamSource.addValue("NAME", contactDTO.getName());
-		namedSqlParamSource.addValue("DESCRIPTION", contactDTO.getDescription());
-		namedSqlParamSource.addValue("ADDRESS_LINE1", contactDTO.getAddress().getAddress1());
-		namedSqlParamSource.addValue("ADDRESS_LINE2", contactDTO.getAddress().getAddress2());
-		namedSqlParamSource.addValue("ADDRESS_LINE3", contactDTO.getAddress().getAddress3());
-		namedSqlParamSource.addValue("COUNTRY", contactDTO.getAddress().getCountry());
-		namedSqlParamSource.addValue("STATE", contactDTO.getAddress().getState());
-		namedSqlParamSource.addValue("CITY", contactDTO.getAddress().getCity());
-		namedSqlParamSource.addValue("PIN", contactDTO.getAddress().getPostalCode());
-		namedSqlParamSource.addValue("UTILITY_ID", contactDTO.getUtilityId());
-		namedSqlParamSource.addValue("COMMUNITY_ID", contactDTO.getCommunityId());
-		namedSqlParamSource.addValue("BUILDING_ID", contactDTO.getBuildingId());
-		namedSqlParamSource.addValue("FLAT_ID", contactDTO.getFlatId());
-		namedSqlParamSource.addValue("USER_ID", contactDTO.getUserId());
-		return namedSqlParamSource;
-	}
+  private MapSqlParameterSource prepareNamedParamSource(final ContactDTO contactDTO, final String contactId) {
+    final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+    namedSqlParamSource.addValue("CONTACT_ID", contactId);
+    namedSqlParamSource.addValue("PHONE_NO", contactDTO.getPhoneNumber());
+    namedSqlParamSource.addValue("EMAIL_ID", contactDTO.getEmailId());
+    namedSqlParamSource.addValue("WEB_SITE", contactDTO.getWebSite());
+    namedSqlParamSource.addValue("TYPE", contactDTO.getType());
+    namedSqlParamSource.addValue("IS_VISIBLE_TO_PUBLIC", contactDTO.getIsVisableToPublic());
+    namedSqlParamSource.addValue("NAME", contactDTO.getName());
+    namedSqlParamSource.addValue("DESCRIPTION", contactDTO.getDescription());
+    namedSqlParamSource.addValue("ADDRESS_LINE1", contactDTO.getAddress().getAddress1());
+    namedSqlParamSource.addValue("ADDRESS_LINE2", contactDTO.getAddress().getAddress2());
+    namedSqlParamSource.addValue("ADDRESS_LINE3", contactDTO.getAddress().getAddress3());
+    namedSqlParamSource.addValue("COUNTRY", contactDTO.getAddress().getCountry());
+    namedSqlParamSource.addValue("STATE", contactDTO.getAddress().getState());
+    namedSqlParamSource.addValue("CITY", contactDTO.getAddress().getCity());
+    namedSqlParamSource.addValue("PIN", contactDTO.getAddress().getPostalCode());
+    namedSqlParamSource.addValue("UTILITY_ID", contactDTO.getUtilityId());
+    namedSqlParamSource.addValue("COMMUNITY_ID", contactDTO.getCommunityId());
+    namedSqlParamSource.addValue("BUILDING_ID", contactDTO.getBuildingId());
+    namedSqlParamSource.addValue("FLAT_ID", contactDTO.getFlatId());
+    namedSqlParamSource.addValue("USER_ID", contactDTO.getUserId());
+    return namedSqlParamSource;
+  }
 }
