@@ -23,90 +23,91 @@ import com.apartment.management.utils.JsonUtils;
 @Path("/users")
 public class ManageUserService {
 
-	private ManageUserDao manageUserDao;
+  private ManageUserDao manageUserDao;
 
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response addUser(final String payload) {
-		UserDTO userDTO = JsonUtils.parseJsonToObject(payload, UserDTO.class);
-		if (null == userDTO) {
-			throw new RuntimeException("unable to parse user information");
-		}
-		final String userId = manageUserDao.save(userDTO);
-		userDTO.setUserId(userId);
-		return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO))
-				.build();
-	}
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response addUser(final String payload) {
+    UserDTO userDTO = JsonUtils.parseJsonToObject(payload, UserDTO.class);
+    if (null == userDTO) {
+      throw new RuntimeException("unable to parse user information");
+    }
+    final String userId = manageUserDao.save(userDTO);
+    userDTO.setUserId(userId);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO)).build();
+  }
 
-	@POST
-	@Path("/{userId}/add-co-occupant")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response addCoOccupant(@PathParam("userId") final String userId,final String payload) {
-		CoOccupantDTO coOccupantDTO = JsonUtils.parseJsonToObject(payload, CoOccupantDTO.class);
-		if (null == coOccupantDTO) {
-			throw new RuntimeException("unable to parse user information");
-		}
-		coOccupantDTO.setUserId(userId);
-		final String coOccupentId = manageUserDao.saveCoOccupent(coOccupantDTO);
-		coOccupantDTO.setId(coOccupentId);
-		return Response.ok().entity(JsonUtils.parseObjectToJson(coOccupantDTO))
-				.build();
-	}
+  @POST
+  @Path("/{userId}/add-co-occupant")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response addCoOccupant(@PathParam("userId")
+  final String userId, final String payload) {
+    CoOccupantDTO coOccupantDTO = JsonUtils.parseJsonToObject(payload, CoOccupantDTO.class);
+    if (null == coOccupantDTO) {
+      throw new RuntimeException("unable to parse user information");
+    }
+    coOccupantDTO.setUserId(userId);
+    final String coOccupentId = manageUserDao.saveCoOccupent(coOccupantDTO);
+    coOccupantDTO.setId(coOccupentId);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(coOccupantDTO)).build();
+  }
 
-	@PUT
-	@Path("/{userId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateUser(final String payload) {
-		UserDTO userDTO = JsonUtils.parseJsonToObject(payload, UserDTO.class);
-		if (null == userDTO) {
-			throw new RuntimeException("unable to parse user information");
-		}
-		manageUserDao.update(userDTO);
-		return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO))
-				.build();
-	}
+  @PUT
+  @Path("/{userId}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updateUser(final String payload) {
+    UserDTO userDTO = JsonUtils.parseJsonToObject(payload, UserDTO.class);
+    if (null == userDTO) {
+      throw new RuntimeException("unable to parse user information");
+    }
+    manageUserDao.update(userDTO);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO)).build();
+  }
 
-	@DELETE
-	public Response deleteUser(@QueryParam("userId") final long userId) {
-		manageUserDao.delete(userId);
-		return Response.ok().build();
-	}
+  @DELETE
+  public Response deleteUser(@QueryParam("userId")
+  final long userId) {
+    manageUserDao.delete(userId);
+    return Response.ok().build();
+  }
 
-	@DELETE
-	@Path("/{userId}/delete-co-occupent")
-	public Response deleteCoOccupent(@QueryParam("coOccupentId") final String coOccupentId) {
-		manageUserDao.deleteCoOccupent(coOccupentId);
-		return Response.ok().build();
-	}
+  @DELETE
+  @Path("/{userId}/delete-co-occupent")
+  public Response deleteCoOccupent(@QueryParam("coOccupentId")
+  final String coOccupentId) {
+    manageUserDao.deleteCoOccupent(coOccupentId);
+    return Response.ok().build();
+  }
 
-	@GET
-	@Path("/search")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public String findUsers(@QueryParam("firstName") final String firstName,
-			@QueryParam("lastName") final String lastName,
-			@QueryParam("emailId") final String emailId,
-			@QueryParam("phoneNumber") final String phoneNumber,
-			@QueryParam("uid") final String uid) {
-		List<UserDTO> userList = new ArrayList<UserDTO>();
-		userList = manageUserDao.findUsers(firstName,lastName,emailId,phoneNumber,uid);
-		return JsonUtils.parseObjectToJson(userList);
-	}
+  @GET
+  @Path("/search")
+  @Consumes(MediaType.APPLICATION_JSON)
+  public String findUsers(@QueryParam("firstName")
+  final String firstName, @QueryParam("lastName")
+  final String lastName, @QueryParam("emailId")
+  final String emailId, @QueryParam("phoneNumber")
+  final String phoneNumber, @QueryParam("uid")
+  final String uid) {
+    List<UserDTO> userList = new ArrayList<UserDTO>();
+    userList = manageUserDao.findUsers(firstName, lastName, emailId, phoneNumber, uid);
+    return JsonUtils.parseObjectToJson(userList);
+  }
 
-	@GET
-	@Path("/{userId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUserById(@PathParam("userId") final long userId) {
-		UserDTO userDTO = manageUserDao.getUserDetailsById(userId);
-		return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO))
-				.build();
-	}
+  @GET
+  @Path("/{userId}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getUserById(@PathParam("userId")
+  final long userId) {
+    UserDTO userDTO = manageUserDao.getUserDetailsById(userId);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO)).build();
+  }
 
-	public void setManageUserDao(final ManageUserDao manageUserDao) {
-		this.manageUserDao = manageUserDao;
-	}
+  public void setManageUserDao(final ManageUserDao manageUserDao) {
+    this.manageUserDao = manageUserDao;
+  }
 
 }

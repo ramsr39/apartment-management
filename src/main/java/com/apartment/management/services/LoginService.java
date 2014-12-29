@@ -22,44 +22,45 @@ import com.google.gson.JsonParser;
 @Path("/login")
 public final class LoginService {
 
-	private LoginDao loginDao;
+  private LoginDao loginDao;
 
-	@GET
-	@Path("/{email}")
-	@Produces("applicaton/json")
-	public Response verifyUserId(@PathParam("email") final String email) {
-		boolean falg = loginDao.isUserExist(email);
-		return Response.ok().entity(String.valueOf(falg)).build();
-	}
+  @GET
+  @Path("/{email}")
+  @Produces("applicaton/json")
+  public Response verifyUserId(@PathParam("email")
+  final String email) {
+    boolean falg = loginDao.isUserExist(email);
+    return Response.ok().entity(String.valueOf(falg)).build();
+  }
 
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response ValidateUser(final String jsonPayload) {
-		JsonParser parser = new JsonParser();
-		JsonObject jsonObject = (JsonObject) parser.parse(jsonPayload);
-		String userName = jsonObject.get("email").getAsString();
-		String receivePwd = jsonObject.get("password").getAsString();
-		String existingPwd = loginDao.getPasswordForUser(userName);
-		if (StringUtils.isEmpty(receivePwd) || StringUtils.isEmpty(existingPwd)
-				|| !receivePwd.equalsIgnoreCase(existingPwd)) {
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response ValidateUser(final String jsonPayload) {
+    JsonParser parser = new JsonParser();
+    JsonObject jsonObject = (JsonObject) parser.parse(jsonPayload);
+    String userName = jsonObject.get("email").getAsString();
+    String receivePwd = jsonObject.get("password").getAsString();
+    String existingPwd = loginDao.getPasswordForUser(userName);
+    if (StringUtils.isEmpty(receivePwd) || StringUtils.isEmpty(existingPwd)
+        || !receivePwd.equalsIgnoreCase(existingPwd)) {
+      return Response.status(Status.UNAUTHORIZED).build();
+    }
 
-		UserDTO userLoginDTO = loginDao.getUserDetails(userName);
-		String responsePayload = convertJavaObjectToJson(userLoginDTO);
-		return Response.ok().entity(responsePayload).build();
+    UserDTO userLoginDTO = loginDao.getUserDetails(userName);
+    String responsePayload = convertJavaObjectToJson(userLoginDTO);
+    return Response.ok().entity(responsePayload).build();
 
-	}
+  }
 
-	private String convertJavaObjectToJson(final UserDTO userLoginDTO) {
-		Gson gson = new GsonBuilder().create();
-		return gson.toJson(userLoginDTO);
+  private String convertJavaObjectToJson(final UserDTO userLoginDTO) {
+    Gson gson = new GsonBuilder().create();
+    return gson.toJson(userLoginDTO);
 
-	}
+  }
 
-	public void setLoginDao(final LoginDao loginDao) {
-		this.loginDao = loginDao;
-	}
+  public void setLoginDao(final LoginDao loginDao) {
+    this.loginDao = loginDao;
+  }
 
 }
