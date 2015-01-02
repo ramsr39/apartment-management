@@ -27,5 +27,7 @@ public interface ContactDao {
   public ContactDTO findContactsByUtilityId(String utilityId);
 
   public List<ContactDTO> findContactsByUserId(String userId);
+  
+  public List<ContactDTO> getPublicContactDetails();
 
 }

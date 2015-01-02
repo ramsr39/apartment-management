@@ -1,6 +1,8 @@
 package com.apartment.management.dto;
 
+
 public final class ContactDTO {
+
   private String id;
 
   private String emailId;
@@ -145,7 +147,7 @@ public final class ContactDTO {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
     return result;
   }
 
@@ -158,12 +160,30 @@ public final class ContactDTO {
     if (getClass() != obj.getClass())
       return false;
     ContactDTO other = (ContactDTO) obj;
-    if (id == null) {
-      if (other.id != null)
+    if (phoneNumber == null) {
+      if (other.phoneNumber != null)
         return false;
-    } else if (!id.equals(other.id))
+    } else if (!phoneNumber.equals(other.phoneNumber))
       return false;
     return true;
   }
+ /* 
+  public static void main(String[] args) {
+    ContactDTO contactDTO1 = new ContactDTO();
+    contactDTO1.setPhoneNumber("2345");
+    
+    ContactDTO contactDTO2 = new ContactDTO();
+    contactDTO2.setPhoneNumber("2345");
+    
+    ContactDTO contactDTO3 = new ContactDTO();
+    contactDTO3.setPhoneNumber("23456");
+    
+    Set<ContactDTO> contactDTOs = new HashSet<ContactDTO>();
+    contactDTOs.add(contactDTO1);
+    contactDTOs.add(contactDTO2);
+    contactDTOs.add(contactDTO3);
+    
+    System.out.println(contactDTOs);
+  }*/
 
 }

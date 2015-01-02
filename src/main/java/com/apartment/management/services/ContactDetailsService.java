@@ -1,7 +1,8 @@
 package com.apartment.management.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -70,20 +71,29 @@ public class ContactDetailsService {
   final String buildingId, @QueryParam("flatId")
   final String flatId, @QueryParam("userId")
   final String userId) {
-    final List<ContactDTO> contactList = new ArrayList<ContactDTO>();
+    final Set<ContactDTO> contactSet = new HashSet<ContactDTO>();
     if (StringUtils.isNotBlank(communityId)) {
-      contactList.addAll(contactDao.findContactsByCommunityId(communityId));
+      contactSet.addAll(contactDao.findContactsByCommunityId(communityId));
     }
     if (StringUtils.isNotBlank(buildingId)) {
-      contactList.addAll(contactDao.findContactsByBuildingId(buildingId));
+      contactSet.addAll(contactDao.findContactsByBuildingId(buildingId));
     }
     if (StringUtils.isNotBlank(flatId)) {
-      contactList.addAll(contactDao.findContactsByFlatId(flatId));
+      contactSet.addAll(contactDao.findContactsByFlatId(flatId));
     }
     if (StringUtils.isNotBlank(userId)) {
-      contactList.addAll(contactDao.findContactsByUserId(userId));
+      contactSet.addAll(contactDao.findContactsByUserId(userId));
     }
-    return JsonUtils.parseObjectToJson(contactList);
+    return JsonUtils.parseObjectToJson(contactSet);
+  }
+
+  @GET
+  @Path("/get-public-contact-details")
+  @Produces(MediaType.APPLICATION_JSON)
+  public String getPublicContactDetails() {
+    final Set<ContactDTO> contactSet = new HashSet<ContactDTO>();
+    contactSet.addAll(contactDao.getPublicContactDetails());
+    return JsonUtils.parseObjectToJson(contactSet);
   }
 
   public void setContactDao(ContactDao contactDao) {

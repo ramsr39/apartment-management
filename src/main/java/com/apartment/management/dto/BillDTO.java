@@ -1,6 +1,7 @@
 package com.apartment.management.dto;
 
 public class BillDTO {
+
   private String id;
 
   private String billNumber;
@@ -24,6 +25,10 @@ public class BillDTO {
   private String receiptNumber;
 
   private String utilityId;
+  
+  private String serviceProviderName;
+  
+  private String serviceProviderType;
 
   public String getId() {
     return id;
@@ -119,6 +124,22 @@ public class BillDTO {
 
   public void setReceiptNumber(final String receiptNumber) {
     this.receiptNumber = receiptNumber;
+  }
+
+  public String getServiceProviderName() {
+    return serviceProviderName;
+  }
+
+  public void setServiceProviderName(final String serviceProviderName) {
+    this.serviceProviderName = serviceProviderName;
+  }
+
+  public String getServiceProviderType() {
+    return serviceProviderType;
+  }
+
+  public void setServiceProviderType(final String serviceProviderType) {
+    this.serviceProviderType = serviceProviderType;
   }
 
 }

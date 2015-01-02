@@ -178,6 +178,17 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
     }
   }
 
+  @Override
+  public List<ContactDTO> getPublicContactDetails() {
+    try {
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE IS_VIABLE_TO_PUBLIC='true'");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper());
+    } catch (final EmptyResultDataAccessException ex) {
+      return new ArrayList<ContactDTO>();
+    }
+  }
+
   private RowMapper<ContactDTO> getContactsRowmapper() {
     return new RowMapper<ContactDTO>() {
       @Override
@@ -232,4 +243,5 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
     namedSqlParamSource.addValue("USER_ID", contactDTO.getUserId());
     return namedSqlParamSource;
   }
+
 }

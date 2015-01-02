@@ -73,13 +73,15 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
 			+ "OWNER_ID=:OWNER_ID"
 			+ " WHERE BUILDING_ID=:BUILDING_ID"; 
 	
-	private static final String GET_BUILDING_DETAILS_QUERY="SELECT * FROM building WHERE COMMUNITY_ID=:COMMUNITY_ID";
+  private static final String GET_BUILDING_DETAILS_QUERY = "SELECT * FROM building WHERE COMMUNITY_ID=:COMMUNITY_ID";
 
-	private static final String FIND_BUILDING_DETAILS_BY_BUILDINGID_QUERY="SELECT * FROM building WHERE BUILDING_ID=:BUILDING_ID";
+  private static final String FIND_BUILDING_DETAILS_BY_BUILDINGID_QUERY =
+    "SELECT * FROM building WHERE BUILDING_ID=:BUILDING_ID";
 
-	private static final String DELETE_BUILDING_QUERY = "DELETE FROM building WHERE BUILDING_ID=:BUILDING_ID";
+  private static final String DELETE_BUILDING_QUERY = "DELETE FROM building WHERE BUILDING_ID=:BUILDING_ID";
 
-	private static final String GET_BUILDING_OWNER_QUERY = "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE EMAILID=:OWNEREID";
+  private static final String GET_BUILDING_OWNER_QUERY =
+    "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE EMAILID=:OWNERID";
 	
   private static final Logger LOG = LoggerFactory.getLogger(BuildingDaoImpl.class);
 
@@ -158,6 +160,10 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
             buildingDto.setCountry(rs.getString("COUNTRY"));
             buildingDto.setPostalCode(rs.getInt("PIN"));
             buildingDto.setImageUrl(rs.getString("IMAGE_URL"));
+            String ownerId = rs.getString("OWNER_ID");
+            if (null != ownerId) {
+              buildingDto.setOwnerDetails(getBuildingOwnerDetails(ownerId));
+            }
             return buildingDto;
           }
         });
