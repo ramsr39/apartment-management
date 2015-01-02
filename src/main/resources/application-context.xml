@@ -19,34 +19,41 @@
 		<property name="loginDao" ref="loginDao" />
 	</bean>
 
-	<bean id="comunityDetailsService" class="com.apartment.management.services.CommunityDetailsService">
-	  <property name="communityDetailsDao" ref="communityDetailsDao"/>
-	  <property name="buildingDao" ref="buildingDao"/>
-	  <property name="flatDao" ref="flatDao"/>
+	<bean id="comunityDetailsService"
+		class="com.apartment.management.services.CommunityDetailsService">
+		<property name="communityDetailsDao" ref="communityDetailsDao" />
+		<property name="buildingDao" ref="buildingDao" />
+		<property name="flatDao" ref="flatDao" />
 	</bean>
 
-	<bean id="buildingDetailsService" class="com.apartment.management.services.BuildingDetailsService">
-	  <property name="communityDetailsDao" ref="communityDetailsDao"/>
-	  <property name="flatDao" ref="flatDao"/>
-	  <property name="buildingDao" ref="buildingDao"/>
+	<bean id="buildingDetailsService"
+		class="com.apartment.management.services.BuildingDetailsService">
+		<property name="communityDetailsDao" ref="communityDetailsDao" />
+		<property name="flatDao" ref="flatDao" />
+		<property name="buildingDao" ref="buildingDao" />
 	</bean>
 
 	<bean id="flatDetailsService" class="com.apartment.management.services.FlatDetailsService">
-		  <property name="flatDao" ref="flatDao"/>
-		   <property name="buildingDao" ref="buildingDao"/>
+		<property name="flatDao" ref="flatDao" />
+		<property name="buildingDao" ref="buildingDao" />
 	</bean>
-	
+
 	<bean id="managerUserService" class="com.apartment.management.services.ManageUserService">
-		  <property name="manageUserDao" ref="manageUserDao"/>
+		<property name="manageUserDao" ref="manageUserDao" />
 	</bean>
-	
+
 	<bean id="contactDetailsService" class="com.apartment.management.services.ContactDetailsService">
-		  <property name="contactDao" ref="contactDao"/>
+		<property name="contactDao" ref="contactDao" />
 	</bean>
-	
-	<bean id="utilitService" class="com.apartment.management.services.UtilityService">
-		  <property name="utilityDao" ref="utilityDao"/>
+
+	<bean id="utilityService" class="com.apartment.management.services.UtilityService">
+		<property name="utilityDao" ref="utilityDao" />
 	</bean>
-	
+
+	<bean id="billDetailsService" class="com.apartment.management.services.BillDetailsService">
+		<property name="utilityDao" ref="utilityDao" />
+		<property name="billDao" ref="billDao" />
+	</bean>
+
 
 </beans>
