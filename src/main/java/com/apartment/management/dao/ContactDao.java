@@ -30,4 +30,6 @@ public interface ContactDao {
   
   public List<ContactDTO> getPublicContactDetails();
 
+  public ContactDTO getContactsByContactId(String id);
+
 }

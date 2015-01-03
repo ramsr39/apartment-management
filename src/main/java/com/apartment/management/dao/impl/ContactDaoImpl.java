@@ -182,12 +182,26 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
   public List<ContactDTO> getPublicContactDetails() {
     try {
       final StringBuilder queryBuilder = new StringBuilder();
-      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE IS_VIABLE_TO_PUBLIC='true'");
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE IS_VIABLE_TO_PUBLIC=true");
       return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper());
     } catch (final EmptyResultDataAccessException ex) {
       return new ArrayList<ContactDTO>();
     }
   }
+
+  @Override
+  public ContactDTO getContactsByContactId(final String contactId) {
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("CONTACT_ID", contactId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE CONTACT_ID=:CONTACT_ID");
+      return getSimpleJdbcTemplate().queryForObject(queryBuilder.toString(), getContactsRowmapper());
+    } catch (final EmptyResultDataAccessException ex) {
+      return new ContactDTO();
+    }
+  }
+
 
   private RowMapper<ContactDTO> getContactsRowmapper() {
     return new RowMapper<ContactDTO>() {
