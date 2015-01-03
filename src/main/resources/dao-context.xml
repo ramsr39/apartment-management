@@ -9,39 +9,45 @@
            classpath:/org/springframework/transaction/config/spring-tx-3.0.xsd
            http://www.springframework.org/schema/context  
            classpath:/org/springframework/context/config/spring-context-3.0.xsd">
-           
+
 	<bean id="loginDao" class="com.apartment.management.dao.impl.LoginDaoImpl">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<bean id="communityDetailsDao" class="com.apartment.management.dao.impl.CommunityDetailsDaoImpl">
+	<bean id="communityDetailsDao"
+		class="com.apartment.management.dao.impl.CommunityDetailsDaoImpl">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
 	<bean id="flatDao" class="com.apartment.management.dao.impl.FlatDaoImpl">
-	  <property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 
 	<bean id="buildingDao" class="com.apartment.management.dao.impl.BuildingDaoImpl">
-	  <property name="dataSource" ref="dataSource" />
-	  <property name="communityDetailsDao" ref="communityDetailsDao"></property>
+		<property name="dataSource" ref="dataSource" />
+		<property name="communityDetailsDao" ref="communityDetailsDao"></property>
 	</bean>
 
 	<bean id="manageUserDao" class="com.apartment.management.dao.impl.ManageUserDaoImpl">
-	  <property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<bean id="contactDao" class="com.apartment.management.dao.impl.ContactDaoImpl">
-	  <property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-   <bean id="utilityDao" class="com.apartment.management.dao.impl.UtilityDaoImpl">
-	  <property name="dataSource" ref="dataSource" />
-	  <property name="contactDao" ref="contactDao" />
+	<bean id="contactDao" class="com.apartment.management.dao.impl.ContactDaoImpl">
+		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
-	 <bean id="billDao" class="com.apartment.management.dao.impl.BillDaoImpl">
-	  <property name="dataSource" ref="dataSource" />
+
+	<bean id="utilityDao" class="com.apartment.management.dao.impl.UtilityDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="contactDao" ref="contactDao" />
 	</bean>
+
+	<bean id="billDao" class="com.apartment.management.dao.impl.BillDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="appointmentDao" class="com.apartment.management.dao.impl.AppointmentDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
 
 </beans>
