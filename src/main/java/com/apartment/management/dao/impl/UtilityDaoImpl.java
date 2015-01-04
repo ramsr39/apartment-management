@@ -88,6 +88,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
     namedSqlParamSource.addValue("USER_ID", utilityDTO.getUserId());
     getSimpleJdbcTemplate().update(INSER_UTILITY_QUERY, namedSqlParamSource);
     ContactDTO contactDTO = utilityDTO.getContactDTO();
+    contactDTO.setUtilityId(utilityId);
     final String contactId = contactDao.save(contactDTO);
     contactDTO.setId(contactId);
     utilityDTO.setContactDTO(contactDTO);
@@ -109,7 +110,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
     namedSqlParamSource.addValue("PAID_BY", utilityDTO.getPaidBy());
     getSimpleJdbcTemplate().update(UPDATE_UTILITY_QUERY, namedSqlParamSource);
     ContactDTO contactDTO = utilityDTO.getContactDTO();
-    contactDao.save(contactDTO);
+    contactDao.update(contactDTO);
     LOG.info("update utility end::" + utilityDTO.getId());
   }
 

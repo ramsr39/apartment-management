@@ -13,7 +13,7 @@ public final class ContactDTO {
 
   private String type;
 
-  private String isVisableToPublic;
+  private String isVisibleToPublic;
 
   private String webSite;
 
@@ -71,12 +71,14 @@ public final class ContactDTO {
     this.type = type;
   }
 
-  public String getIsVisableToPublic() {
-    return isVisableToPublic;
+ 
+
+  public String getIsVisibleToPublic() {
+    return isVisibleToPublic;
   }
 
-  public void setIsVisableToPublic(final String isVisableToPublic) {
-    this.isVisableToPublic = isVisableToPublic;
+  public void setIsVisibleToPublic(final String isVisibleToPublic) {
+    this.isVisibleToPublic = isVisibleToPublic;
   }
 
   public String getWebSite() {

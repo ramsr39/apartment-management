@@ -55,7 +55,7 @@
 		<property name="billDao" ref="billDao" />
 	</bean>
 
-	<bean id="appointmentService" class="com.apartment.management.services.BillDetailsService">
+	<bean id="appointmentService" class="com.apartment.management.services.AppointmentService">
 		<property name="appointmentDao" ref="appointmentDao" />
 		<property name="contactDao" ref="contactDao" />
 	</bean>

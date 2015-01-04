@@ -67,7 +67,7 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 			   + "NAME=:NAME,"
 			   + "WEB_SITE=:WEB_SITE,"
 			   + "IS_VISIBLE_TO_PUBLIC=:IS_VISIBLE_TO_PUBLIC,"
-			   + "TYPE=:TYPE"
+			   + "TYPE=:TYPE,"
 			   + "DESCRIPTION=:DESCRIPTION,"
 			   + "ADDRESS_LINE1=:ADDRESS_LINE1,"
 			   + "ADDRESS_LINE2=:ADDRESS_LINE2,"
@@ -76,14 +76,11 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 			   + "STATE=:STATE,"
 			   + "COUNTRY=:COUNTRY,"
 			   + "PIN=:PIN,"
-			   + "UTILITY_ID=:UTILITY_ID,"
-			   + "COMMUNITY_ID=:COMMUNITY_ID,"
-			   + "BUILDING_ID=:BUILDING_ID,"
-			   + "FLAT_ID=:FLAT_ID,"
-			   + "USER_ID=:USER_ID WHERE CONTACT_ID=:CONTAT_ID";
+			   + "USER_ID=:USER_ID,"
+			   + "FLAT_ID=:FLAT_ID"
+			   + " WHERE CONTACT_ID=:CONTACT_ID";
 
-	
-  private static final String FIND_CONTACT_BASE_QUERY = "SELECT *FROM contact ";
+  private static final String FIND_CONTACT_BASE_QUERY = "SELECT *FROM contact";
 
   private static final String DELETE_CONTACT = "DELETE FROM contact WHERE CONTACT_ID=:CONTACT_ID";
 
@@ -182,7 +179,7 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
   public List<ContactDTO> getPublicContactDetails() {
     try {
       final StringBuilder queryBuilder = new StringBuilder();
-      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE IS_VIABLE_TO_PUBLIC=true");
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE IS_VISIBLE_TO_PUBLIC=").append("'true'");
       return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper());
     } catch (final EmptyResultDataAccessException ex) {
       return new ArrayList<ContactDTO>();
@@ -196,7 +193,7 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
       namedSqlParamSource.addValue("CONTACT_ID", contactId);
       final StringBuilder queryBuilder = new StringBuilder();
       queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE CONTACT_ID=:CONTACT_ID");
-      return getSimpleJdbcTemplate().queryForObject(queryBuilder.toString(), getContactsRowmapper());
+      return getSimpleJdbcTemplate().queryForObject(queryBuilder.toString(), getContactsRowmapper(),namedSqlParamSource);
     } catch (final EmptyResultDataAccessException ex) {
       return new ContactDTO();
     }
@@ -240,7 +237,7 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
     namedSqlParamSource.addValue("EMAIL_ID", contactDTO.getEmailId());
     namedSqlParamSource.addValue("WEB_SITE", contactDTO.getWebSite());
     namedSqlParamSource.addValue("TYPE", contactDTO.getType());
-    namedSqlParamSource.addValue("IS_VISIBLE_TO_PUBLIC", contactDTO.getIsVisableToPublic());
+    namedSqlParamSource.addValue("IS_VISIBLE_TO_PUBLIC", contactDTO.getIsVisibleToPublic());
     namedSqlParamSource.addValue("NAME", contactDTO.getName());
     namedSqlParamSource.addValue("DESCRIPTION", contactDTO.getDescription());
     namedSqlParamSource.addValue("ADDRESS_LINE1", contactDTO.getAddress().getAddress1());

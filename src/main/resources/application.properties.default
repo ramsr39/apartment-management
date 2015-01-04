@@ -1,5 +1,6 @@
 am.jdbc.driverClass=com.mysql.jdbc.Driver
 am.jdbc.url=jdbc:mysql://localhost:3307/apartment_new_db
+#am.jdbc.url=jdbc:mysql://localhost:3306/apartment_new_db
 am.jdbc.userId=root
 am.jdbc.password=Sairam@4851
 am.jdbc.pool.maxWait=30000

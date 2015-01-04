@@ -80,39 +80,40 @@ public class BillDetailsService {
     if (StringUtils.isNotBlank(communityId)) {
       List<BillDTO> communityPendingBillList = billDao.findCommunityPendingBills(communityId);
       for (BillDTO billDTO : communityPendingBillList) {
-        getUtilityProviderNameAndType(billDTO);
+        UtilityDTO utilityDTO = utilityDao.findUtilitiesByUtilityId(billDTO.getUtilityId());
+        billDTO.setServiceProviderType(utilityDTO.getType());
+        billDTO.setServiceProviderName(utilityDTO.getServiceProviderName());
         pendingBIllList.add(billDTO);
       }
     }
     if (StringUtils.isNotBlank(buildingId)) {
       List<BillDTO> buildingPendigBillList = billDao.findBuildingPendingBills(buildingId);
       for (BillDTO billDTO : buildingPendigBillList) {
-        getUtilityProviderNameAndType(billDTO);
+        UtilityDTO utilityDTO = utilityDao.findUtilitiesByUtilityId(billDTO.getUtilityId());
+        billDTO.setServiceProviderType(utilityDTO.getType());
+        billDTO.setServiceProviderName(utilityDTO.getServiceProviderName());
         pendingBIllList.add(billDTO);
       }
     }
     if (StringUtils.isNotBlank(flatId)) {
       List<BillDTO> flatPendigBillList = billDao.findFlatPendingBills(flatId);
       for (BillDTO billDTO : flatPendigBillList) {
-        getUtilityProviderNameAndType(billDTO);
+        UtilityDTO utilityDTO = utilityDao.findUtilitiesByUtilityId(billDTO.getUtilityId());
+        billDTO.setServiceProviderType(utilityDTO.getType());
+        billDTO.setServiceProviderName(utilityDTO.getServiceProviderName());
         pendingBIllList.add(billDTO);
       }
     }
     if (StringUtils.isNotBlank(userId)) {
       List<BillDTO> userPendigBillList = billDao.findUserPendingBills(userId);
       for (BillDTO billDTO : userPendigBillList) {
-        getUtilityProviderNameAndType(billDTO);
+        UtilityDTO utilityDTO = utilityDao.findUtilitiesByUtilityId(billDTO.getUtilityId());
+        billDTO.setServiceProviderType(utilityDTO.getType());
+        billDTO.setServiceProviderName(utilityDTO.getServiceProviderName());
         pendingBIllList.add(billDTO);
       }
     }
     return JsonUtils.parseObjectToJson(pendingBIllList);
-  }
-
-  private BillDTO getUtilityProviderNameAndType(BillDTO billDTO) {
-    UtilityDTO utilityDTO = utilityDao.findUtilitiesByUtilityId(billDTO.getUtilityId());
-    billDTO.setServiceProviderType(utilityDTO.getType());
-    billDTO.setServiceProviderName(utilityDTO.getServiceProviderName());
-    return billDTO;
   }
 
   public void setBillDao(final BillDao billDao) {

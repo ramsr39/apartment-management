@@ -23,6 +23,10 @@ import com.apartment.management.dto.AppointmentDTO;
 import com.apartment.management.dto.ContactDTO;
 import com.apartment.management.utils.JsonUtils;
 
+/**
+ * @author Ramesh
+ * 
+ */
 @Path("/appointment")
 public class AppointmentService {
   private AppointmentDao appointmentDao;
@@ -94,7 +98,17 @@ public class AppointmentService {
     for (AppointmentDTO appointmentDto : appointmentList) {
       ContactDTO contactDTO = contactDao.getContactsByContactId(appointmentDto.getContactDTO().getId());
       appointmentDto.setContactDTO(contactDTO);
+      appointments.add(appointmentDto);
     }
     return appointments;
   }
+
+  public void setAppointmentDao(final AppointmentDao appointmentDao) {
+    this.appointmentDao = appointmentDao;
+  }
+
+  public void setContactDao(final ContactDao contactDao) {
+    this.contactDao = contactDao;
+  }
+
 }

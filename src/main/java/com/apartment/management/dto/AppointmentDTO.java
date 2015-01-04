@@ -12,6 +12,8 @@ public class AppointmentDTO {
 
   private DateTime remindMe;
 
+  private String description;
+
   private String flatId;
 
   private String buildingId;
@@ -52,6 +54,14 @@ public class AppointmentDTO {
 
   public void setRemindMe(final DateTime remindMe) {
     this.remindMe = remindMe;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public ContactDTO getContactDTO() {
