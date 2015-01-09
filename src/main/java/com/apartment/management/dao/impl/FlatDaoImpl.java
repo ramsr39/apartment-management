@@ -235,7 +235,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
             UserDTO ownerDto = new UserDTO();
             ownerDto.setEmailId(ownerId);
             UserDTO tenantDto = new UserDTO();
-            ownerDto.setEmailId(tenantId);
+            tenantDto.setEmailId(tenantId);
             flatDTO.setOwnerDetails(ownerDto);
             flatDTO.setTenantDetails(tenantDto);
             LOG.info("FlatDaoImpl getFlatDetailsByUser mapRow ::::end");

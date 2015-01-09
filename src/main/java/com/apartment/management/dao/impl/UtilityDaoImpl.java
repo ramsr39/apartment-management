@@ -140,7 +140,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
       final StringBuilder queryBuilder = new StringBuilder(FIND_UTILITIES_BY_FLAT_ID_QUERY);
       namedSqlParamSource.addValue("FLAT_ID", flatId);
       if (null != paidBy) {
-        queryBuilder.append(" ").append("AND").append("PAID_BY=" + paidBy);
+        queryBuilder.append(" ").append("AND").append(" ").append("PAID_BY=" + paidBy);
       }
       return getSimpleJdbcTemplate().query(queryBuilder.toString(), getUtilityRowmapper(), namedSqlParamSource);
     } catch (final EmptyResultDataAccessException er) {

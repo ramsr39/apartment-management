@@ -58,7 +58,7 @@ public class JsonUtils {
 
   @Override
   public JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext context) {
-    return new JsonPrimitive(src.toString(DateTimeZone.UTC.toString()));
+    return new JsonPrimitive(src.toString());
   }
 }
   public static void main(String[] args) {

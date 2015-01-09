@@ -69,6 +69,18 @@ public class BillDetailsService {
   }
 
   @GET
+  @Path("/get-last-bill-details")
+  @Produces(MediaType.APPLICATION_JSON)
+  public String getLastBillDetails(@QueryParam("utilityId")
+  final String utilityId) {
+    List<BillDTO> billList = billDao.getLastBillLastBillDetails(utilityId);
+    if(billList.size()==0){
+      return JsonUtils.parseObjectToJson(new BillDTO());
+    }
+    return JsonUtils.parseObjectToJson(billDao.getLastBillLastBillDetails(utilityId).get(0));
+  }
+
+  @GET
   @Path("/find-pending-bills")
   @Produces(MediaType.APPLICATION_JSON)
   public String findPendingBills(@QueryParam("communityId")

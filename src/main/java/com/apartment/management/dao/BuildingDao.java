@@ -17,7 +17,7 @@ public interface BuildingDao {
   public void update(BuildingDTO buildingDTO);
 
   @Transactional(propagation = Propagation.REQUIRED)
-  public void delete(long buiildingId);
+  public void delete(String buiildingId);
 
   public List<BuildingDTO> findBuildingDetailsByCommunityId(String communityId);
 

@@ -22,6 +22,10 @@ public class AppointmentDTO {
 
   private String userId;
 
+  private String isVisibleToOwner;
+
+  private String isVisibleToTenant;
+
   private ContactDTO contactDTO = new ContactDTO();
 
   public String getId() {
@@ -102,6 +106,22 @@ public class AppointmentDTO {
 
   public void setUserId(final String userId) {
     this.userId = userId;
+  }
+
+  public String getIsVisibleToOwner() {
+    return isVisibleToOwner;
+  }
+
+  public void setIsVisibleToOwner(final String isVisibleToOwner) {
+    this.isVisibleToOwner = isVisibleToOwner;
+  }
+
+  public String getIsVisibleToTenant() {
+    return isVisibleToTenant;
+  }
+
+  public void setIsVisibleToTenant(final String isVisibleToTenant) {
+    this.isVisibleToTenant = isVisibleToTenant;
   }
 
 }

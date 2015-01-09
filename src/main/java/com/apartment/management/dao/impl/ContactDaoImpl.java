@@ -86,23 +86,30 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 
   @Override
   public String save(final ContactDTO contactDTO) {
+    LOG.info("save contact start::");
     final String contactId = "CN" + RandomStringUtils.randomNumeric(8);
     final MapSqlParameterSource namedSqlParamSource = prepareNamedParamSource(contactDTO, contactId);
     getSimpleJdbcTemplate().update(INSERT_CONTACT_DETAILS_QUERY, namedSqlParamSource);
+    LOG.info("save contact end::"+contactDTO.getId());
     return contactId;
   }
 
   @Override
   public void update(final ContactDTO contactDTO) {
+    LOG.info("update contact start::"+contactDTO.getId());
     final MapSqlParameterSource namedSqlParamSource = prepareNamedParamSource(contactDTO, contactDTO.getId());
     getSimpleJdbcTemplate().update(UPDATE_CONTACT_DETAILS_QUERY, namedSqlParamSource);
+    LOG.info("update contact end::"+contactDTO.getId());
   }
 
   @Override
   public void delete(final String contactId) {
+    LOG.info("delete contact start::"+contactId);
     final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
     namedSqlParamSource.addValue("CONTACT_ID", contactId);
     getSimpleJdbcTemplate().update(DELETE_CONTACT, namedSqlParamSource);
+    LOG.info("delete contact end::"+contactId);
+    
   }
 
   @Override

@@ -69,8 +69,7 @@ public class BuildingDetailsService {
   public Response delete(@PathParam("buildingId")
   final String buildingId) {
     assertId(buildingId, "flatId should not null or empty");
-    long id = Long.parseLong(buildingId);
-    buildingDao.delete(id);
+    buildingDao.delete(buildingId);
     return Response.ok().build();
   }
 

@@ -73,6 +73,10 @@ private static final String UPDATE_BILL_QUERY = "UPDATE bill SET BILL_NO=:BILL_N
 
   private static final String FIND_UTILITY_PENDING_BILLS =
     "SELECT *FROM bill WHERE UTILITY_ID=:UTILITY_ID AND RECEIPT_NO IS NULL";
+  
+  private static final String GET_BILL_SERVICE_TO_FROM_DATE_QUERY = "SELECT BILL_ID,SERVICE_FROM, SERVICE_TO FROM bill "
+      + "WHERE SERVICE_TO=(SELECT MAX(SERVICE_TO) FROM bill WHERE UTILITY_ID=:UTILITY_ID)";
+
 
   @Override
   public String addBill(final BillDTO billDTO) {
@@ -158,7 +162,7 @@ private static final String UPDATE_BILL_QUERY = "UPDATE bill SET BILL_NO=:BILL_N
     List<BillDTO> pendingbuillList = new ArrayList<BillDTO>();
     try {
       final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-      namedSqlParamSource.addValue("BILDING_ID", buildingId);
+      namedSqlParamSource.addValue("BUILDING_ID", buildingId);
       List<String> utilityIdList = getUtilityIds(namedSqlParamSource, FIND_BUILDING_UTILITY_ID);
       pendingbuillList = getPedingBills(utilityIdList);
     } catch (final EmptyResultDataAccessException er) {
@@ -244,6 +248,28 @@ private static final String UPDATE_BILL_QUERY = "UPDATE bill SET BILL_NO=:BILL_N
       }
     }, namedSqlParamSource);
     return utilityIdList;
+  }
+
+  @Override
+  public List<BillDTO> getLastBillLastBillDetails(final String utilityId) {
+    LOG.info("BillDaoImpl getLastBillLastBillDetails start.........."+utilityId);
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("UTILITY_ID", utilityId);
+      return getSimpleJdbcTemplate().query(GET_BILL_SERVICE_TO_FROM_DATE_QUERY, new RowMapper<BillDTO>() {
+        @Override
+        public BillDTO mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+          BillDTO billDto = new BillDTO();
+          billDto.setId(rs.getString("BILL_ID"));
+          billDto.setServiceFrom(rs.getString("SERVICE_FROM"));
+          billDto.setServiceTo(rs.getString("SERVICE_TO"));
+          return billDto;
+        }
+      },namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException er) {
+      LOG.error("emptu result found...for utilityId"+utilityId+"::"+er);
+      return new ArrayList<BillDTO>();   
+     }
   }
 
 }

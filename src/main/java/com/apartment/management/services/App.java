@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.apartment.management.dao.ContactDao;
+import com.apartment.management.dao.impl.ContactDaoImpl;
 import com.apartment.management.dto.BuildingDTO;
 import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.CommunityDTO;
@@ -27,10 +29,10 @@ public class App
     	//System.out.println(service.saveCommunityDetails("myadmin@gmail.com",getCommunitypaylaod()).getEntity().toString());
     	//BuildingDetailsService bs = (BuildingDetailsService)ctx.getBean("buildingDetailsService");
     	//bs.save("38", getBuildingPaylaod());
-    	
-    	FlatDetailsService fs = (FlatDetailsService)ctx.getBean("flatDetailsService");
+    	ContactDao c = (ContactDao)ctx.getBean("contactDao");
+    	//FlatDetailsService fs = (FlatDetailsService)ctx.getBean("contactDao");
     	//fs.save("24", getFlatpaylaod());
-    	fs.getUserResidenceDetails("myadmin@gmail.com");
+    	//fs.getUserResidenceDetails("abc@gmail.com");
     	
     	ManageUserService mus = (ManageUserService)ctx.getBean("managerUserService");
     	//System.out.println(mus.addUser(getUserPayload()).getEntity());
@@ -44,6 +46,8 @@ public class App
     	//System.out.println(ds.ValidateUser(paylaod).getEntity());
     	
     //	System.out.println(service.findCommunitiesByNameAndCity("test", "VIZAG", "myadmin@gmail.com"));
+    	
+    	
     }
     
     private static String getUserPayload() {

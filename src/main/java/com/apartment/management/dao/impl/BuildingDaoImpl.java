@@ -102,7 +102,7 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
   }
 
   @Override
-  public void delete(final long buiildingId) {
+  public void delete(final String buiildingId) {
     final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
     mapSqlParameterSource.addValue("BUILDING_ID", buiildingId);
     getNamedParameterJdbcTemplate().update(DELETE_BUILDING_QUERY, mapSqlParameterSource);

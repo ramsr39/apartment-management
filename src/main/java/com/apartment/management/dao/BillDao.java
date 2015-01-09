@@ -27,5 +27,7 @@ public interface BillDao {
   public List<BillDTO> findFlatPendingBills(final String flatId);
 
   public List<BillDTO> findUserPendingBills(final String userId);
+  
+  public List<BillDTO> getLastBillLastBillDetails(final String utilityId);
 
 }

@@ -33,7 +33,7 @@
 				<version>2.2</version>
 				<configuration>
 					<!-- <url>http://50.62.58.115:8080/manager/text</url> -->
-					<url>http://50.62.134.122:8080/manager/text</url>
+					<url>http://192.169.249.52:8080/manager/text</url>
 					<username>tomcat</username>
 					<password>admin</password>
 					<server>TomcatServer</server>
@@ -121,6 +121,11 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jcl</artifactId>
 			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

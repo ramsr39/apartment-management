@@ -45,7 +45,7 @@ public class UtilityService {
     UtilityDTO utilityDTO = JsonUtils.parseJsonToObject(payload, UtilityDTO.class);
     utilityDTO.setId(utilityId);;
     utilityDao.update(utilityDTO);
-    return Response.ok().build();
+    return Response.ok().entity(JsonUtils.parseObjectToJson(utilityDTO)).build();
   }
 
   @GET
