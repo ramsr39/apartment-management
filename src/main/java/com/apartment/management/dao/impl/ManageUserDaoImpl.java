@@ -2,6 +2,7 @@ package com.apartment.management.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -18,12 +19,19 @@ import com.apartment.management.dto.Address;
 import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.EmergencyContactInfo;
 import com.apartment.management.dto.UserDTO;
+import com.apartment.management.dto.UserPrivilegeDTO;
 
 public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements ManageUserDao{
 
-	private static final Logger LOG = LoggerFactory.getLogger(ManageUserDaoImpl.class);
-	
-	private static final String INSERT_USER_QUERY  = "INSERT INTO userinfo(USERID,"
+  private static final String GET_USER_ROLES = "SELECT *FROM management_group WHERE USER_ID=:USER_ID";
+
+  private static final String GET_COMMUNITY_MGMT_GROUP_ROLES = "SELECT *FROM management_group WHERE COMMUNITY_ID=:COMMUNITY_ID";
+
+  private static final Logger LOG = LoggerFactory.getLogger(ManageUserDaoImpl.class);
+
+  private static final String DELETE_ROLE_QUERY = "DELETE FROM management_group WHERE MGMT_GRP_ID=:MGMT_GRP_ID";
+  
+  private static final String INSERT_USER_QUERY  = "INSERT INTO userinfo(USERID,"
 			+ "FIRSTNAME,"
 			+ "LASTNAME,"
 			+ "EMAILID,"
@@ -62,9 +70,54 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 			 + ":COUNTRY,"
 			 + ":PIN)";
 	
-	private static final String INSERT_EMERGENCY_CANT_INF_QUERY="INSERT INTO emrg_contact_info(NAME,REL,PHONE_NUM,EMAILID)"
-			+ " values(:NAME,:REL,:PHONE_NUM,:EMAILID)";
-	
+  private static final String INSERT_EMERGENCY_CANT_INF_QUERY =
+    "INSERT INTO emrg_contact_info(NAME,REL,PHONE_NUM,EMAILID)" + " values(:NAME,:REL,:PHONE_NUM,:EMAILID)";
+
+  private static final String INSERT_USER_ROLE_QUERY ="INSERT INTO management_group (MGMT_GRP_ID,"
+    + "ROLE,"
+    + "START_DATE,"
+    + "END_DATE,"
+    + "ENTER_EXPENSES,"
+    + "APPROVE_OWN_EXPENSES,"
+    + "APPROVE_OTHERS_EXPENSES,"
+    + "ENTER_CONTACTS,"
+    + "APPROVE_OWN_CONTACTS,"
+    + "APPROVE_OTHERS_CONTACTS,"
+    + "ENTER_APPOINTMENTS,"
+    + "APPROVE_OWN_APPOINTMENTS,"
+    + "APPROVE_OTHERS_APPOINTMENTS,"
+    + "ENTER_NOTICES,"
+    + "APPROVE_OWN_NOTICES,"
+    + "APPROVE_OTHERS_NOTICES,"
+    + "ENTER_UTILITIES,"
+    + "APPROVE_OWN_UTILITIES,"
+    + "APPROVE_OTHERS_UTILITIES,"
+    + "COMMUNITY_ID,"
+    + "USER_ID,"
+    + "CREATED_BY)"
+        + "VALUES(:MGMT_GRP_ID,"
+        + ":ROLE,"
+        + ":START_DATE,"
+        + ":END_DATE,"
+        + ":ENTER_EXPENSES,"
+        + ":APPROVE_OWN_EXPENSES,"
+        + ":APPROVE_OTHERS_EXPENSES,"
+        + ":ENTER_CONTACTS,"
+        + ":APPROVE_OWN_CONTACTS,"
+        + ":APPROVE_OTHERS_CONTACTS,"
+        + ":ENTER_APPOINTMENTS,"
+        + ":APPROVE_OWN_APPOINTMENTS,"
+        + ":APPROVE_OTHERS_APPOINTMENTS,"
+        + ":ENTER_NOTICES,"
+        + ":APPROVE_OWN_NOTICES,"
+        + ":APPROVE_OTHERS_NOTICES,"
+        + ":ENTER_UTILITIES,"
+        + ":APPROVE_OWN_UTILITIES,"
+        + ":APPROVE_OTHERS_UTILITIES,"
+        + ":COMMUNITY_ID,"
+        + ":USER_ID,"
+        + ":CREATED_BY)";
+
 	private static final String UPDATE_EMERGENCY_CANT_INF_QUERY="UPDATE emrg_contact_info SET "
 			+ "NAME=:NAME,"
 			+ "REL=:REL,"
@@ -106,13 +159,35 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
   		    + ":DATE_OF_BIRTH,"
   		    + ":USER_ID,:FLAT_ID)";
 
-	private static final String DELETE_CO_OCCUPANT_QUERY = "DELETE FROM co_occupants_info WHERE CO_OCCUPANT_ID=:CO_OCCUPANT_ID";
+   private static final String DELETE_CO_OCCUPANT_QUERY = "DELETE FROM co_occupants_info WHERE CO_OCCUPANT_ID=:CO_OCCUPANT_ID";
 
-	private static final String DELETE_USER_QUERY = "DELETE FROM userinfo WHERE USERID=:USERID";
+   private static final String DELETE_USER_QUERY = "DELETE FROM userinfo WHERE USERID=:USERID";
 
-	private String FIND_USERS_FOR_SEARH_QUERY = "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo";
+   private String FIND_USERS_FOR_SEARH_QUERY = "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo";
 
-	private static final String GET_USER_DETAILS_BY_USERID_QUERY = "SELECT * FROM userinfo WHERE USERID=:USERID";
+   private static final String GET_USER_DETAILS_BY_USERID_QUERY = "SELECT * FROM userinfo WHERE USERID=:USERID";
+
+   private static final String UPDATE_USER_ROLE_QUERY =
+    "UPDATE management_group SET ROLE=:ROLE,"
+    + "START_DATE=:START_DATE,"
+    + "END_DATE=:END_DATE,"
+    + "ENTER_EXPENSES=:ENTER_EXPENSES,"
+    + "APPROVE_OWN_EXPENSES=:APPROVE_OWN_EXPENSES,"
+    + "APPROVE_OTHERS_EXPENSES=:APPROVE_OTHERS_EXPENSES,"
+    + "ENTER_CONTACTS=:ENTER_CONTACTS,"
+    + "APPROVE_OWN_CONTACTS=:APPROVE_OWN_CONTACTS,"
+    + "APPROVE_OTHERS_CONTACTS=:APPROVE_OTHERS_CONTACTS,"
+    + "ENTER_APPOINTMENTS=:ENTER_APPOINTMENTS,"
+    + "APPROVE_OWN_APPOINTMENTS=:APPROVE_OWN_APPOINTMENTS,"
+    + "APPROVE_OTHERS_APPOINTMENTS=:APPROVE_OTHERS_APPOINTMENTS,"
+    + "ENTER_NOTICES=:ENTER_NOTICES,"
+    + "APPROVE_OWN_NOTICES=:APPROVE_OWN_NOTICES,"
+    + "APPROVE_OTHERS_NOTICES=:APPROVE_OTHERS_NOTICES,"
+    + "ENTER_UTILITIES=:ENTER_UTILITIES,"
+    + "APPORVE_OWN_UTILITIES=:APPROVE_OWN_UTILITIES,"
+    + "APPROVE_OTHERS_UTILITIES=:APPROVE_OTHERS_UTILITIES,"
+    + "UPDATED_BY=:UPDATED_BY "
+    + "WHERE MGMT_GRP_ID=:MGMT_GRP_ID";
 
   @Override
   public String save(final UserDTO userDto) {
@@ -169,7 +244,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
   }
 
   @Override
-  public UserDTO getUserDetailsById(final long userId) {
+  public UserDTO getUserDetailsById(final String userId) {
     MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
     namedParameterSource.addValue("USERID", userId);
     return getNamedParameterJdbcTemplate().queryForObject(GET_USER_DETAILS_BY_USERID_QUERY, namedParameterSource,
@@ -232,6 +307,124 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
     namedParameterSource.addValue("CO_OCCUPANT_ID", coOccupentId);
     getNamedParameterJdbcTemplate().update(DELETE_CO_OCCUPANT_QUERY, namedParameterSource);
+  }
+
+ 
+  @Override
+  public String addRole(final UserPrivilegeDTO userPrivilegeDTO) {
+    final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+    final String mgmtGroupId = "M"+RandomStringUtils.randomNumeric(8);
+    namedParameterSource.addValue("MGMT_GRP_ID",mgmtGroupId);
+    namedParameterSource.addValue("ROLE",userPrivilegeDTO.getRole());
+    namedParameterSource.addValue("START_DATE",userPrivilegeDTO.getStartDate());
+    namedParameterSource.addValue("END_DATE",userPrivilegeDTO.getEndDate());
+    namedParameterSource.addValue("ENTER_EXPENSES",String.valueOf(userPrivilegeDTO.isEnterExpenses()));
+    namedParameterSource.addValue("APPROVE_OWN_EXPENSES",String.valueOf(userPrivilegeDTO.isApporveOwnExpenses()));
+    namedParameterSource.addValue("APPROVE_OTHERS_EXPENSES",String.valueOf(userPrivilegeDTO.isApproveOthersExpenses()));
+    namedParameterSource.addValue("ENTER_CONTACTS",String.valueOf(userPrivilegeDTO.isEnterContacts()));
+    namedParameterSource.addValue("APPROVE_OTHERS_CONTACTS",String.valueOf(userPrivilegeDTO.isApproveOthersContacts()));
+    namedParameterSource.addValue("APPROVE_OWN_CONTACTS",String.valueOf(userPrivilegeDTO.isApproveOwnContacts()));
+    namedParameterSource.addValue("ENTER_APPOINTMENTS",String.valueOf(userPrivilegeDTO.isEnterAppointments()));
+    namedParameterSource.addValue("APPROVE_OTHERS_APPOINTMENTS",String.valueOf(userPrivilegeDTO.isApproveOthersAppointments()));
+    namedParameterSource.addValue("APPROVE_OWN_APPOINTMENTS",String.valueOf(userPrivilegeDTO.isApproveOwnAppointments()));
+    namedParameterSource.addValue("ENTER_NOTICES",String.valueOf(userPrivilegeDTO.isEnterNotices()));
+    namedParameterSource.addValue("APPROVE_OTHERS_NOTICES",String.valueOf(userPrivilegeDTO.isApproveOthersNotices()));
+    namedParameterSource.addValue("APPROVE_OWN_NOTICES",String.valueOf(userPrivilegeDTO.isApproveOwnNotices()));
+    namedParameterSource.addValue("ENTER_UTILITIES",String.valueOf(userPrivilegeDTO.isEnterUtilities()));
+    namedParameterSource.addValue("APPROVE_OTHERS_UTILITIES",String.valueOf(userPrivilegeDTO.isApproveOthersUtilities()));
+    namedParameterSource.addValue("APPROVE_OWN_UTILITIES",String.valueOf(userPrivilegeDTO.isApproveOwnUtilities()));
+    namedParameterSource.addValue("COMMUNITY_ID",userPrivilegeDTO.getCommunityId());
+    namedParameterSource.addValue("USER_ID",userPrivilegeDTO.getUserDTO().getEmailId());
+    namedParameterSource.addValue("CREATED_BY",userPrivilegeDTO.getCreatedBy());
+    getNamedParameterJdbcTemplate().update(INSERT_USER_ROLE_QUERY,namedParameterSource);
+    return mgmtGroupId;
+  }
+
+  @Override
+  public String updateRole(final UserPrivilegeDTO userPrivilegeDTO) {
+    final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+    namedParameterSource.addValue("MGMT_GRP_ID",userPrivilegeDTO.getId());
+    namedParameterSource.addValue("ROLE",userPrivilegeDTO.getRole());
+    namedParameterSource.addValue("START_DATE",userPrivilegeDTO.getStartDate());
+    namedParameterSource.addValue("END_DATE",userPrivilegeDTO.getEndDate());
+    namedParameterSource.addValue("ENTER_EXPENSES",String.valueOf(userPrivilegeDTO.isEnterExpenses()));
+    namedParameterSource.addValue("APPROVE_OWN_EXPENSES",String.valueOf(userPrivilegeDTO.isApporveOwnExpenses()));
+    namedParameterSource.addValue("APPROVE_OTHERS_EXPENSES",String.valueOf(userPrivilegeDTO.isApproveOthersExpenses()));
+    namedParameterSource.addValue("ENTER_CONTACTS",String.valueOf(userPrivilegeDTO.isEnterContacts()));
+    namedParameterSource.addValue("APPROVE_OTHERS_CONTACTS",String.valueOf(userPrivilegeDTO.isApproveOthersContacts()));
+    namedParameterSource.addValue("APPROVE_OWN_CONTACTS",String.valueOf(userPrivilegeDTO.isApproveOwnContacts()));
+    namedParameterSource.addValue("ENTER_APPOINTMENTS",String.valueOf(userPrivilegeDTO.isEnterAppointments()));
+    namedParameterSource.addValue("APPROVE_OTHERS_APPOINTMENTS",String.valueOf(userPrivilegeDTO.isApproveOthersAppointments()));
+    namedParameterSource.addValue("APPROVE_OWN_APPOINTMENTS",String.valueOf(userPrivilegeDTO.isApproveOwnAppointments()));
+    namedParameterSource.addValue("ENTER_NOTICES",String.valueOf(userPrivilegeDTO.isEnterNotices()));
+    namedParameterSource.addValue("APPROVE_OTHERS_NOTICES",String.valueOf(userPrivilegeDTO.isApproveOthersNotices()));
+    namedParameterSource.addValue("APPROVE_OWN_NOTICES",String.valueOf(userPrivilegeDTO.isApproveOwnNotices()));
+    namedParameterSource.addValue("ENTER_UTILITIES",String.valueOf(userPrivilegeDTO.isEnterUtilities()));
+    namedParameterSource.addValue("APPROVE_OTHERS_UTILITIES",String.valueOf(userPrivilegeDTO.isApproveOthersUtilities()));
+    namedParameterSource.addValue("APPROVE_OWN_UTILITIES",String.valueOf(userPrivilegeDTO.isApproveOwnUtilities()));
+    namedParameterSource.addValue("UPDATED_BY",userPrivilegeDTO.getUpdatedBy());
+    getNamedParameterJdbcTemplate().update(UPDATE_USER_ROLE_QUERY,namedParameterSource);
+    return userPrivilegeDTO.getId();
+  }
+
+  @Override
+  public void deleteRole(String managementGroupId) {
+    final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+    namedParameterSource.addValue("MGMT_GRP_ID",managementGroupId);
+    getNamedParameterJdbcTemplate().update(DELETE_ROLE_QUERY,namedParameterSource);    
+  }
+
+  @Override
+  public List<UserPrivilegeDTO> getCommunityRoles(final String communityId) {
+    try {
+      MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+      namedParameterSource.addValue("COMMUNITY_ID", communityId);
+      return getNamedParameterJdbcTemplate().query(GET_COMMUNITY_MGMT_GROUP_ROLES,namedParameterSource, getRoles());
+    } catch (EmptyResultDataAccessException e) {
+      return new ArrayList<UserPrivilegeDTO>();
+    }
+  }
+
+  @Override
+  public List<UserPrivilegeDTO> getUserRoles(final String userId) {
+    try {
+      MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+      namedParameterSource.addValue("USER_ID", userId);
+      return getNamedParameterJdbcTemplate().query(GET_USER_ROLES,namedParameterSource, getRoles());
+    } catch (EmptyResultDataAccessException e) {
+      return new ArrayList<UserPrivilegeDTO>();
+    }
+  }
+
+  private RowMapper<UserPrivilegeDTO> getRoles() {
+    return new RowMapper<UserPrivilegeDTO>() {
+      @Override
+      public UserPrivilegeDTO mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        UserPrivilegeDTO userPrivilegeDTO = new UserPrivilegeDTO();
+        userPrivilegeDTO.setId(rs.getString("MGMT_ID"));
+        userPrivilegeDTO.setRole(rs.getString("ROLE"));
+        userPrivilegeDTO.setStartDate(rs.getString("START_DATE"));
+        userPrivilegeDTO.setEndDate(rs.getString("END_DATE"));
+        userPrivilegeDTO.setEnterExpenses(Boolean.valueOf(rs.getString("ENTER_EXPENSES")));
+        userPrivilegeDTO.setApporveOwnExpenses(Boolean.valueOf(rs.getString("APPROVE_OWN_EXPENSES")));
+        userPrivilegeDTO.setApproveOthersExpenses(Boolean.valueOf(rs.getString("APPROVE_OTHERS_EXPENSES")));
+        userPrivilegeDTO.setEnterContacts(Boolean.valueOf(rs.getString("ENTER_CONTACTS")));
+        userPrivilegeDTO.setApproveOthersContacts(Boolean.valueOf(rs.getString("APPROVE_OTHERS_CONTACTS")));
+        userPrivilegeDTO.setApproveOwnContacts(Boolean.valueOf(rs.getString("APPROVE_OWN_CONTACTS")));
+        userPrivilegeDTO.setEnterNotices(Boolean.valueOf(rs.getString("ENTER_NOTICES")));
+        userPrivilegeDTO.setApproveOthersNotices(Boolean.valueOf(rs.getString("APPROVE_OTHERS_NOTICES")));
+        userPrivilegeDTO.setApproveOwnNotices(Boolean.valueOf(rs.getString("APPROVE_OWN_NOTICES")));
+        userPrivilegeDTO.setEnterAppointments(Boolean.valueOf(rs.getString("ENTER_APPOINTMENTS")));
+        userPrivilegeDTO.setApproveOwnAppointments(Boolean.valueOf(rs.getString("APPROVE_OWN_APPOINTMENTS")));
+        userPrivilegeDTO.setApproveOthersAppointments(Boolean.valueOf(rs.getString("APPROVE_OTHERS_APPOINTMENTS")));
+        userPrivilegeDTO.setEnterUtilities(Boolean.valueOf(rs.getString("ENTER_UTILITIES")));
+        userPrivilegeDTO.setApproveOthersUtilities(Boolean.valueOf(rs.getString("APPROVE_OTHER_UTILITIES")));
+        userPrivilegeDTO.setApproveOwnUtilities(Boolean.valueOf(rs.getString("APPROVE_OWN_UTILITIES")));
+        UserDTO userDTO = getUserDetailsById(rs.getString("USER_ID"));
+        userPrivilegeDTO.setUserDTO(userDTO);
+        return userPrivilegeDTO;
+      }
+    };
   }
 
   private MapSqlParameterSource prepareNamedSqlParameterSource(final UserDTO user) {

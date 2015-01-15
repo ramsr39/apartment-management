@@ -93,7 +93,7 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
   public String save(final FlatDTO flatDTO) {
     LOG.info("FlatDaoImpl save::::start");
     MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-    final String flatId = "F" + RandomStringUtils.randomNumeric(8).toUpperCase();
+    final String flatId = "F" + RandomStringUtils.randomNumeric(8);
     namedParameterSource.addValue("FLAT_ID", flatId);
     prepareParameterSource(flatDTO, namedParameterSource);
     getNamedParameterJdbcTemplate().update(INSERT_FLAT_DETAILS_QUERY, namedParameterSource);

@@ -44,11 +44,15 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
     final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
     namedSqlParamSource.addValue("APT_ID", appointmentId);
     namedSqlParamSource.addValue("DESCRIPTION", appointmentDTO.getDescription());
-    if(StringUtils.isNotBlank(appointmentDTO.getIsVisibleToTenant())){
-    namedSqlParamSource.addValue("IS_VISIBLE_TO_TENANT", appointmentDTO.getIsVisibleToTenant());
+    if (StringUtils.isNotBlank(appointmentDTO.getIsVisibleToTenant())) {
+      namedSqlParamSource.addValue("IS_VISIBLE_TO_TENANT", appointmentDTO.getIsVisibleToTenant());
+    } else {
+      namedSqlParamSource.addValue("IS_VISIBLE_TO_TENANT", "false");
     }
-    if(StringUtils.isNotBlank(appointmentDTO.getIsVisibleToOwner())){
-    namedSqlParamSource.addValue("IS_VISIBLE_TO_OWNER", appointmentDTO.getIsVisibleToOwner());
+    if (StringUtils.isNotBlank(appointmentDTO.getIsVisibleToOwner())) {
+      namedSqlParamSource.addValue("IS_VISIBLE_TO_OWNER", appointmentDTO.getIsVisibleToOwner());
+    } else {
+      namedSqlParamSource.addValue("IS_VISIBLE_TO_OWNER", "false");
     }
     namedSqlParamSource.addValue("APT_DATE", getUtcTime(appointmentDTO.getAppointmentDate().getMillis()));
     namedSqlParamSource.addValue("REMIND_ME", getUtcTime(appointmentDTO.getRemindMe().getMillis()));
@@ -148,8 +152,8 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setId(rs.getString("APT_ID"));
         appointmentDTO.setStatus(rs.getString("APT_STATUS"));
-        appointmentDTO.setIsVisibleToOwner("IS_VISIBLE_TO_OWNER");
-        appointmentDTO.setIsVisibleToTenant("IS_VISIBLE_TO_TENANT");
+        appointmentDTO.setIsVisibleToOwner(rs.getString("IS_VISIBLE_TO_OWNER"));
+        appointmentDTO.setIsVisibleToTenant(rs.getString("IS_VISIBLE_TO_TENANT"));
         appointmentDTO.setAppointmentDate(new DateTime(rs.getTimestamp("APT_DATE").getTime()));
         appointmentDTO.setDescription(rs.getString("DESCRIPTION"));
         appointmentDTO.setRemindMe(new DateTime(rs.getTimestamp("REMIND_ME").getTime()));

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -15,14 +16,19 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.apartment.management.dao.ManageUserDao;
 import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.UserDTO;
+import com.apartment.management.dto.UserPrivilegeDTO;
 import com.apartment.management.utils.JsonUtils;
 
 @Path("/users")
 public class ManageUserService {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ManageUserService.class);
   private ManageUserDao manageUserDao;
 
   @POST
@@ -101,9 +107,69 @@ public class ManageUserService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response getUserById(@PathParam("userId")
-  final long userId) {
+  final String userId) {
     UserDTO userDTO = manageUserDao.getUserDetailsById(userId);
     return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO)).build();
+  }
+
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/add-role")
+  public Response addRole(final String payload,@HeaderParam("userId") final String userId) {
+    UserPrivilegeDTO userPrivilegeDTO = JsonUtils.parseJsonToObject(payload, UserPrivilegeDTO.class);
+    if (null == userPrivilegeDTO) {
+      throw new RuntimeException("unable to parse user information");
+    }
+    userPrivilegeDTO.setCreatedBy(userId);
+    final String id = manageUserDao.addRole(userPrivilegeDTO);
+    userPrivilegeDTO.setId(id);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(userPrivilegeDTO)).build();
+  }
+
+  @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/update-role")
+  public Response updateRole(final String payload,@HeaderParam("userId") final String userId) {
+    LOG.info("updateRole started...............");
+    UserPrivilegeDTO userPrivilegeDTO = JsonUtils.parseJsonToObject(payload, UserPrivilegeDTO.class);
+    if (null == userPrivilegeDTO) {
+      throw new RuntimeException("unable to parse user information");
+    }
+    userPrivilegeDTO.setUpdatedBy(userId);
+    final String managementGroupId = manageUserDao.updateRole(userPrivilegeDTO);
+    LOG.info("successfully updateRole for the id..............."+managementGroupId);
+    return Response.ok().entity(JsonUtils.parseObjectToJson(userPrivilegeDTO)).build();
+  }
+
+  @PUT
+  @Path("/dalete-role/{managementGroupId}")
+  public Response deleteRole(final String payload,@HeaderParam("managementGroupId") final String managementGroupId) {
+    LOG.info("deleteRole started for id........"+managementGroupId);
+     manageUserDao.deleteRole(managementGroupId);
+    LOG.info("successfully deleted role for the id..............."+managementGroupId);
+    return Response.ok().build();
+  }
+  
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/get-community-roles")
+  public String getCommiunityRoles(@QueryParam("communityId") final String communityId) {
+    LOG.info("getCommiunityRoles started for id........"+communityId);
+    List<UserPrivilegeDTO> rolesList = manageUserDao.getCommunityRoles(communityId);
+    LOG.info("getCommiunityRoles end.for the id............."+communityId);
+    return JsonUtils.parseObjectToJson(rolesList);
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/get-user-roles")
+  public String getUserRoles(@QueryParam("userId") final String userId) {
+    LOG.info("getUserRoles started for id........"+userId);
+    List<UserPrivilegeDTO> rolesList =  manageUserDao.getUserRoles(userId);
+    LOG.info("getUserRoles end.for the id............."+userId);
+    return JsonUtils.parseObjectToJson(rolesList);
   }
 
   public void setManageUserDao(final ManageUserDao manageUserDao) {
