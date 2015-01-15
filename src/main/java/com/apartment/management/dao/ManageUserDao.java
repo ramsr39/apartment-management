@@ -32,10 +32,10 @@ public interface ManageUserDao {
 
   @Transactional(propagation = Propagation.REQUIRED)
   public String addRole(UserPrivilegeDTO userPrivilegeDTO);
-  
+
   @Transactional(propagation = Propagation.REQUIRED)
   public String updateRole(UserPrivilegeDTO userPrivilegeDTO);
-  
+
   @Transactional(propagation = Propagation.REQUIRED)
   public void deleteRole(String managementGroupId);
 
