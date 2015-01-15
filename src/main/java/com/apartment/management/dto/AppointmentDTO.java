@@ -12,6 +12,8 @@ public class AppointmentDTO {
 
   private DateTime remindMe;
 
+  private String approvedStatus;
+
   private String description;
 
   private String flatId;
@@ -66,6 +68,14 @@ public class AppointmentDTO {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public String getApprovedStatus() {
+    return approvedStatus;
+  }
+
+  public void setApprovedStatus(final String approvedStatus) {
+    this.approvedStatus = approvedStatus;
   }
 
   public ContactDTO getContactDTO() {

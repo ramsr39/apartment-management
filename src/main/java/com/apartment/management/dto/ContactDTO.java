@@ -18,6 +18,8 @@ public final class ContactDTO {
   private String webSite;
 
   private String name;
+  
+  private String approvedStatus;
 
   private Address address = new Address();
 
@@ -95,6 +97,14 @@ public final class ContactDTO {
 
   public void setName(final String name) {
     this.name = name;
+  }
+
+  public String getApprovedStatus() {
+    return approvedStatus;
+  }
+
+  public void setApprovedStatus(final String approvedStatus) {
+    this.approvedStatus = approvedStatus;
   }
 
   public Address getAddress() {

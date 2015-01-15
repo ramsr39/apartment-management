@@ -24,15 +24,16 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
   private static final String GET_APPOINTMENT_BASE_QUERY = "SELECT * FROM appointment";
 
   private static final String INSERT_APPOINTMENT_QUERY =
-    "INSERT INTO appointment(APT_ID,APT_DATE,REMIND_ME,DESCRIPTION,IS_VISIBLE_TO_OWNER,IS_VISIBLE_TO_TENANT,CONTACT_ID,FLAT_ID,BUILDING_ID,COMMUNITY_ID,USER_ID) "
-        + "values(:APT_ID,:APT_DATE,:REMIND_ME,:DESCRIPTION,:IS_VISIBLE_TO_OWNER,:IS_VISIBLE_TO_TENANT,:CONTACT_ID,:FLAT_ID,:BUILDING_ID,:COMMUNITY_ID,:USER_ID)";
+    "INSERT INTO appointment(APT_ID,APT_DATE,REMIND_ME,DESCRIPTION,IS_VISIBLE_TO_OWNER,IS_VISIBLE_TO_TENANT,APPROVED_STATUS,CONTACT_ID,FLAT_ID,BUILDING_ID,COMMUNITY_ID,USER_ID) "
+        + "values(:APT_ID,:APT_DATE,:REMIND_ME,:DESCRIPTION,:IS_VISIBLE_TO_OWNER,:IS_VISIBLE_TO_TENANT,:APPROVED_STATUS,:CONTACT_ID,:FLAT_ID,:BUILDING_ID,:COMMUNITY_ID,:USER_ID)";
 
   private static final String UPDATE_APPOINTMENT_QUERY =
     "UPDATE appointment SET APT_DATE=:APT_DATE,REMIND_ME=:REMIND_ME,"
     + "APT_STATUS=:APT_STATUS,"
     + "DESCRIPTION=:DESCRIPTION,"
     + "IS_VISIBLE_TO_OWNER=:IS_VISIBLE_TO_OWNER,"
-    + "IS_VISIBLE_TO_TENANT=:IS_VISIBLE_TO_TENANT"
+    + "IS_VISIBLE_TO_TENANT=:IS_VISIBLE_TO_TENANT,"
+    + "APPROVED_STATUS=:APPROVED_STATUS"
     + " WHERE APT_ID=:APT_ID";
 
   private static final String DELETE_APPOINTMENT_QUERY = "DELETE FROM appointment WHERE APT_ID=:APT_ID";
@@ -54,6 +55,7 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
     } else {
       namedSqlParamSource.addValue("IS_VISIBLE_TO_OWNER", "false");
     }
+    namedSqlParamSource.addValue("APPROVED_STATUS", appointmentDTO.getApprovedStatus());
     namedSqlParamSource.addValue("APT_DATE", getUtcTime(appointmentDTO.getAppointmentDate().getMillis()));
     namedSqlParamSource.addValue("REMIND_ME", getUtcTime(appointmentDTO.getRemindMe().getMillis()));
     namedSqlParamSource.addValue("CONTACT_ID", appointmentDTO.getContactDTO().getId());
@@ -82,6 +84,7 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
     namedSqlParamSource.addValue("APT_DATE", getUtcTime(appointmentDTO.getAppointmentDate().getMillis()));
     namedSqlParamSource.addValue("REMIND_ME", getUtcTime(appointmentDTO.getRemindMe().getMillis()));
     namedSqlParamSource.addValue("APT_STATUS", appointmentDTO.getStatus());
+    namedSqlParamSource.addValue("APPROVED_STATUS", appointmentDTO.getApprovedStatus());
     namedSqlParamSource.addValue("CONTANCT_ID", appointmentDTO.getContactDTO().getId());
     getSimpleJdbcTemplate().update(UPDATE_APPOINTMENT_QUERY, namedSqlParamSource);
   }

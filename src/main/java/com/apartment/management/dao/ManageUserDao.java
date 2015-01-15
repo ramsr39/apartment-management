@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.UserDTO;
+import com.apartment.management.dto.UserPrivilegeDTO;
 
 public interface ManageUserDao {
   @Transactional(propagation = Propagation.REQUIRED)
@@ -27,6 +28,19 @@ public interface ManageUserDao {
   public List<UserDTO>
       findUsers(String firstName, String lastName, String emailId, String phoneNumber, String uidNumber);
 
-  public UserDTO getUserDetailsById(long userId);
+  public UserDTO getUserDetailsById(String userId);
+
+  @Transactional(propagation = Propagation.REQUIRED)
+  public String addRole(UserPrivilegeDTO userPrivilegeDTO);
+  
+  @Transactional(propagation = Propagation.REQUIRED)
+  public String updateRole(UserPrivilegeDTO userPrivilegeDTO);
+  
+  @Transactional(propagation = Propagation.REQUIRED)
+  public void deleteRole(String managementGroupId);
+
+  public List<UserPrivilegeDTO> getCommunityRoles(String communityId);
+
+  public List<UserPrivilegeDTO> getUserRoles(String userId);
 
 }

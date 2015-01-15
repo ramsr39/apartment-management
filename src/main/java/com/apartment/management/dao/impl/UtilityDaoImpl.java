@@ -32,7 +32,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 			+ "SERVICE_PROVIDER_NAME,"
 			+ "REMIND_ME,"
 			+ "PAID_BY,"
-			+ "STATUS,"
+			+ "APPROVED_STATUS,"
 			+ "FLAT_ID,"
 			+ "BUILDING_ID,"
 			+ "COMMUNITY_ID,"
@@ -44,7 +44,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 			         + ":SERVICE_PROVIDER_NAME,"
 			         + ":REMIND_ME,"
 			         + ":PAID_BY,"
-			         + ":STATUS,"
+			         + ":APPROVED_STATUS,"
 			         + ":FLAT_ID,"
 			         + ":BUILDING_ID,"
 			         + ":COMMUNITY_ID,"
@@ -57,7 +57,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
            + "SERVICE_PROVIDER_NAME=:SERVICE_PROVIDER_NAME,"
            + "REMIND_ME=:REMIND_ME,"
            + "PAID_BY=:PAID_BY "
-           + "STATUS=:STATUS"
+           + "APPROVED_STATUS=:APPROVED_STATUS"
            + "WHERE UTILITY_ID=:UTILITY_ID";
 	
   private static final String DELETE_UTILITY_QUERY = "DELETE FROM utility WHERE UTILITY_ID=:UTILITY_ID";
@@ -85,7 +85,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
     namedSqlParamSource.addValue("SERVICE_PROVIDER_NAME", utilityDTO.getServiceProviderName());
     namedSqlParamSource.addValue("REMIND_ME", utilityDTO.getRemindMe());
     namedSqlParamSource.addValue("PAID_BY", utilityDTO.getPaidBy());
-    namedSqlParamSource.addValue("STATUS", utilityDTO.getStatus());
+    namedSqlParamSource.addValue("APPROVED_STATUS", utilityDTO.getApproveStatus());
     namedSqlParamSource.addValue("FLAT_ID", utilityDTO.getFlatId());
     namedSqlParamSource.addValue("BUILDING_ID", utilityDTO.getBuildingId());
     namedSqlParamSource.addValue("COMMUNITY_ID", utilityDTO.getCommunityId());
@@ -112,7 +112,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
     namedSqlParamSource.addValue("SERVICE_PROVIDER_NAME", utilityDTO.getServiceProviderName());
     namedSqlParamSource.addValue("REMIND_ME", utilityDTO.getRemindMe());
     namedSqlParamSource.addValue("PAID_BY", utilityDTO.getPaidBy());
-    namedSqlParamSource.addValue("STATUS", utilityDTO.getStatus());
+    namedSqlParamSource.addValue("APPROVED_STATUS", utilityDTO.getApproveStatus());
     getSimpleJdbcTemplate().update(UPDATE_UTILITY_QUERY, namedSqlParamSource);
     ContactDTO contactDTO = utilityDTO.getContactDTO();
     contactDao.update(contactDTO);
