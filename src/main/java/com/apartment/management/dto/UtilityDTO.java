@@ -15,6 +15,8 @@ public final class UtilityDTO {
 
   private String paidBy;
 
+  private String status;
+
   private String flatId;
 
   private String buildingId;
@@ -79,6 +81,14 @@ public final class UtilityDTO {
 
   public void setPaidBy(final String paidBy) {
     this.paidBy = paidBy;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(final String status) {
+    this.status = status;
   }
 
   public String getFlatId() {
