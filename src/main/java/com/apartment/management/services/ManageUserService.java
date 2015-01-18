@@ -172,6 +172,17 @@ public class ManageUserService {
     return JsonUtils.parseObjectToJson(rolesList);
   }
 
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/check-user-residency-in-community")
+  public String isUserResidentInCommunity(@QueryParam("communityId") final String communityId,@QueryParam("userId") final String userId) {
+    LOG.info("getUserRoles started for id........"+userId);
+    boolean flag = manageUserDao.isUserResidentInCommunity(communityId,userId);
+    LOG.info("getUserRoles end.for the id............."+userId);
+    return String.valueOf(flag);
+  }
+ 
   public void setManageUserDao(final ManageUserDao manageUserDao) {
     this.manageUserDao = manageUserDao;
   }

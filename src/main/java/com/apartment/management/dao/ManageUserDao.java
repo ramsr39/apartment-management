@@ -43,4 +43,6 @@ public interface ManageUserDao {
 
   public List<UserPrivilegeDTO> getUserRoles(String userId);
 
+  public boolean isUserResidentInCommunity(String communityId, String userId);
+
 }

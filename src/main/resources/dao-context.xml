@@ -30,6 +30,7 @@
 
 	<bean id="manageUserDao" class="com.apartment.management.dao.impl.ManageUserDaoImpl">
 		<property name="dataSource" ref="dataSource" />
+		<property name="buildingDao" ref="buildingDao" />
 	</bean>
 
 	<bean id="contactDao" class="com.apartment.management.dao.impl.ContactDaoImpl">

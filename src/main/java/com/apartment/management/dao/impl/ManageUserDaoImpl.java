@@ -14,8 +14,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 
+import com.apartment.management.dao.BuildingDao;
 import com.apartment.management.dao.ManageUserDao;
 import com.apartment.management.dto.Address;
+import com.apartment.management.dto.BuildingDTO;
 import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.EmergencyContactInfo;
 import com.apartment.management.dto.UserDTO;
@@ -23,11 +25,13 @@ import com.apartment.management.dto.UserPrivilegeDTO;
 
 public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements ManageUserDao{
 
+  private static final Logger LOG = LoggerFactory.getLogger(ManageUserDaoImpl.class);
+  
+  private BuildingDao buildingDao;
+
   private static final String GET_USER_ROLES = "SELECT *FROM management_group WHERE USER_ID=:USER_ID";
 
   private static final String GET_COMMUNITY_MGMT_GROUP_ROLES = "SELECT *FROM management_group WHERE COMMUNITY_ID=:COMMUNITY_ID";
-
-  private static final Logger LOG = LoggerFactory.getLogger(ManageUserDaoImpl.class);
 
   private static final String DELETE_ROLE_QUERY = "DELETE FROM management_group WHERE MGMT_GRP_ID=:MGMT_GRP_ID";
   
@@ -188,6 +192,10 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     + "APPROVE_OTHERS_UTILITIES=:APPROVE_OTHERS_UTILITIES,"
     + "UPDATED_BY=:UPDATED_BY "
     + "WHERE MGMT_GRP_ID=:MGMT_GRP_ID";
+
+   private static final String GET_BUILDING_ID_COUNT_BY_COMMUNITY_USER = "SELECT COUNT(BUILDING_ID) WHERE COMMUNITY_ID=:COMMUNITY_ID AND OWNER_ID=:OWNER_ID";
+
+   private static final String GET_FLAT_IDS_COUNT_BY_BUILDING_AND_BY_OWNER_OR_BY_TENANT = "SELECT COUNT(FLAT_ID) FROM flatunit WHERE BUILDING_ID=:BUILDING_ID AND (OWNER_ID=:OWNER_ID OR TENANT_ID=:TENANT_ID)";
 
   @Override
   public String save(final UserDTO userDto) {
@@ -396,6 +404,35 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     }
   }
 
+  @Override
+  public boolean isUserResidentInCommunity(final String communityId, final String userId) {
+    try {
+      MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+      namedParameterSource.addValue("COMMUNITY_ID", communityId);
+      namedParameterSource.addValue("OWNER_ID", userId);
+      int rowCount = getNamedParameterJdbcTemplate().queryForInt(GET_BUILDING_ID_COUNT_BY_COMMUNITY_USER, namedParameterSource);
+      if (rowCount > 0) {
+        return true;
+      } else {
+        for (BuildingDTO buildingDTO : buildingDao.findBuildingDetailsByCommunityId(communityId)) {
+          namedParameterSource.addValue("BUILDING_ID", buildingDTO.getId());
+          namedParameterSource.addValue("TENANT_ID", userId);
+          int flatRowCount =
+            getNamedParameterJdbcTemplate().queryForInt(GET_FLAT_IDS_COUNT_BY_BUILDING_AND_BY_OWNER_OR_BY_TENANT,
+                namedParameterSource);
+          if (flatRowCount > 0) {
+            return true;
+          }
+        }
+
+      }
+    } catch (EmptyResultDataAccessException er) {
+      LOG.warn("no records found with::" + communityId + "::" + "and for user:" + userId);
+      return false;
+    }
+    return false;
+  }
+
   private RowMapper<UserPrivilegeDTO> getRoles() {
     return new RowMapper<UserPrivilegeDTO>() {
       @Override
@@ -527,6 +564,10 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
       queryBuilder.append(" WHERE LASTNAME=:LASTNAME");
     }
     return queryBuilder;
+  }
+
+  public void setBuildingDao(final BuildingDao buildingDao) {
+    this.buildingDao = buildingDao;
   }
 
 }
