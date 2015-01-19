@@ -32,4 +32,6 @@ public interface ContactDao {
 
   public ContactDTO getContactsByContactId(String id);
 
+  public List<ContactDTO> findPendingContacts(String userId, String communityId);
+
 }

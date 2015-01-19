@@ -21,7 +21,9 @@ import com.apartment.management.dto.UtilityDTO;
 
 public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 
-	private static final Logger LOG = LoggerFactory.getLogger(UtilityDaoImpl.class);
+	private static final String FIND_PENDING_UTILITIES_BY_COMMUNITY_AND_USER = "SELECT *FROM utility WHERE USER_ID=:USER_ID AND APPROVED_STATUS='PENDING' AND COMMUNITY_ID=:COMMUNITY_ID";
+
+  private static final Logger LOG = LoggerFactory.getLogger(UtilityDaoImpl.class);
 
 	private ContactDao contactDao;
 
@@ -193,6 +195,20 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
     }
   }
 
+  @Override
+  public List<UtilityDTO> findPendingUtilities(final String userId, final String communityId) {
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("USER_ID", userId);
+      namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
+      return getSimpleJdbcTemplate().query(FIND_PENDING_UTILITIES_BY_COMMUNITY_AND_USER, getUtilityRowmapper(),
+          namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException er) {
+      LOG.info("no utilities found with userId:" + userId + "::" + er);
+      return new ArrayList<UtilityDTO>();
+    }
+  }
+
   private RowMapper<UtilityDTO> getUtilityRowmapper() {
     return new RowMapper<UtilityDTO>() {
       @Override
@@ -220,4 +236,5 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
   public void setContactDao(final ContactDao contactDao) {
     this.contactDao = contactDao;
   }
+
 }

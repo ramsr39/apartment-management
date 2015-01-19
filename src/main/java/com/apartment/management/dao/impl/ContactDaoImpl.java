@@ -209,6 +209,24 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
     }
   }
 
+  @Override
+  public List<ContactDTO> findPendingContacts(final String userId, final String communityId) {
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("USER_ID", userId);
+      namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ")
+                  .append("WHERE USER_ID=:USER_ID").append(" ")
+                  .append("AND").append(" ")
+                  .append("COMMUNITY_ID=:COMMUNITY_ID").append(" ")
+                  .append("AND").append(" ")
+                 .append("APPROVED_STATUS='PENDING'");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException ex) {
+      return new ArrayList<ContactDTO>();
+    }
+  }
 
   private RowMapper<ContactDTO> getContactsRowmapper() {
     return new RowMapper<ContactDTO>() {
