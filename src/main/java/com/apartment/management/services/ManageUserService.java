@@ -214,10 +214,10 @@ public class ManageUserService {
         List<UtilityDTO> pendingUtilities = utilityDao.findPendingUtilities(userId,userPrivilegeDTO.getCommunityId());
     }
     if (userPrivilegeDTO.isApproveOthersContacts()) {
-      List<ContactDTO> pendingUtilities = contactDao.findPendingContacts(userId,userPrivilegeDTO.getCommunityId());
+      List<ContactDTO> pendingContacts = contactDao.findPendingContacts(userId,userPrivilegeDTO.getCommunityId());
     }
     if (userPrivilegeDTO.isApproveOthersAppointments()) {
-      List<AppointmentDTO> pendingUtilities = appointmentDao.findPendingAppointments(userId,userPrivilegeDTO.getCommunityId());
+      List<AppointmentDTO> pendingAppointments = appointmentDao.findPendingAppointments(userId,userPrivilegeDTO.getCommunityId());
     }
     if (userPrivilegeDTO.isApproveOwnNotices()) {
 
