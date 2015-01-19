@@ -2,6 +2,7 @@ package com.apartment.management.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -9,6 +10,7 @@ import java.util.TimeZone;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
@@ -109,42 +111,79 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
 
   @Override
   public List<AppointmentDTO> getCommunityAppointments(final String communityId) {
-    final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-    namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
-    final StringBuilder queryBuilder = new StringBuilder();
-    queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ")
-        .append("WHERE COMMUNITY_ID=:COMMUNITY_ID AND APT_STATUS='OPEN'");
-    return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ")
+          .append("WHERE COMMUNITY_ID=:COMMUNITY_ID AND APT_STATUS='OPEN'");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException er) {
+      LOG.warn("no appointments found for community:" + communityId);
+      return new ArrayList<AppointmentDTO>();
+    }
   }
- 
+
   @Override
   public List<AppointmentDTO> getBuildingAppointments(final String buildingId) {
-    final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-    namedSqlParamSource.addValue("BUILDING_ID", buildingId);
-    final StringBuilder queryBuilder = new StringBuilder();
-    queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ")
-        .append("WHERE BUILDING_ID=:BUILDING_ID AND APT_STATUS='OPEN'");
-    return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("BUILDING_ID", buildingId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ")
+          .append("WHERE BUILDING_ID=:BUILDING_ID AND APT_STATUS='OPEN'");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException er) {
+      LOG.warn("no appointments found for building:" + buildingId);
+      return new ArrayList<AppointmentDTO>();
+    }
   }
 
   @Override
   public List<AppointmentDTO> getFlatAppointments(final String flatId) {
-    LOG.info("flat appointments:::" + flatId);
-    final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-    namedSqlParamSource.addValue("FLAT_ID", flatId);
-    final StringBuilder queryBuilder = new StringBuilder();
-    queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ").append("WHERE FLAT_ID=:FLAT_ID AND APT_STATUS='OPEN'");
-    LOG.info(queryBuilder.toString());
-    return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
+    try {
+      LOG.info("flat appointments:::" + flatId);
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("FLAT_ID", flatId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ")
+          .append("WHERE FLAT_ID=:FLAT_ID AND APT_STATUS='OPEN'");
+      LOG.info(queryBuilder.toString());
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException er) {
+      LOG.warn("no appointments found for flat:" + flatId);
+      return new ArrayList<AppointmentDTO>();
+    }
   }
 
   @Override
   public List<AppointmentDTO> getUserAppointments(final String userId) {
-    final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-    namedSqlParamSource.addValue("USER_ID", userId);
-    final StringBuilder queryBuilder = new StringBuilder();
-    queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ").append("WHERE USER_ID=:USER_ID AND APT_STATUS=OPEN");
-    return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("USER_ID", userId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ").append("WHERE USER_ID=:USER_ID AND APT_STATUS=OPEN");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException er) {
+      LOG.warn("no appointments found for user:" + userId);
+      return new ArrayList<AppointmentDTO>();
+    }
+  }
+
+  @Override
+  public List<AppointmentDTO> findPendingAppointments(final String userId, final String communityId) {
+    try {
+      final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
+      namedSqlParamSource.addValue("USER_ID", userId);
+      namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
+      final StringBuilder queryBuilder = new StringBuilder();
+      queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ")
+          .append("WHERE USER_ID=:USER_ID AND APPROVED_STATUS='PENDING' AND COMMUNITY_ID=:COMMUNITY_ID");
+      return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
+    } catch (final EmptyResultDataAccessException er) {
+      LOG.warn("no pending appointments found for user:" + userId+"and for community:"+communityId);
+      return new ArrayList<AppointmentDTO>();
+    }
   }
 
   private RowMapper<AppointmentDTO> getAppointmentRowmapper() {
