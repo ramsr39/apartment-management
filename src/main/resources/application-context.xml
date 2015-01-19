@@ -40,6 +40,10 @@
 
 	<bean id="managerUserService" class="com.apartment.management.services.ManageUserService">
 		<property name="manageUserDao" ref="manageUserDao" />
+		<property name="contactDao" ref="contactDao" />
+		<property name="utilityDao" ref="utilityDao" />
+		<property name="appointmentDao" ref="appointmentDao" />
+
 	</bean>
 
 	<bean id="contactDetailsService" class="com.apartment.management.services.ContactDetailsService">
