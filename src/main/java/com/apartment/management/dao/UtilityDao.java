@@ -28,4 +28,6 @@ public interface UtilityDao {
 
   public UtilityDTO findUtilitiesByUtilityId(String utilityId);
 
+  public List<UtilityDTO> findPendingUtilities(String userId, String communityId);
+
 }
