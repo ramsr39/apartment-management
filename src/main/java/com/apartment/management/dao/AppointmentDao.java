@@ -26,4 +26,6 @@ public interface AppointmentDao {
 
   public List<AppointmentDTO> getUserAppointments(String userId);
 
+  public List<AppointmentDTO> findPendingAppointments(String userId, String communityId);
+
 }
