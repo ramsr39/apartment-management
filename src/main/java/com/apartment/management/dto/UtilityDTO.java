@@ -15,7 +15,9 @@ public final class UtilityDTO {
 
   private String paidBy;
 
-  private String approveStatus;
+  private String approvedStatus;
+
+  private String approvedBy;
 
   private String flatId;
 
@@ -83,12 +85,20 @@ public final class UtilityDTO {
     this.paidBy = paidBy;
   }
 
-  public String getApproveStatus() {
-    return approveStatus;
+  public String getApprovedStatus() {
+    return approvedStatus;
   }
 
-  public void setApproveStatus(final String approveStatus) {
-    this.approveStatus = approveStatus;
+  public void setApprovedStatus(final String approvedStatus) {
+    this.approvedStatus = approvedStatus;
+  }
+
+  public String getApprovedBy() {
+    return approvedBy;
+  }
+
+  public void setApprovedBy(final String approvedBy) {
+    this.approvedBy = approvedBy;
   }
 
   public String getFlatId() {

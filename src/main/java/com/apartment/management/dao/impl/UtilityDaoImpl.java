@@ -35,6 +35,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 			+ "REMIND_ME,"
 			+ "PAID_BY,"
 			+ "APPROVED_STATUS,"
+			+ "APPROVED_BY,"
 			+ "FLAT_ID,"
 			+ "BUILDING_ID,"
 			+ "COMMUNITY_ID,"
@@ -47,6 +48,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 			         + ":REMIND_ME,"
 			         + ":PAID_BY,"
 			         + ":APPROVED_STATUS,"
+			         + ":APPROVED_BY,"
 			         + ":FLAT_ID,"
 			         + ":BUILDING_ID,"
 			         + ":COMMUNITY_ID,"
@@ -58,9 +60,10 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
            + "SERVICE_NO=:SERVICE_NO,"
            + "SERVICE_PROVIDER_NAME=:SERVICE_PROVIDER_NAME,"
            + "REMIND_ME=:REMIND_ME,"
-           + "PAID_BY=:PAID_BY "
-           + "APPROVED_STATUS=:APPROVED_STATUS"
-           + "WHERE UTILITY_ID=:UTILITY_ID";
+           + "PAID_BY=:PAID_BY,"
+           + "APPROVED_STATUS=:APPROVED_STATUS,"
+           + "APPROVED_BY=:APPROVED_BY"
+           + " WHERE UTILITY_ID=:UTILITY_ID";
 	
   private static final String DELETE_UTILITY_QUERY = "DELETE FROM utility WHERE UTILITY_ID=:UTILITY_ID";
 
@@ -87,7 +90,8 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
     namedSqlParamSource.addValue("SERVICE_PROVIDER_NAME", utilityDTO.getServiceProviderName());
     namedSqlParamSource.addValue("REMIND_ME", utilityDTO.getRemindMe());
     namedSqlParamSource.addValue("PAID_BY", utilityDTO.getPaidBy());
-    namedSqlParamSource.addValue("APPROVED_STATUS", utilityDTO.getApproveStatus());
+    namedSqlParamSource.addValue("APPROVED_STATUS", utilityDTO.getApprovedStatus());
+    namedSqlParamSource.addValue("APPROVED_BY", utilityDTO.getApprovedBy());
     namedSqlParamSource.addValue("FLAT_ID", utilityDTO.getFlatId());
     namedSqlParamSource.addValue("BUILDING_ID", utilityDTO.getBuildingId());
     namedSqlParamSource.addValue("COMMUNITY_ID", utilityDTO.getCommunityId());
@@ -114,7 +118,8 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
     namedSqlParamSource.addValue("SERVICE_PROVIDER_NAME", utilityDTO.getServiceProviderName());
     namedSqlParamSource.addValue("REMIND_ME", utilityDTO.getRemindMe());
     namedSqlParamSource.addValue("PAID_BY", utilityDTO.getPaidBy());
-    namedSqlParamSource.addValue("APPROVED_STATUS", utilityDTO.getApproveStatus());
+    namedSqlParamSource.addValue("APPROVED_STATUS", utilityDTO.getApprovedStatus());
+    namedSqlParamSource.addValue("APPROVED_BY", utilityDTO.getApprovedBy());
     getSimpleJdbcTemplate().update(UPDATE_UTILITY_QUERY, namedSqlParamSource);
     ContactDTO contactDTO = utilityDTO.getContactDTO();
     contactDao.update(contactDTO);

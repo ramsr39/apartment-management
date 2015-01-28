@@ -14,6 +14,8 @@ public class AppointmentDTO {
 
   private String approvedStatus;
 
+  private String approvedBy;
+
   private String description;
 
   private String flatId;
@@ -76,6 +78,14 @@ public class AppointmentDTO {
 
   public void setApprovedStatus(final String approvedStatus) {
     this.approvedStatus = approvedStatus;
+  }
+
+  public String getApprovedBy() {
+    return approvedBy;
+  }
+
+  public void setApprovedBy(final String approvedBy) {
+    this.approvedBy = approvedBy;
   }
 
   public ContactDTO getContactDTO() {

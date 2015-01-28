@@ -77,6 +77,27 @@ public class CommunityDetailsService {
   }
 
   @GET
+  @Path("/find-user-community-details")
+  @Produces(MediaType.APPLICATION_JSON)
+  public String findUserCommunityDetailsByUserId(@QueryParam("userId")
+  final String userId) {
+    List<CommunityDTO> userCommunityList = new ArrayList<CommunityDTO>();
+    List<String> communityIdList = communityDetailsDao.getUserCommunityIds(userId);
+    for(String communityId:communityIdList){
+      CommunityDTO communityDTO = new CommunityDTO();
+      communityDTO = communityDetailsDao.getCommunityDetailsByCommunityId(communityId);
+      List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityId);
+      communityDTO.setBuildingList(buildingList);
+      List<String> buildingIdList = getBuildingIds(buildingList);
+      long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
+      communityDTO.setBuildingList(buildingList);
+      communityDTO.setTotalFlats(totalFlats);
+      userCommunityList.add(communityDTO);
+    }
+    return JsonUtils.parseObjectToJson(userCommunityList);
+  }
+
+  @GET
   @Path("/{communityId}")
   @Produces(MediaType.APPLICATION_JSON)
   public String findCommunityDetailsByCommunityId(@PathParam("communityId")

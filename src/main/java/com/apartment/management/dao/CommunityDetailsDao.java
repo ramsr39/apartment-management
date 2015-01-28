@@ -16,6 +16,8 @@ public interface CommunityDetailsDao {
 
   public CommunityDTO findCommunityDetailsByUserId(String emailId);
 
+  public List<String> getUserCommunityIds(String emailId);
+
   public CommunityDTO getCommunityDetailsByCommunityId(String communityId);
 
   public boolean isCommnityExistedForUser(String emailId);

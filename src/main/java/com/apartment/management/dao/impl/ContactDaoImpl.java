@@ -36,6 +36,7 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 			+ "COUNTRY,"
 			+ "PIN,"
 			+ "APPROVED_STATUS,"
+			+ "APPROVED_BY,"
 			+ "UTILITY_ID,"
 			+ "COMMUNITY_ID,"
 			+ "BUILDING_ID,"
@@ -56,7 +57,8 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 			   + ":STATE,"
 			   + ":COUNTRY,"
 			   + ":PIN,"
-			   + "APPROVED_STATUS,"
+			   + ":APPROVED_STATUS,"
+			   + ":APPROVED_BY,"
 			   + ":UTILITY_ID,"
 			   + ":COMMUNITY_ID,"
 			   + ":BUILDING_ID,"
@@ -76,6 +78,7 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 			   + "ADDRESS_LINE3=:ADDRESS_LINE3,"
 			   + "CITY=:CITY,"
 			   + "APPROVED_STATUS=:APPROVED_STATUS,"
+			   + "APPROVED_BY=:APPROVED_BY,"
 			   + "STATE=:STATE,"
 			   + "COUNTRY=:COUNTRY,"
 			   + "PIN=:PIN,"
@@ -276,6 +279,7 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
     namedSqlParamSource.addValue("CITY", contactDTO.getAddress().getCity());
     namedSqlParamSource.addValue("PIN", contactDTO.getAddress().getPostalCode());
     namedSqlParamSource.addValue("APPROVED_STATUS", contactDTO.getApprovedStatus());
+    namedSqlParamSource.addValue("APPROVED_BY", contactDTO.getApprovedBy());
     namedSqlParamSource.addValue("UTILITY_ID", contactDTO.getUtilityId());
     namedSqlParamSource.addValue("COMMUNITY_ID", contactDTO.getCommunityId());
     namedSqlParamSource.addValue("BUILDING_ID", contactDTO.getBuildingId());

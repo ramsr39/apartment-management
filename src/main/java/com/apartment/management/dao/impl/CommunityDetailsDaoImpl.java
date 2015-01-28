@@ -2,11 +2,13 @@ package com.apartment.management.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
@@ -258,6 +260,24 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
         return communityDTO;
       }
     }, mapSqlParameterSource);
+  }
+
+  @Override
+  public List<String> getUserCommunityIds(final String emailId) {
+    try {
+      MapSqlParameterSource paramaSource = new MapSqlParameterSource();
+      paramaSource.addValue("USER_ID", emailId);
+      return getSimpleJdbcTemplate().query("SELECT COMMUNITY_ID FROM management_group WHERE USER_ID=:USER_ID",
+          new RowMapper<String>() {
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+              // TODO Auto-generated method stub
+              return rs.getString("COMMUNITY_ID");
+            }
+          }, paramaSource);
+    } catch (final EmptyResultDataAccessException er) {
+      return new ArrayList<String>();
+    }
   }
 
 }

@@ -1,6 +1,5 @@
 package com.apartment.management.dto;
 
-
 public final class ContactDTO {
 
   private String id;
@@ -18,7 +17,7 @@ public final class ContactDTO {
   private String webSite;
 
   private String name;
-  
+
   private String approvedStatus;
 
   private Address address = new Address();
@@ -32,6 +31,8 @@ public final class ContactDTO {
   private String flatId;
 
   public String userId;
+
+  public String approvedBy;
 
   public String getId() {
     return id;
@@ -72,8 +73,6 @@ public final class ContactDTO {
   public void setType(final String type) {
     this.type = type;
   }
-
- 
 
   public String getIsVisibleToPublic() {
     return isVisibleToPublic;
@@ -155,6 +154,14 @@ public final class ContactDTO {
     this.userId = userId;
   }
 
+  public String getApprovedBy() {
+    return approvedBy;
+  }
+
+  public void setApprovedBy(final String approvedBy) {
+    this.approvedBy = approvedBy;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -179,23 +186,12 @@ public final class ContactDTO {
       return false;
     return true;
   }
- /* 
-  public static void main(String[] args) {
-    ContactDTO contactDTO1 = new ContactDTO();
-    contactDTO1.setPhoneNumber("2345");
-    
-    ContactDTO contactDTO2 = new ContactDTO();
-    contactDTO2.setPhoneNumber("2345");
-    
-    ContactDTO contactDTO3 = new ContactDTO();
-    contactDTO3.setPhoneNumber("23456");
-    
-    Set<ContactDTO> contactDTOs = new HashSet<ContactDTO>();
-    contactDTOs.add(contactDTO1);
-    contactDTOs.add(contactDTO2);
-    contactDTOs.add(contactDTO3);
-    
-    System.out.println(contactDTOs);
-  }*/
+  /*
+   * public static void main(String[] args) { ContactDTO contactDTO1 = new ContactDTO();
+   * contactDTO1.setPhoneNumber("2345"); ContactDTO contactDTO2 = new ContactDTO(); contactDTO2.setPhoneNumber("2345");
+   * ContactDTO contactDTO3 = new ContactDTO(); contactDTO3.setPhoneNumber("23456"); Set<ContactDTO> contactDTOs = new
+   * HashSet<ContactDTO>(); contactDTOs.add(contactDTO1); contactDTOs.add(contactDTO2); contactDTOs.add(contactDTO3);
+   * System.out.println(contactDTOs); }
+   */
 
 }
