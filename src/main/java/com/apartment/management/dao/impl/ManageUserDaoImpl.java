@@ -29,9 +29,9 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
   
   private BuildingDao buildingDao;
 
-  private static final String GET_USER_ROLES = "SELECT *FROM management_group WHERE USER_ID=:USER_ID";
+  private static final String GET_USER_ROLES = "SELECT * FROM management_group WHERE USER_ID=:USER_ID";
 
-  private static final String GET_COMMUNITY_MGMT_GROUP_ROLES = "SELECT *FROM management_group WHERE COMMUNITY_ID=:COMMUNITY_ID";
+  private static final String GET_COMMUNITY_MGMT_GROUP_ROLES = "SELECT * FROM management_group WHERE COMMUNITY_ID=:COMMUNITY_ID";
 
   private static final String DELETE_ROLE_QUERY = "DELETE FROM management_group WHERE MGMT_GRP_ID=:MGMT_GRP_ID";
   
@@ -41,6 +41,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 			+ "EMAILID,"
 			+ "PASSWORD,"
 			+ "PRIMARY_PH_NO,"
+			+ "IS_ADMIN_GROUP,"
 			+ "UID_TYPE,"
 			+ "UID_NUMBER,"
 			+ "DOB,"
@@ -60,10 +61,11 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 			 + ":EMAILID,"
 			 + ":PASSWORD,"
 			 + ":PRIMARY_PH_NO,"
+			 + ":IS_ADMIN_GROUP,"
 			 + ":UID_TYPE,"
 			 + ":UID_NUMBER,"
 			 + ":DOB,"
-			 + "SECONDERY_PH_NO,"
+			 + ":SECONDERY_PH_NO,"
 			 + ":SECOUNDERY_EMAIL,"
 			 + ":BLOOD_GROUP,"
 			 + ":ADDRESS_LINE1,"
@@ -96,6 +98,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     + "ENTER_UTILITIES,"
     + "APPROVE_OWN_UTILITIES,"
     + "APPROVE_OTHERS_UTILITIES,"
+    + "EDIT_GENERAL_INFO,"
     + "COMMUNITY_ID,"
     + "USER_ID,"
     + "CREATED_BY)"
@@ -118,6 +121,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
         + ":ENTER_UTILITIES,"
         + ":APPROVE_OWN_UTILITIES,"
         + ":APPROVE_OTHERS_UTILITIES,"
+        + ":EDIT_GENERAL_INFO,"
         + ":COMMUNITY_ID,"
         + ":USER_ID,"
         + ":CREATED_BY)";
@@ -133,6 +137,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 			+ "LASTNAME=:LASTNAME,"
 			+ "EMAILID=:EMAILID,"
 			+ "PRIMARY_PH_NO=:PRIMARY_PH_NO,"
+			+ "IS_ADMIN_GROUP=:IS_ADMIN_GROUP,"
 			+ "UID_TYPE=:UID_TYPE,"
 			+ "UID_NUMBER=:UID_NUMBER,"
 			+ "DOB=:DOB,"
@@ -190,6 +195,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     + "ENTER_UTILITIES=:ENTER_UTILITIES,"
     + "APPORVE_OWN_UTILITIES=:APPROVE_OWN_UTILITIES,"
     + "APPROVE_OTHERS_UTILITIES=:APPROVE_OTHERS_UTILITIES,"
+    + "EDIT_GENERAL_INFO=:EDIT_GENERAL_INFO,"
     + "UPDATED_BY=:UPDATED_BY "
     + "WHERE MGMT_GRP_ID=:MGMT_GRP_ID";
 
@@ -219,7 +225,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
   }
 
   @Override
-  public void delete(final long userId) {
+  public void delete(final String userId) {
     MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
     namedParameterSource.addValue("USERID", userId);
     getNamedParameterJdbcTemplate().update(DELETE_USER_QUERY, namedParameterSource);
@@ -271,6 +277,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
             userDTO.setSecondaryEmail(rs.getString("SECOUNDERY_EMAIL"));
             userDTO.setSecondaryPhoneNumber(rs.getString("SECONDERY_PH_NO"));
             userDTO.setPrimaryPhoneNumber(rs.getString("PRIMARY_PH_NO"));
+            userDTO.setAdminSupport(Boolean.valueOf(rs.getString("IS_ADMIN_GROUP")));
             Address address = new Address();
             address.setAddress1(rs.getString("ADDRESS_LINE1"));
             address.setAddress2(rs.getString("ADDRESS_LINE2"));
@@ -341,8 +348,9 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     namedParameterSource.addValue("ENTER_UTILITIES",String.valueOf(userPrivilegeDTO.isEnterUtilities()));
     namedParameterSource.addValue("APPROVE_OTHERS_UTILITIES",String.valueOf(userPrivilegeDTO.isApproveOthersUtilities()));
     namedParameterSource.addValue("APPROVE_OWN_UTILITIES",String.valueOf(userPrivilegeDTO.isApproveOwnUtilities()));
+    namedParameterSource.addValue("EDIT_GENERAL_INFO",String.valueOf(userPrivilegeDTO.isEditGeneralInfo()));
     namedParameterSource.addValue("COMMUNITY_ID",userPrivilegeDTO.getCommunityId());
-    namedParameterSource.addValue("USER_ID",userPrivilegeDTO.getUserDTO().getEmailId());
+    namedParameterSource.addValue("USER_ID",userPrivilegeDTO.getUserDTO().getUserId());
     namedParameterSource.addValue("CREATED_BY",userPrivilegeDTO.getCreatedBy());
     getNamedParameterJdbcTemplate().update(INSERT_USER_ROLE_QUERY,namedParameterSource);
     return mgmtGroupId;
@@ -370,6 +378,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     namedParameterSource.addValue("ENTER_UTILITIES",String.valueOf(userPrivilegeDTO.isEnterUtilities()));
     namedParameterSource.addValue("APPROVE_OTHERS_UTILITIES",String.valueOf(userPrivilegeDTO.isApproveOthersUtilities()));
     namedParameterSource.addValue("APPROVE_OWN_UTILITIES",String.valueOf(userPrivilegeDTO.isApproveOwnUtilities()));
+    namedParameterSource.addValue("EDIT_GENERAL_INFO",String.valueOf(userPrivilegeDTO.isEditGeneralInfo()));
     namedParameterSource.addValue("UPDATED_BY",userPrivilegeDTO.getUpdatedBy());
     getNamedParameterJdbcTemplate().update(UPDATE_USER_ROLE_QUERY,namedParameterSource);
     return userPrivilegeDTO.getId();
@@ -438,7 +447,8 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
       @Override
       public UserPrivilegeDTO mapRow(final ResultSet rs, final int rowNum) throws SQLException {
         UserPrivilegeDTO userPrivilegeDTO = new UserPrivilegeDTO();
-        userPrivilegeDTO.setId(rs.getString("MGMT_ID"));
+        userPrivilegeDTO.setId(rs.getString("MGMT_GRP_ID"));
+        userPrivilegeDTO.setCommunityId(rs.getString("COMMUNITY_ID"));
         userPrivilegeDTO.setRole(rs.getString("ROLE"));
         userPrivilegeDTO.setStartDate(rs.getString("START_DATE"));
         userPrivilegeDTO.setEndDate(rs.getString("END_DATE"));
@@ -455,8 +465,9 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
         userPrivilegeDTO.setApproveOwnAppointments(Boolean.valueOf(rs.getString("APPROVE_OWN_APPOINTMENTS")));
         userPrivilegeDTO.setApproveOthersAppointments(Boolean.valueOf(rs.getString("APPROVE_OTHERS_APPOINTMENTS")));
         userPrivilegeDTO.setEnterUtilities(Boolean.valueOf(rs.getString("ENTER_UTILITIES")));
-        userPrivilegeDTO.setApproveOthersUtilities(Boolean.valueOf(rs.getString("APPROVE_OTHER_UTILITIES")));
+        userPrivilegeDTO.setApproveOthersUtilities(Boolean.valueOf(rs.getString("APPROVE_OTHERS_UTILITIES")));
         userPrivilegeDTO.setApproveOwnUtilities(Boolean.valueOf(rs.getString("APPROVE_OWN_UTILITIES")));
+        userPrivilegeDTO.setEditGeneralInfo(Boolean.valueOf(rs.getString("EDIT_GENERAL_INFO")));
         UserDTO userDTO = getUserDetailsById(rs.getString("USER_ID"));
         userPrivilegeDTO.setUserDTO(userDTO);
         return userPrivilegeDTO;
@@ -470,6 +481,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     namedParameterSource.addValue("LASTNAME", user.getLastName());
     namedParameterSource.addValue("EMAILID", user.getEmailId());
     namedParameterSource.addValue("PRIMARY_PH_NO", user.getPrimaryPhoneNumber());
+    namedParameterSource.addValue("IS_ADMIN_GROUP", String.valueOf(user.isAdminSupport()));
     namedParameterSource.addValue("UID_TYPE", user.getUidType());
     namedParameterSource.addValue("UID_NUMBER", user.getUid());
     namedParameterSource.addValue("DOB", user.getDateOfBirth());

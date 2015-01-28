@@ -39,6 +39,8 @@ public final class UserPrivilegeDTO {
   private boolean isApproveOthersNotices = false;
 
   private boolean isApproveOwnNotices = false;
+  
+  private boolean isEditGeneralInfo = false;
 
   private String communityId;
 
@@ -231,5 +233,13 @@ public final class UserPrivilegeDTO {
   public void setUpdatedBy(final String updatedBy) {
     this.updatedBy = updatedBy;
   }
+
+public boolean isEditGeneralInfo() {
+	return isEditGeneralInfo;
+}
+
+public void setEditGeneralInfo(boolean isEditGeneralInfo) {
+	this.isEditGeneralInfo = isEditGeneralInfo;
+}
 
 }

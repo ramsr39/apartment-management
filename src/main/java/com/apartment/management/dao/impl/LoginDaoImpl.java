@@ -21,7 +21,7 @@ public class LoginDaoImpl extends SimpleJdbcDaoSupport implements LoginDao {
   private static String GET_USER_PWD_QUERY = "SELECT PASSWORD FROM userinfo WHERE EMAILID=:EMAILID";
 
   private static String GET_USER_INFO_QUERY =
-    "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,USERROLE FROM userinfo WHERE EMAILID=:EMAILID";
+    "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,IS_ADMIN_GROUP,USERID FROM userinfo WHERE EMAILID=:EMAILID";
 
   @Override
   public boolean isUserExist(final String emailId) {
@@ -54,9 +54,10 @@ public class LoginDaoImpl extends SimpleJdbcDaoSupport implements LoginDao {
       public UserDTO mapRow(final ResultSet rs, final int rowNum) throws SQLException {
         UserDTO dto = new UserDTO();
         dto.setEmailId(rs.getString("EMAILID"));
-        dto.setRole(rs.getString("USERROLE"));
         dto.setFirstName(rs.getString("FIRSTNAME"));
         dto.setLastName(rs.getString("LASTNAME"));
+        dto.setAdminSupport(Boolean.valueOf(rs.getString("IS_ADMIN_GROUP")));
+        dto.setUserId(rs.getString("USERID"));
         return dto;
       }
     }, mapSqlParameterSource);

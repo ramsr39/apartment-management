@@ -17,7 +17,7 @@ public interface ManageUserDao {
   public void update(UserDTO user);
 
   @Transactional(propagation = Propagation.REQUIRED)
-  public void delete(long id);
+  public void delete(String id);
 
   @Transactional(propagation = Propagation.REQUIRED)
   public String saveCoOccupent(CoOccupantDTO coOccupantDTO);

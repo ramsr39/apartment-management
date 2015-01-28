@@ -88,7 +88,7 @@ public class ManageUserService {
 
   @DELETE
   public Response deleteUser(@QueryParam("userId")
-  final long userId) {
+  final String userId) {
     manageUserDao.delete(userId);
     return Response.ok().build();
   }
