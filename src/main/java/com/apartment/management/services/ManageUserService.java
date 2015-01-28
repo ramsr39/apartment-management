@@ -26,6 +26,7 @@ import com.apartment.management.dao.UtilityDao;
 import com.apartment.management.dto.AppointmentDTO;
 import com.apartment.management.dto.CoOccupantDTO;
 import com.apartment.management.dto.ContactDTO;
+import com.apartment.management.dto.PendingItemsDTO;
 import com.apartment.management.dto.UserDTO;
 import com.apartment.management.dto.UserPrivilegeDTO;
 import com.apartment.management.dto.UtilityDTO;
@@ -48,12 +49,14 @@ public class ManageUserService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response addUser(final String payload) {
+    LOG.info("addeUser start----");
     UserDTO userDTO = JsonUtils.parseJsonToObject(payload, UserDTO.class);
     if (null == userDTO) {
       throw new RuntimeException("unable to parse user information");
     }
     final String userId = manageUserDao.save(userDTO);
     userDTO.setUserId(userId);
+    LOG.info("addeUser end----" + userId);
     return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO)).build();
   }
 
@@ -63,6 +66,7 @@ public class ManageUserService {
   @Produces(MediaType.APPLICATION_JSON)
   public Response addCoOccupant(@PathParam("userId")
   final String userId, final String payload) {
+    LOG.info("addCoOccupant start----"+userId);
     CoOccupantDTO coOccupantDTO = JsonUtils.parseJsonToObject(payload, CoOccupantDTO.class);
     if (null == coOccupantDTO) {
       throw new RuntimeException("unable to parse user information");
@@ -70,6 +74,7 @@ public class ManageUserService {
     coOccupantDTO.setUserId(userId);
     final String coOccupentId = manageUserDao.saveCoOccupent(coOccupantDTO);
     coOccupantDTO.setId(coOccupentId);
+    LOG.info("addCoOccupant end----"+userId);
     return Response.ok().entity(JsonUtils.parseObjectToJson(coOccupantDTO)).build();
   }
 
@@ -78,11 +83,13 @@ public class ManageUserService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateUser(final String payload) {
+    LOG.info("updateUser start----");
     UserDTO userDTO = JsonUtils.parseJsonToObject(payload, UserDTO.class);
     if (null == userDTO) {
       throw new RuntimeException("unable to parse user information");
     }
     manageUserDao.update(userDTO);
+    LOG.info("updateUser start----");
     return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO)).build();
   }
 
@@ -121,7 +128,9 @@ public class ManageUserService {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getUserById(@PathParam("userId")
   final String userId) {
+    LOG.info("getUserById method start for user::" + userId);
     UserDTO userDTO = manageUserDao.getUserDetailsById(userId);
+    LOG.info("getUserById method end..................");
     return Response.ok().entity(JsonUtils.parseObjectToJson(userDTO)).build();
   }
 
@@ -131,6 +140,7 @@ public class ManageUserService {
   @Path("/add-role")
   public Response addRole(final String payload, @HeaderParam("userId")
   final String userId) {
+    LOG.info("addRole started..............."+userId);
     UserPrivilegeDTO userPrivilegeDTO = JsonUtils.parseJsonToObject(payload, UserPrivilegeDTO.class);
     if (null == userPrivilegeDTO) {
       throw new RuntimeException("unable to parse user information");
@@ -138,6 +148,7 @@ public class ManageUserService {
     userPrivilegeDTO.setCreatedBy(userId);
     final String id = manageUserDao.addRole(userPrivilegeDTO);
     userPrivilegeDTO.setId(id);
+    LOG.info("addRole end..............."+userId);
     return Response.ok().entity(JsonUtils.parseObjectToJson(userPrivilegeDTO)).build();
   }
 
@@ -210,14 +221,21 @@ public class ManageUserService {
   final String userId, final String payload) {
     LOG.info("getUserPendingItems started for id........" + userId);
     UserPrivilegeDTO userPrivilegeDTO = JsonUtils.parseJsonToObject(payload, UserPrivilegeDTO.class);
+    PendingItemsDTO pendingItemsDTO = new PendingItemsDTO();
     if (userPrivilegeDTO.isApproveOthersUtilities()) {
-        List<UtilityDTO> pendingUtilities = utilityDao.findPendingUtilities(userId,userPrivilegeDTO.getCommunityId());
+      final List<UtilityDTO> pendingUtilities =
+        utilityDao.findPendingUtilities(userId, userPrivilegeDTO.getCommunityId());
+      pendingItemsDTO.setPendingUtilities(pendingUtilities);
     }
     if (userPrivilegeDTO.isApproveOthersContacts()) {
-      List<ContactDTO> pendingContacts = contactDao.findPendingContacts(userId,userPrivilegeDTO.getCommunityId());
+      final List<ContactDTO> pendingContacts =
+        contactDao.findPendingContacts(userId, userPrivilegeDTO.getCommunityId());
+      pendingItemsDTO.setPendingContacts(pendingContacts);
     }
     if (userPrivilegeDTO.isApproveOthersAppointments()) {
-      List<AppointmentDTO> pendingAppointments = appointmentDao.findPendingAppointments(userId,userPrivilegeDTO.getCommunityId());
+      final List<AppointmentDTO> pendingAppointments =
+        appointmentDao.findPendingAppointments(userId, userPrivilegeDTO.getCommunityId());
+      pendingItemsDTO.setPendingAppointments(pendingAppointments);
     }
     if (userPrivilegeDTO.isApproveOwnNotices()) {
 
@@ -226,7 +244,7 @@ public class ManageUserService {
 
     }
     LOG.info("getUserPendingItems end.for the id............." + userId);
-    return null;
+    return JsonUtils.parseObjectToJson(pendingItemsDTO);
   }
 
   public void setManageUserDao(final ManageUserDao manageUserDao) {
