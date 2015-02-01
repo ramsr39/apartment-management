@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -37,8 +38,10 @@ public class AppointmentService {
   @Path("/save-appointment")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response saveAppointment(final String paylaod) {
+  public Response saveAppointment(@HeaderParam("user_id")
+  final String createdUserId, final String paylaod) {
     final AppointmentDTO appointmentDTO = JsonUtils.parseJsonToObject(paylaod, AppointmentDTO.class);
+    appointmentDTO.setCreatedBy(createdUserId);
     final String appointmentId = appointmentDao.save(appointmentDTO);
     appointmentDTO.setId(appointmentId);
     return Response.ok().entity(JsonUtils.parseObjectToJson(appointmentDTO)).build();
@@ -56,8 +59,10 @@ public class AppointmentService {
   @Path("/update-appointment")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateBill(final String paylaod) {
+  public Response updateBill(@HeaderParam("user_id")
+  final String updatedUserId, final String paylaod) {
     final AppointmentDTO appointmentDTO = JsonUtils.parseJsonToObject(paylaod, AppointmentDTO.class);
+    appointmentDTO.setUpdatedBy(updatedUserId);
     appointmentDao.update(appointmentDTO);
     return Response.ok().entity(JsonUtils.parseObjectToJson(appointmentDTO)).build();
   }

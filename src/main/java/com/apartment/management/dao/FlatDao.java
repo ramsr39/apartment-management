@@ -24,7 +24,7 @@ public interface FlatDao {
 
   public FlatDTO getFlatDetailsByFaltId(String flatId);
 
-  public List<FlatDTO> getFlatDetailsByUser(String emailId);
+  public List<FlatDTO> getFlatDetailsByUser(String userId);
 
   public List<CoOccupantDTO> findCoOccupants(String flatId, String userId);
 

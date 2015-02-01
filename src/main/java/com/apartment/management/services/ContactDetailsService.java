@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -29,11 +30,13 @@ public class ContactDetailsService {
   @Path("/save")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response saveContactDetails(final String paylaod) {
+  public Response saveContactDetails(@HeaderParam("user_id")
+  final String createdUserId, final String paylaod) {
     final ContactDTO contactDTO = JsonUtils.parseJsonToObject(paylaod, ContactDTO.class);
     if (null == contactDTO) {
       throw new RuntimeException("contacts dto is null");
     }
+    contactDTO.setCreatedBy(createdUserId);
     final String contactId = contactDao.save(contactDTO);
     contactDTO.setId(contactId);
     return Response.ok().entity(JsonUtils.parseObjectToJson(contactDTO)).build();
@@ -43,11 +46,13 @@ public class ContactDetailsService {
   @Path("/update")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateContactDetails(final String paylaod) {
+  public Response updateContactDetails(@HeaderParam("user_id")
+  final String updatedUserId, final String paylaod) {
     final ContactDTO contactDTO = JsonUtils.parseJsonToObject(paylaod, ContactDTO.class);
     if (null == contactDTO) {
       throw new RuntimeException("contactdto is null");
     }
+    contactDTO.setUpdatedBy(updatedUserId);
     contactDao.update(contactDTO);
     return Response.ok().entity(JsonUtils.parseObjectToJson(contactDTO)).build();
   }

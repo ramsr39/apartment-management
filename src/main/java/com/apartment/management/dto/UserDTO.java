@@ -30,7 +30,7 @@ public class UserDTO {
   private Address address;
 
   private String status;
-  
+
   private boolean isAdminSupport = false;
 
   public String getUserId() {
@@ -159,12 +159,12 @@ public class UserDTO {
     this.status = status;
   }
 
-public boolean isAdminSupport() {
-	return isAdminSupport;
-}
+  public boolean isAdminSupport() {
+    return isAdminSupport;
+  }
 
-public void setAdminSupport(boolean isAdminSupport) {
-	this.isAdminSupport = isAdminSupport;
-}
+  public void setAdminSupport(boolean isAdminSupport) {
+    this.isAdminSupport = isAdminSupport;
+  }
 
 }

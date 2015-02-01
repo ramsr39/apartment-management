@@ -78,10 +78,10 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
   private static final String FIND_FLAT_DETAILS_BY_FLAT_ID = "SELECT * FROM flatunit WHERE FLAT_ID=:FLAT_ID";
 
   private static final String GET_FLAT_OWNER_QUERY =
-    "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE EMAILID=:OWNERID";
+    "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE USERID=:OWNERID";
 
   private static final String GET_FLAT_TENANT_QUERY =
-    "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE EMAILID=:TENANTID";
+    "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE USERID=:TENANTID";
 
   private static final String GET_FLAT_DETAILS_BY_USER = "SELECT FLAT_ID," + "FLOORNO," + "UNITNO," + "OWNER_ID,"
       + "TENANT_ID," + "BUILDING_ID" + " FROM flatunit" + " WHERE OWNER_ID=:OWNER_ID OR TENANT_ID=:TENANT_ID";
@@ -92,10 +92,9 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
   @Override
   public String save(final FlatDTO flatDTO) {
     LOG.info("FlatDaoImpl save::::start");
-    MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+    final MapSqlParameterSource namedParameterSource = prepareParameterSource(flatDTO);
     final String flatId = "F" + RandomStringUtils.randomNumeric(8);
     namedParameterSource.addValue("FLAT_ID", flatId);
-    prepareParameterSource(flatDTO, namedParameterSource);
     getNamedParameterJdbcTemplate().update(INSERT_FLAT_DETAILS_QUERY, namedParameterSource);
     LOG.info("FlatDaoImpl save::::end");
     return flatId;
@@ -104,9 +103,8 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
   @Override
   public void update(final FlatDTO flatDTO) {
     LOG.info("FlatDaoImpl update::::start");
-    MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
+    final MapSqlParameterSource namedParameterSource = prepareParameterSource(flatDTO);
     namedParameterSource.addValue("FLAT_ID", flatDTO.getId());
-    prepareParameterSource(flatDTO, namedParameterSource);
     getNamedParameterJdbcTemplate().update(UPDATE_FLAT_DETAILS_QUERY, namedParameterSource);
     LOG.info("FlatDaoImpl update::::end");
   }
@@ -215,11 +213,11 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
   }
 
   @Override
-  public List<FlatDTO> getFlatDetailsByUser(final String emailId) {
+  public List<FlatDTO> getFlatDetailsByUser(final String userId) {
     LOG.info("FlatDaoImpl getFlatDetailsByUser by buildingId::::start");
     MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-    mapSqlParameterSource.addValue("OWNER_ID", emailId);
-    mapSqlParameterSource.addValue("TENANT_ID", emailId);
+    mapSqlParameterSource.addValue("OWNER_ID", userId);
+    mapSqlParameterSource.addValue("TENANT_ID", userId);
     return getNamedParameterJdbcTemplate().query(GET_FLAT_DETAILS_BY_USER, mapSqlParameterSource,
         new RowMapper<FlatDTO>() {
           @Override
@@ -233,9 +231,9 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
             String tenantId = rs.getString("TENANT_ID");
             flatDTO.setBuildingId(rs.getString("BUILDING_ID"));
             UserDTO ownerDto = new UserDTO();
-            ownerDto.setEmailId(ownerId);
+            ownerDto.setUserId(ownerId);
             UserDTO tenantDto = new UserDTO();
-            tenantDto.setEmailId(tenantId);
+            tenantDto.setUserId(tenantId);
             flatDTO.setOwnerDetails(ownerDto);
             flatDTO.setTenantDetails(tenantDto);
             LOG.info("FlatDaoImpl getFlatDetailsByUser mapRow ::::end");
@@ -245,7 +243,8 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
         });
   }
 
-  private void prepareParameterSource(final FlatDTO flatDTO, MapSqlParameterSource namedParameterSource) {
+  private MapSqlParameterSource prepareParameterSource(final FlatDTO flatDTO) {
+    final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
     namedParameterSource.addValue("UNITNO", flatDTO.getUnitNumber());
     namedParameterSource.addValue("UNITSIZE", flatDTO.getUnitSize());
     namedParameterSource.addValue("FLOORNO", flatDTO.getFloorNumber());
@@ -259,8 +258,9 @@ public class FlatDaoImpl extends NamedParameterJdbcDaoSupport implements FlatDao
     namedParameterSource.addValue("RESIDENTTYPE", flatDTO.getResidentType());
     namedParameterSource.addValue("BUILDING_ID", flatDTO.getBuildingId());
     namedParameterSource.addValue("DESCRIPTION", flatDTO.getDescription());
-    namedParameterSource.addValue("OWNER_ID", flatDTO.getOwnerDetails().getEmailId());
-    namedParameterSource.addValue("TENANT_ID", flatDTO.getTenantDetails().getEmailId());
+    namedParameterSource.addValue("OWNER_ID", flatDTO.getOwnerDetails().getUserId());
+    namedParameterSource.addValue("TENANT_ID", flatDTO.getTenantDetails().getUserId());
+    return namedParameterSource;
   }
 
   private UserDTO getFlatOwnerDetails(final String ownerId) {

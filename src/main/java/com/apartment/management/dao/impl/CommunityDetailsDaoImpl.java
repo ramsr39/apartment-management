@@ -30,7 +30,7 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			+ "CITY, "
 			+ "PIN, "
 			+ "DESCRIPTION, "
-			+ "COMMUNITYTYPE,EMAILID) "
+			+ "COMMUNITYTYPE) "
 			 + "VALUES("
 			 + ":COMMUNITY_ID,"
 			 + ":COMMUNITYNAME,"
@@ -41,10 +41,9 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 			 + ":CITY,"
 			 + ":PIN,"
 			 + ":DESCRIPTION,"
-			 + ":COMMUNITYTYPE,"
-			 + ":EMAILID)";
+			 + ":COMMUNITYTYPE)";
 
-	
+
 	private static final String UPDATE_COMMUNITY_QUERY = "UPDATE community SET "
 			+ "COMMUNITYNAME=:COMMUNITYNAME,"
 			+ "ADDRESS_LINE1=:ADDRESS_LINE1,"
@@ -91,14 +90,13 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
 		 		+ "WHERE COMMUNITY_ID=:COMMUNITY_ID";
 
 	 private static String FIND_COMMUNITIES_BY_CITY_QUERY="SELECT * FROM community "
-	 		+ "WHERE CITY=:CITY AND EMAILID=:EMAILID";
+	 		+ "WHERE CITY=:CITY";
 
 	 private static final String FIND_COMMUNITIES_BY_NAME_QUERY="SELECT * FROM community "
-		 		+ "WHERE COMMUNITYNAME LIKE :COMMUNITYNAME "
-		 		+ "AND EMAILID=:EMAILID";
+		 		+ "WHERE COMMUNITYNAME LIKE :COMMUNITYNAME ";
 
   @Override
-  public String save(final String emailId, final CommunityDTO communityDTO) {
+  public String save(final CommunityDTO communityDTO) {
     MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
     try {
       final String communityId = "C" + RandomStringUtils.randomNumeric(8);
@@ -113,7 +111,6 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
       mapSqlParameterSource.addValue("PIN", communityDTO.getPostalCode());
       mapSqlParameterSource.addValue("DESCRIPTION", communityDTO.getDescription());
       mapSqlParameterSource.addValue("COMMUNITYTYPE", communityDTO.getType());
-      mapSqlParameterSource.addValue("EMAILID", emailId);
       getSimpleJdbcTemplate().getNamedParameterJdbcOperations().update(INSERT_COMMUNITY_QUERY, mapSqlParameterSource);
       return communityId;
     } catch (DataAccessException e) {
@@ -178,15 +175,14 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
   }
 
   @Override
-  public List<CommunityDTO> findCommunitiesByCity(final String emailId, final String communityName, final String city) {
-    String finalquery = FIND_COMMUNITIES_BY_CITY_QUERY;
+  public List<CommunityDTO> findCommunitiesByCity(final String communityName, final String city) {
+    StringBuilder finalquery = new StringBuilder(FIND_COMMUNITIES_BY_CITY_QUERY);
     MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-    mapSqlParameterSource.addValue("EMAILID", emailId);
     if (StringUtils.isNotBlank(communityName)) {
-      finalquery = FIND_COMMUNITIES_BY_CITY_QUERY + " AND COMMUNITYNAME LIKE " + "'%" + communityName + "%'";
+      finalquery.append(" AND COMMUNITYNAME LIKE ").append("'%").append(communityName).append("%'");
     }
     mapSqlParameterSource.addValue("CITY", city);
-    return getSimpleJdbcTemplate().query(finalquery, new RowMapper<CommunityDTO>() {
+    return getSimpleJdbcTemplate().query(finalquery.toString(), new RowMapper<CommunityDTO>() {
       @Override
       public CommunityDTO mapRow(final ResultSet rs, final int rowNum) throws SQLException {
         CommunityDTO communityDTO = new CommunityDTO();
@@ -207,9 +203,8 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
   }
 
   @Override
-  public List<CommunityDTO> findCommunitiesByName(final String emailId, final String communityName) {
+  public List<CommunityDTO> findCommunitiesByName(final String communityName) {
     MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-    mapSqlParameterSource.addValue("EMAILID", emailId);
     mapSqlParameterSource.addValue("COMMUNITYNAME", "%" + communityName + "%");
     return getSimpleJdbcTemplate().query(FIND_COMMUNITIES_BY_NAME_QUERY, new RowMapper<CommunityDTO>() {
       @Override
@@ -263,15 +258,14 @@ public class CommunityDetailsDaoImpl extends SimpleJdbcDaoSupport implements
   }
 
   @Override
-  public List<String> getUserCommunityIds(final String emailId) {
+  public List<String> getUserCommunityIds(final String userId) {
     try {
       MapSqlParameterSource paramaSource = new MapSqlParameterSource();
-      paramaSource.addValue("USER_ID", emailId);
+      paramaSource.addValue("USER_ID", userId);
       return getSimpleJdbcTemplate().query("SELECT COMMUNITY_ID FROM management_group WHERE USER_ID=:USER_ID",
           new RowMapper<String>() {
             @Override
             public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-              // TODO Auto-generated method stub
               return rs.getString("COMMUNITY_ID");
             }
           }, paramaSource);

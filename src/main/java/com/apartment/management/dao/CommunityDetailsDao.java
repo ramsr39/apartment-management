@@ -9,7 +9,7 @@ import com.apartment.management.dto.CommunityDTO;
 
 public interface CommunityDetailsDao {
   @Transactional(propagation = Propagation.REQUIRED)
-  public String save(String emailId, CommunityDTO communityDTO);
+  public String save(CommunityDTO communityDTO);
 
   @Transactional(propagation = Propagation.REQUIRED)
   public void update(CommunityDTO communityDTO);
@@ -22,9 +22,9 @@ public interface CommunityDetailsDao {
 
   public boolean isCommnityExistedForUser(String emailId);
 
-  public List<CommunityDTO> findCommunitiesByName(String emailId, String communityName);
+  public List<CommunityDTO> findCommunitiesByName(String communityName);
 
-  public List<CommunityDTO> findCommunitiesByCity(String emailId, String communityName, String city);
+  public List<CommunityDTO> findCommunitiesByCity(String communityName, String city);
 
   public String getCommunityName(String communityId);
 

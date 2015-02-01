@@ -40,10 +40,9 @@ public class CommunityDetailsService {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response saveCommunityDetails(@HeaderParam("user_id")
-  final String emailId, final String payload) {
+  public Response saveCommunityDetails(final String payload) {
     final CommunityDTO communityDTO = JsonUtils.parseJsonToObject(payload, CommunityDTO.class);
-    final String communityId = communityDetailsDao.save(emailId, communityDTO);
+    final String communityId = communityDetailsDao.save(communityDTO);
     communityDTO.setId(communityId);
     return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO)).build();
   }
@@ -58,24 +57,19 @@ public class CommunityDetailsService {
     return Response.ok().entity(JsonUtils.parseObjectToJson(communityDTO)).build();
   }
 
-  @GET
-  @Path("/find-community-details")
-  @Produces(MediaType.APPLICATION_JSON)
-  public String findCommunityDetailsByUserId(@HeaderParam("user_id")
-  final String emailId) {
-    CommunityDTO communityDTO = new CommunityDTO();
-    if (!communityDetailsDao.isCommnityExistedForUser(emailId)) {
-      return JsonUtils.parseObjectToJson(communityDTO);
-    }
-    communityDTO = communityDetailsDao.findCommunityDetailsByUserId(emailId);
-    List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityDTO.getId());
-    List<String> buildingIdList = getBuildingIds(buildingList);
-    long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
-    communityDTO.setBuildingList(buildingList);
-    communityDTO.setTotalFlats(totalFlats);
-    return JsonUtils.parseObjectToJson(communityDTO);
-  }
-
+  /*
+   * @GET
+   * @Path("/find-community-details")
+   * @Produces(MediaType.APPLICATION_JSON) public String findCommunityDetailsByUserId(@HeaderParam("user_id") final
+   * String emailId) { CommunityDTO communityDTO = new CommunityDTO(); if
+   * (!communityDetailsDao.isCommnityExistedForUser(emailId)) { return JsonUtils.parseObjectToJson(communityDTO); }
+   * communityDTO = communityDetailsDao.findCommunityDetailsByUserId(emailId); List<BuildingDTO> buildingList =
+   * buildingDao.findBuildingDetailsByCommunityId(communityDTO.getId()); List<String> buildingIdList =
+   * getBuildingIds(buildingList); long totalFlats = flatDao.getTotalNumberOfFlatsForBuilding(buildingIdList);
+   * communityDTO.setBuildingList(buildingList); communityDTO.setTotalFlats(totalFlats); return
+   * JsonUtils.parseObjectToJson(communityDTO); }
+   */
+ 
   @GET
   @Path("/find-user-community-details")
   @Produces(MediaType.APPLICATION_JSON)
@@ -83,7 +77,7 @@ public class CommunityDetailsService {
   final String userId) {
     List<CommunityDTO> userCommunityList = new ArrayList<CommunityDTO>();
     List<String> communityIdList = communityDetailsDao.getUserCommunityIds(userId);
-    for(String communityId:communityIdList){
+    for (String communityId : communityIdList) {
       CommunityDTO communityDTO = new CommunityDTO();
       communityDTO = communityDetailsDao.getCommunityDetailsByCommunityId(communityId);
       List<BuildingDTO> buildingList = buildingDao.findBuildingDetailsByCommunityId(communityId);
@@ -118,15 +112,14 @@ public class CommunityDetailsService {
   @Produces(MediaType.APPLICATION_JSON)
   public String findCommunitiesByNameAndCity(@QueryParam("communityName")
   final String communityName, @QueryParam("city")
-  final String city, @HeaderParam("user_id")
-  final String emailId) {
+  final String city) {
 
     List<CommunityDTO> communitiesList = new ArrayList<CommunityDTO>();
     if (StringUtils.isNotBlank(city)) {
-      communitiesList = communityDetailsDao.findCommunitiesByCity(emailId, communityName, city);
+      communitiesList = communityDetailsDao.findCommunitiesByCity(communityName, city);
       return JsonUtils.parseObjectToJson(communitiesList);
     }
-    communitiesList = communityDetailsDao.findCommunitiesByName(emailId, communityName);
+    communitiesList = communityDetailsDao.findCommunitiesByName(communityName);
     return JsonUtils.parseObjectToJson(communitiesList);
   }
 

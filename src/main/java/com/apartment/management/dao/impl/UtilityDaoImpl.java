@@ -21,8 +21,6 @@ import com.apartment.management.dto.UtilityDTO;
 
 public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 
-	private static final String FIND_PENDING_UTILITIES_BY_COMMUNITY_AND_USER = "SELECT *FROM utility WHERE USER_ID=:USER_ID AND APPROVED_STATUS='PENDING' AND COMMUNITY_ID=:COMMUNITY_ID";
-
   private static final Logger LOG = LoggerFactory.getLogger(UtilityDaoImpl.class);
 
 	private ContactDao contactDao;
@@ -39,7 +37,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 			+ "FLAT_ID,"
 			+ "BUILDING_ID,"
 			+ "COMMUNITY_ID,"
-			+ "USER_ID) "
+			+ "USER_ID,CREATED_BY) "
 			+ "VALUES(:UTILITY_ID,"
 			         + ":UTILITY_TYPE,"
 			         + ":LEVEL,"
@@ -52,7 +50,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
 			         + ":FLAT_ID,"
 			         + ":BUILDING_ID,"
 			         + ":COMMUNITY_ID,"
-			         + ":USER_ID)";
+			         + ":USER_ID,:CREATED_BY)";
 
 	private static final String UPDATE_UTILITY_QUERY= "UPDATE utility SET "
            + "UTILITY_TYPE=:UTILITY_TYPE,"
@@ -62,7 +60,8 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
            + "REMIND_ME=:REMIND_ME,"
            + "PAID_BY=:PAID_BY,"
            + "APPROVED_STATUS=:APPROVED_STATUS,"
-           + "APPROVED_BY=:APPROVED_BY"
+           + "APPROVED_BY=:APPROVED_BY,"
+           + "UPDATED_BY=:UPDATED_BY"
            + " WHERE UTILITY_ID=:UTILITY_ID";
 	
   private static final String DELETE_UTILITY_QUERY = "DELETE FROM utility WHERE UTILITY_ID=:UTILITY_ID";
@@ -77,6 +76,9 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
   private static final String FIND_UTILITIES_BY_UTILITY_ID_QUERY = "SELECT *FROM utility WHERE UTILITY_ID=:UTILITY_ID";
 
   private static final String FIND_UTILITIES_BY_COMMUNITY_ID = "SELECT *FROM utility WHERE COMMUNITY_ID=:COMMUNITY_ID";
+  
+  private static final String FIND_PENDING_UTILITIES_BY_COMMUNITY_AND_USER = "SELECT *FROM utility WHERE APPROVED_STATUS='PENDING' AND COMMUNITY_ID=:COMMUNITY_ID";
+
 
   @Override
   public UtilityDTO save(final UtilityDTO utilityDTO) {
@@ -96,9 +98,11 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
     namedSqlParamSource.addValue("BUILDING_ID", utilityDTO.getBuildingId());
     namedSqlParamSource.addValue("COMMUNITY_ID", utilityDTO.getCommunityId());
     namedSqlParamSource.addValue("USER_ID", utilityDTO.getUserId());
+    namedSqlParamSource.addValue("CREATED_BY", utilityDTO.getCreatedBy());
     getSimpleJdbcTemplate().update(INSER_UTILITY_QUERY, namedSqlParamSource);
     ContactDTO contactDTO = utilityDTO.getContactDTO();
     contactDTO.setUtilityId(utilityId);
+    contactDTO.setCreatedBy(utilityDTO.getCreatedBy());
     final String contactId = contactDao.save(contactDTO);
     contactDTO.setId(contactId);
     utilityDTO.setContactDTO(contactDTO);
@@ -120,6 +124,7 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
     namedSqlParamSource.addValue("PAID_BY", utilityDTO.getPaidBy());
     namedSqlParamSource.addValue("APPROVED_STATUS", utilityDTO.getApprovedStatus());
     namedSqlParamSource.addValue("APPROVED_BY", utilityDTO.getApprovedBy());
+    namedSqlParamSource.addValue("UPDATED_BY", utilityDTO.getUpdatedBy());
     getSimpleJdbcTemplate().update(UPDATE_UTILITY_QUERY, namedSqlParamSource);
     ContactDTO contactDTO = utilityDTO.getContactDTO();
     contactDao.update(contactDTO);
@@ -204,7 +209,6 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
   public List<UtilityDTO> findPendingUtilities(final String userId, final String communityId) {
     try {
       final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-      namedSqlParamSource.addValue("USER_ID", userId);
       namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
       return getSimpleJdbcTemplate().query(FIND_PENDING_UTILITIES_BY_COMMUNITY_AND_USER, getUtilityRowmapper(),
           namedSqlParamSource);
@@ -225,11 +229,14 @@ public class UtilityDaoImpl extends SimpleJdbcDaoSupport implements UtilityDao {
         utilityDTO.setServiceNumber(rs.getString("SERVICE_NO"));
         utilityDTO.setServiceProviderName(rs.getString("SERVICE_PROVIDER_NAME"));
         utilityDTO.setRemindMe(rs.getString("REMIND_ME"));
+        utilityDTO.setApprovedStatus(rs.getString("APPROVED_STATUS"));
+        utilityDTO.setApprovedBy(rs.getString("APPROVED_BY"));
         utilityDTO.setPaidBy(rs.getString("PAID_BY"));
         utilityDTO.setCommunityId(rs.getString("COMMUNITY_ID"));
         utilityDTO.setBuildingId(rs.getString("BUILDING_ID"));
         utilityDTO.setFlatId(rs.getString("FLAT_ID"));
         utilityDTO.setUserId(rs.getString("USER_ID"));
+        utilityDTO.setCreatedBy(rs.getString("CREATED_BY"));
         if (StringUtils.isNotBlank(utilityDTO.getId())) {
           utilityDTO.setContactDTO(contactDao.findContactsByUtilityId(utilityDTO.getId()));
         }

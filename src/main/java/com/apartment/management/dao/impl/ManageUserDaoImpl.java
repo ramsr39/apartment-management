@@ -77,7 +77,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
 			 + ":PIN)";
 	
   private static final String INSERT_EMERGENCY_CANT_INF_QUERY =
-    "INSERT INTO emrg_contact_info(NAME,REL,PHONE_NUM,EMAILID)" + " values(:NAME,:REL,:PHONE_NUM,:EMAILID)";
+    "INSERT INTO emrg_contact_info(NAME,REL,PHONE_NUM,USER_ID)" + " values(:NAME,:REL,:PHONE_NUM,:USER_ID)";
 
   private static final String INSERT_USER_ROLE_QUERY ="INSERT INTO management_group (MGMT_GRP_ID,"
     + "ROLE,"
@@ -193,7 +193,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     + "APPROVE_OWN_NOTICES=:APPROVE_OWN_NOTICES,"
     + "APPROVE_OTHERS_NOTICES=:APPROVE_OTHERS_NOTICES,"
     + "ENTER_UTILITIES=:ENTER_UTILITIES,"
-    + "APPORVE_OWN_UTILITIES=:APPROVE_OWN_UTILITIES,"
+    + "APPROVE_OWN_UTILITIES=:APPROVE_OWN_UTILITIES,"
     + "APPROVE_OTHERS_UTILITIES=:APPROVE_OTHERS_UTILITIES,"
     + "EDIT_GENERAL_INFO=:EDIT_GENERAL_INFO,"
     + "UPDATED_BY=:UPDATED_BY "
@@ -212,7 +212,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     // need to generate defult pwd in feature for time being i am setting admin as per client req
     // namedParameterSource.addValue("PASSWORD", RandomStringUtils.randomAlphanumeric(6));
     getNamedParameterJdbcTemplate().update(INSERT_USER_QUERY, namedParameterSource);
-    insertEmergencyContactInfo(userDto.getEmergencyContactInfo(), userDto.getEmailId());
+    insertEmergencyContactInfo(userDto.getEmergencyContactInfo(), userId);
     return userId;
   }
 
@@ -290,7 +290,7 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
             }
             userDTO.setAddress(address);
             try {
-              userDTO.setEmergencyContactInfo(getEmeregencyContactInfo(userDTO.getEmailId()));
+              userDTO.setEmergencyContactInfo(getEmeregencyContactInfo(userId));
             } catch (final EmptyResultDataAccessException ex) {
               LOG.error("caught the emptu result for user :::" + userId, ex);
               System.out.println("caught the emptu result for user::" + userId + "::" + ex);
@@ -507,19 +507,19 @@ public class ManageUserDaoImpl extends NamedParameterJdbcDaoSupport implements M
     getNamedParameterJdbcTemplate().update(UPDATE_EMERGENCY_CANT_INF_QUERY, namedParameterSource);
   }
 
-  private void insertEmergencyContactInfo(final EmergencyContactInfo emrgCantInfo, final String emailId) {
+  private void insertEmergencyContactInfo(final EmergencyContactInfo emrgCantInfo, final String userId) {
     final MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
     namedParameterSource.addValue("NAME", emrgCantInfo.getName());
     namedParameterSource.addValue("REL", emrgCantInfo.getRelation());
     namedParameterSource.addValue("PHONE_NUM", emrgCantInfo.getPhoneNumber());
-    namedParameterSource.addValue("EMAILID", emailId);
+    namedParameterSource.addValue("USER_ID", userId);
     getNamedParameterJdbcTemplate().update(INSERT_EMERGENCY_CANT_INF_QUERY, namedParameterSource);
   }
 
-  private EmergencyContactInfo getEmeregencyContactInfo(final String emailId) {
+  private EmergencyContactInfo getEmeregencyContactInfo(final String userId) {
     MapSqlParameterSource namedParameterSource = new MapSqlParameterSource();
-    namedParameterSource.addValue("EMAILID", emailId);
-    return getNamedParameterJdbcTemplate().queryForObject("SELECT * FROM emrg_contact_info WHERE EMAILID=:EMAILID",
+    namedParameterSource.addValue("USER_ID", userId);
+    return getNamedParameterJdbcTemplate().queryForObject("SELECT * FROM emrg_contact_info WHERE USER_ID=:USER_ID",
         namedParameterSource, new RowMapper<EmergencyContactInfo>() {
           @Override
           public EmergencyContactInfo mapRow(final ResultSet rs, final int rowNum) throws SQLException {

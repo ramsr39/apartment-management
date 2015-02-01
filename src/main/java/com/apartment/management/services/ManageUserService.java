@@ -66,7 +66,7 @@ public class ManageUserService {
   @Produces(MediaType.APPLICATION_JSON)
   public Response addCoOccupant(@PathParam("userId")
   final String userId, final String payload) {
-    LOG.info("addCoOccupant start----"+userId);
+    LOG.info("addCoOccupant start----" + userId);
     CoOccupantDTO coOccupantDTO = JsonUtils.parseJsonToObject(payload, CoOccupantDTO.class);
     if (null == coOccupantDTO) {
       throw new RuntimeException("unable to parse user information");
@@ -74,7 +74,7 @@ public class ManageUserService {
     coOccupantDTO.setUserId(userId);
     final String coOccupentId = manageUserDao.saveCoOccupent(coOccupantDTO);
     coOccupantDTO.setId(coOccupentId);
-    LOG.info("addCoOccupant end----"+userId);
+    LOG.info("addCoOccupant end----" + userId);
     return Response.ok().entity(JsonUtils.parseObjectToJson(coOccupantDTO)).build();
   }
 
@@ -140,7 +140,7 @@ public class ManageUserService {
   @Path("/add-role")
   public Response addRole(final String payload, @HeaderParam("userId")
   final String userId) {
-    LOG.info("addRole started..............."+userId);
+    LOG.info("addRole started..............." + userId);
     UserPrivilegeDTO userPrivilegeDTO = JsonUtils.parseJsonToObject(payload, UserPrivilegeDTO.class);
     if (null == userPrivilegeDTO) {
       throw new RuntimeException("unable to parse user information");
@@ -148,7 +148,7 @@ public class ManageUserService {
     userPrivilegeDTO.setCreatedBy(userId);
     final String id = manageUserDao.addRole(userPrivilegeDTO);
     userPrivilegeDTO.setId(id);
-    LOG.info("addRole end..............."+userId);
+    LOG.info("addRole end..............." + userId);
     return Response.ok().entity(JsonUtils.parseObjectToJson(userPrivilegeDTO)).build();
   }
 
@@ -218,33 +218,47 @@ public class ManageUserService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("/get-user-pending-items")
   public String getUserPendingItems(@QueryParam("userId")
-  final String userId, final String payload) {
+  final String userId) {
     LOG.info("getUserPendingItems started for id........" + userId);
-    UserPrivilegeDTO userPrivilegeDTO = JsonUtils.parseJsonToObject(payload, UserPrivilegeDTO.class);
+    List<UserPrivilegeDTO> userPrivilegList = manageUserDao.getUserRoles(userId);
     PendingItemsDTO pendingItemsDTO = new PendingItemsDTO();
-    if (userPrivilegeDTO.isApproveOthersUtilities()) {
-      final List<UtilityDTO> pendingUtilities =
-        utilityDao.findPendingUtilities(userId, userPrivilegeDTO.getCommunityId());
-      pendingItemsDTO.setPendingUtilities(pendingUtilities);
-    }
-    if (userPrivilegeDTO.isApproveOthersContacts()) {
-      final List<ContactDTO> pendingContacts =
-        contactDao.findPendingContacts(userId, userPrivilegeDTO.getCommunityId());
-      pendingItemsDTO.setPendingContacts(pendingContacts);
-    }
-    if (userPrivilegeDTO.isApproveOthersAppointments()) {
-      final List<AppointmentDTO> pendingAppointments =
-        appointmentDao.findPendingAppointments(userId, userPrivilegeDTO.getCommunityId());
-      pendingItemsDTO.setPendingAppointments(pendingAppointments);
-    }
-    if (userPrivilegeDTO.isApproveOwnNotices()) {
+    for (UserPrivilegeDTO userPrivilegeDTO : userPrivilegList) {
+      if (userPrivilegeDTO.isApproveOthersUtilities()) {
+        final List<UtilityDTO> pendingUtilities =
+          utilityDao.findPendingUtilities(userId, userPrivilegeDTO.getCommunityId());
+        pendingItemsDTO.getPendingUtilities().addAll(pendingUtilities);
+      }
+      if (userPrivilegeDTO.isApproveOthersContacts()) {
+        final List<ContactDTO> pendingContacts =
+          contactDao.findPendingContacts(userId, userPrivilegeDTO.getCommunityId());
+        pendingItemsDTO.getPendingContacts().addAll(pendingContacts);
+      }
+      if (userPrivilegeDTO.isApproveOthersAppointments()) {
+        final List<AppointmentDTO> pendingAppointments =
+          appointmentDao.findPendingAppointments(userId, userPrivilegeDTO.getCommunityId());
+        pendingItemsDTO.getPendingAppointments().addAll(prepareAppointmentContactDetails(pendingAppointments));
+      }
+      if (userPrivilegeDTO.isApproveOwnNotices()) {
 
-    }
-    if (userPrivilegeDTO.isApproveOthersExpenses()) {
+      }
+      if (userPrivilegeDTO.isApproveOthersExpenses()) {
 
+      }
     }
     LOG.info("getUserPendingItems end.for the id............." + userId);
     return JsonUtils.parseObjectToJson(pendingItemsDTO);
+  }
+
+  private List<AppointmentDTO> prepareAppointmentContactDetails(final List<AppointmentDTO> appointmentList) {
+    LOG.info("prepareAppointmentContactDetails start...............");
+    List<AppointmentDTO> appointments = new ArrayList<AppointmentDTO>();
+    for (AppointmentDTO appointmentDto : appointmentList) {
+      ContactDTO contactDTO = contactDao.getContactsByContactId(appointmentDto.getContactDTO().getId());
+      appointmentDto.setContactDTO(contactDTO);
+      appointments.add(appointmentDto);
+    }
+    LOG.info("prepareAppointmentContactDetails end..............."+appointments.size());
+    return appointments;
   }
 
   public void setManageUserDao(final ManageUserDao manageUserDao) {

@@ -81,8 +81,8 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
   private static final String DELETE_BUILDING_QUERY = "DELETE FROM building WHERE BUILDING_ID=:BUILDING_ID";
 
   private static final String GET_BUILDING_OWNER_QUERY =
-    "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE EMAILID=:OWNERID";
-	
+    "SELECT USERID,FIRSTNAME,LASTNAME,EMAILID,PRIMARY_PH_NO FROM userinfo WHERE USERID=:OWNERID";
+
   private static final Logger LOG = LoggerFactory.getLogger(BuildingDaoImpl.class);
 
   @Override
@@ -204,7 +204,7 @@ public class BuildingDaoImpl extends NamedParameterJdbcDaoSupport
     mapSqlParameterSource.addValue("CITY", buildingDTO.getCity());
     mapSqlParameterSource.addValue("PIN", buildingDTO.getPostalCode());
     mapSqlParameterSource.addValue("IMAGE_URL", buildingDTO.getImageUrl());
-    mapSqlParameterSource.addValue("OWNER_ID", buildingDTO.getOwnerDetails().getEmailId());
+    mapSqlParameterSource.addValue("OWNER_ID", buildingDTO.getOwnerDetails().getUserId());
     return mapSqlParameterSource;
   }
 

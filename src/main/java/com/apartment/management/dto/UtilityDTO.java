@@ -27,6 +27,10 @@ public final class UtilityDTO {
 
   private String userId;
 
+  private String createdBy;
+
+  private String updatedBy;
+
   private ContactDTO contactDTO = new ContactDTO();
 
   public String getId() {
@@ -141,4 +145,19 @@ public final class UtilityDTO {
     this.contactDTO = contactDTO;
   }
 
+  public String getCreatedBy() {
+    return createdBy;
+  }
+
+  public void setCreatedBy(final String createdBy) {
+    this.createdBy = createdBy;
+  }
+
+  public String getUpdatedBy() {
+    return updatedBy;
+  }
+
+  public void setUpdatedBy(final String updatedBy) {
+    this.updatedBy = updatedBy;
+  }
 }

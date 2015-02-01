@@ -41,7 +41,7 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 			+ "COMMUNITY_ID,"
 			+ "BUILDING_ID,"
 			+ "FLAT_ID,"
-			+ "USER_ID)"
+			+ "USER_ID,CREATED_BY)"
 			+" VALUES(:CONTACT_ID,"
 			   + ":PHONE_NO,"
 			   + ":EMAIL_ID,"
@@ -63,7 +63,7 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 			   + ":COMMUNITY_ID,"
 			   + ":BUILDING_ID,"
 			   + ":FLAT_ID,"
-			   + ":USER_ID)";
+			   + ":USER_ID,:CREATED_BY)";
 
 	private static final String UPDATE_CONTACT_DETAILS_QUERY="UPDATE contact SET "
 			   + "PHONE_NO=:PHONE_NO,"
@@ -83,7 +83,8 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
 			   + "COUNTRY=:COUNTRY,"
 			   + "PIN=:PIN,"
 			   + "USER_ID=:USER_ID,"
-			   + "FLAT_ID=:FLAT_ID"
+			   + "FLAT_ID=:FLAT_ID,"
+			   + "UPDATED_BY=:UPDATED_BY"
 			   + " WHERE CONTACT_ID=:CONTACT_ID";
 
   private static final String FIND_CONTACT_BASE_QUERY = "SELECT *FROM contact";
@@ -192,7 +193,14 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
   public List<ContactDTO> getPublicContactDetails() {
     try {
       final StringBuilder queryBuilder = new StringBuilder();
-      queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ").append("WHERE IS_VISIBLE_TO_PUBLIC=").append("'true'");
+      queryBuilder.append(FIND_CONTACT_BASE_QUERY)
+          .append(" ")
+          .append("WHERE IS_VISIBLE_TO_PUBLIC=")
+          .append("'true'")
+          .append(" ")
+          .append("AND")
+          .append(" ")
+          .append("APPROVED_STATUS='APPROVED'");
       return getSimpleJdbcTemplate().query(queryBuilder.toString(), getContactsRowmapper());
     } catch (final EmptyResultDataAccessException ex) {
       return new ArrayList<ContactDTO>();
@@ -216,12 +224,10 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
   public List<ContactDTO> findPendingContacts(final String userId, final String communityId) {
     try {
       final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-      namedSqlParamSource.addValue("USER_ID", userId);
       namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
       final StringBuilder queryBuilder = new StringBuilder();
       queryBuilder.append(FIND_CONTACT_BASE_QUERY).append(" ")
-                  .append("WHERE USER_ID=:USER_ID").append(" ")
-                  .append("AND").append(" ")
+                  .append("WHERE ")
                   .append("COMMUNITY_ID=:COMMUNITY_ID").append(" ")
                   .append("AND").append(" ")
                  .append("APPROVED_STATUS='PENDING'");
@@ -247,6 +253,10 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
         contactDTO.setBuildingId(rs.getString("BUILDING_ID"));
         contactDTO.setFlatId(rs.getString("FLAT_ID"));
         contactDTO.setUserId(rs.getString("USER_ID"));
+        contactDTO.setIsVisibleToPublic(rs.getString("IS_VISIBLE_TO_PUBLIC"));
+        contactDTO.setApprovedStatus(rs.getString("APPROVED_STATUS"));
+        contactDTO.setApprovedBy(rs.getString("APPROVED_BY"));
+        contactDTO.setCreatedBy(rs.getString("CREATED_BY"));
         final Address address = new Address();
         address.setAddress1(rs.getString("ADDRESS_LINE1"));
         address.setAddress2(rs.getString("ADDRESS_LINE2"));
@@ -285,6 +295,8 @@ public class ContactDaoImpl extends SimpleJdbcDaoSupport implements ContactDao{
     namedSqlParamSource.addValue("BUILDING_ID", contactDTO.getBuildingId());
     namedSqlParamSource.addValue("FLAT_ID", contactDTO.getFlatId());
     namedSqlParamSource.addValue("USER_ID", contactDTO.getUserId());
+    namedSqlParamSource.addValue("CREATED_BY", contactDTO.getCreatedBy());
+    namedSqlParamSource.addValue("UPDATED_BY", contactDTO.getUpdatedBy());
     return namedSqlParamSource;
   }
 

@@ -3,6 +3,7 @@ package com.apartment.management.services;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -12,12 +13,15 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
+
 import com.apartment.management.dao.UtilityDao;
 import com.apartment.management.dto.UtilityDTO;
 import com.apartment.management.utils.JsonUtils;
 
 @Path("/utility")
 public class UtilityService {
+  private static final Logger LOG =Logger.getLogger(UtilityService.class);
 
   private UtilityDao utilityDao;
 
@@ -25,8 +29,10 @@ public class UtilityService {
   @Path("/save")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response saveUtility(final String paylaod) {
+  public Response saveUtility(@HeaderParam("user_id") final String createdUserId,final String paylaod) {
+    LOG.info("createdUserId::"+createdUserId);
     UtilityDTO utilityDTO = JsonUtils.parseJsonToObject(paylaod, UtilityDTO.class);
+    utilityDTO.setCreatedBy(createdUserId);
     utilityDTO = utilityDao.save(utilityDTO);
     return Response.ok().entity(JsonUtils.parseObjectToJson(utilityDTO)).build();
   }
@@ -41,9 +47,10 @@ public class UtilityService {
   
   @PUT
   @Path("/{utilityId}")
-  public Response update(@PathParam("utilityId") final String utilityId,final String payload) {
+  public Response update(@HeaderParam("user_id") final String updatedUserId,@PathParam("utilityId") final String utilityId,final String payload) {
     UtilityDTO utilityDTO = JsonUtils.parseJsonToObject(payload, UtilityDTO.class);
-    utilityDTO.setId(utilityId);;
+    utilityDTO.setId(utilityId);
+    utilityDTO.setUpdatedBy(updatedUserId);
     utilityDao.update(utilityDTO);
     return Response.ok().entity(JsonUtils.parseObjectToJson(utilityDTO)).build();
   }

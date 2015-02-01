@@ -26,8 +26,8 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
   private static final String GET_APPOINTMENT_BASE_QUERY = "SELECT * FROM appointment";
 
   private static final String INSERT_APPOINTMENT_QUERY =
-    "INSERT INTO appointment(APT_ID,APT_DATE,REMIND_ME,DESCRIPTION,IS_VISIBLE_TO_OWNER,IS_VISIBLE_TO_TENANT,APPROVED_STATUS,APPROVED_BY,CONTACT_ID,FLAT_ID,BUILDING_ID,COMMUNITY_ID,USER_ID) "
-        + "values(:APT_ID,:APT_DATE,:REMIND_ME,:DESCRIPTION,:IS_VISIBLE_TO_OWNER,:IS_VISIBLE_TO_TENANT,:APPROVED_STATUS,:APPROVED_BY,:CONTACT_ID,:FLAT_ID,:BUILDING_ID,:COMMUNITY_ID,:USER_ID)";
+    "INSERT INTO appointment(APT_ID,APT_DATE,REMIND_ME,DESCRIPTION,IS_VISIBLE_TO_OWNER,IS_VISIBLE_TO_TENANT,APPROVED_STATUS,APPROVED_BY,CONTACT_ID,FLAT_ID,BUILDING_ID,COMMUNITY_ID,USER_ID,CREATED_BY) "
+        + "values(:APT_ID,:APT_DATE,:REMIND_ME,:DESCRIPTION,:IS_VISIBLE_TO_OWNER,:IS_VISIBLE_TO_TENANT,:APPROVED_STATUS,:APPROVED_BY,:CONTACT_ID,:FLAT_ID,:BUILDING_ID,:COMMUNITY_ID,:USER_ID,:CREATED_BY)";
 
   private static final String UPDATE_APPOINTMENT_QUERY =
     "UPDATE appointment SET APT_DATE=:APT_DATE,REMIND_ME=:REMIND_ME,"
@@ -37,6 +37,7 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
     + "IS_VISIBLE_TO_TENANT=:IS_VISIBLE_TO_TENANT,"
     + "APPROVED_STATUS=:APPROVED_STATUS,"
     + "APPROVED_BY=:APPROVED_BY"
+    + "UPDATED_BY=:UPDATED_BY,"
     + " WHERE APT_ID=:APT_ID";
 
   private static final String DELETE_APPOINTMENT_QUERY = "DELETE FROM appointment WHERE APT_ID=:APT_ID";
@@ -67,6 +68,7 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
     namedSqlParamSource.addValue("BUILDING_ID", appointmentDTO.getBuildingId());
     namedSqlParamSource.addValue("COMMUNITY_ID", appointmentDTO.getCommunityId());
     namedSqlParamSource.addValue("USER_ID", appointmentDTO.getUserId());
+    namedSqlParamSource.addValue("CREATED_BY", appointmentDTO.getCreatedBy());
     getSimpleJdbcTemplate().update(INSERT_APPOINTMENT_QUERY, namedSqlParamSource);
     return appointmentId;
   }
@@ -91,6 +93,7 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
     namedSqlParamSource.addValue("APPROVED_BY", appointmentDTO.getApprovedBy());
     namedSqlParamSource.addValue("APPROVED_STATUS", appointmentDTO.getApprovedStatus());
     namedSqlParamSource.addValue("CONTANCT_ID", appointmentDTO.getContactDTO().getId());
+    namedSqlParamSource.addValue("UPDATED_BY", appointmentDTO.getUpdatedBy());
     getSimpleJdbcTemplate().update(UPDATE_APPOINTMENT_QUERY, namedSqlParamSource);
   }
 
@@ -177,11 +180,10 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
   public List<AppointmentDTO> findPendingAppointments(final String userId, final String communityId) {
     try {
       final MapSqlParameterSource namedSqlParamSource = new MapSqlParameterSource();
-      namedSqlParamSource.addValue("USER_ID", userId);
       namedSqlParamSource.addValue("COMMUNITY_ID", communityId);
       final StringBuilder queryBuilder = new StringBuilder();
       queryBuilder.append(GET_APPOINTMENT_BASE_QUERY).append(" ")
-          .append("WHERE USER_ID=:USER_ID AND APPROVED_STATUS='PENDING' AND COMMUNITY_ID=:COMMUNITY_ID");
+          .append("WHERE APPROVED_STATUS='PENDING' AND COMMUNITY_ID=:COMMUNITY_ID");
       return getSimpleJdbcTemplate().query(queryBuilder.toString(), getAppointmentRowmapper(), namedSqlParamSource);
     } catch (final EmptyResultDataAccessException er) {
       LOG.warn("no pending appointments found for user:" + userId+"and for community:"+communityId);
@@ -199,8 +201,11 @@ public class AppointmentDaoImpl extends SimpleJdbcDaoSupport implements Appointm
         appointmentDTO.setStatus(rs.getString("APT_STATUS"));
         appointmentDTO.setIsVisibleToOwner(rs.getString("IS_VISIBLE_TO_OWNER"));
         appointmentDTO.setIsVisibleToTenant(rs.getString("IS_VISIBLE_TO_TENANT"));
+        appointmentDTO.setApprovedStatus(rs.getString("APPROVED_STATUS"));
+        appointmentDTO.setApprovedBy(rs.getString("APPROVED_BY"));
         appointmentDTO.setAppointmentDate(new DateTime(rs.getTimestamp("APT_DATE").getTime()));
         appointmentDTO.setDescription(rs.getString("DESCRIPTION"));
+        appointmentDTO.setCreatedBy(rs.getString("CREATED_BY"));
         appointmentDTO.setRemindMe(new DateTime(rs.getTimestamp("REMIND_ME").getTime()));
         ContactDTO contactDTO = new ContactDTO();
         contactDTO.setId(rs.getString("CONTACT_ID"));

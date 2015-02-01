@@ -30,6 +30,10 @@ public class AppointmentDTO {
 
   private String isVisibleToTenant;
 
+  private String createdBy;
+
+  private String updatedBy;
+
   private ContactDTO contactDTO = new ContactDTO();
 
   public String getId() {
@@ -142,6 +146,22 @@ public class AppointmentDTO {
 
   public void setIsVisibleToTenant(final String isVisibleToTenant) {
     this.isVisibleToTenant = isVisibleToTenant;
+  }
+
+  public String getCreatedBy() {
+    return createdBy;
+  }
+
+  public void setCreatedBy(final String createdBy) {
+    this.createdBy = createdBy;
+  }
+
+  public String getUpdatedBy() {
+    return updatedBy;
+  }
+
+  public void setUpdatedBy(final String updatedBy) {
+    this.updatedBy = updatedBy;
   }
 
 }
